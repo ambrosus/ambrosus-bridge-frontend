@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useWeb3React } from '@web3-react/core';
+import { useHistory } from 'react-router';
 import {
   ConfiguredInjectedConnector,
   ConfiguredWalletConnectConnector,
@@ -9,14 +10,19 @@ import MetaMaskIcon from '../../assets/img/connect-wallet__metamask.jpg';
 import WalletConnectIcon from '../../assets/img/connect-wallet__wallet-connect.png';
 
 const ConnectWallet = () => {
-  const context = useWeb3React();
+  const web3 = useWeb3React();
+  const history = useHistory();
 
   const handleMetamaskLogin = () => {
-    context.activate(ConfiguredInjectedConnector);
+    web3
+      .activate(ConfiguredInjectedConnector)
+      .then(() => history.push('/exchange'));
   };
 
   const handleWalletConnectLogin = () => {
-    context.activate(ConfiguredWalletConnectConnector);
+    web3
+      .activate(ConfiguredWalletConnectConnector)
+      .then(() => history.push('/exchange'));
   };
 
   return (

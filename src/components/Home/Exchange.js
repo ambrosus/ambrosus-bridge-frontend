@@ -1,30 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 import CurrencyInput from '../CurrencyInput';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import NetworkSelect from '../NetworkSelect';
 
-const Exchange = () => (
-  <div className="content exchange">
-    <h2 className="exchange__heading">Select Network and enter amount</h2>
-    <div className="exchange__fields">
-      <ExchangeField />
-      <img
-        src={SwapButton}
-        alt="swap button"
-        className="exchange__swap-button"
-      />
-      <ExchangeField isReceive />
+const Exchange = () => {
+  const history = useHistory();
+
+  const handleTransferButton = () => {
+    history.push('/confirm');
+  };
+
+  return (
+    <div className="content exchange">
+      <h2 className="exchange__heading">Select Network and enter amount</h2>
+      <div className="exchange__fields">
+        <ExchangeField />
+        <img
+          src={SwapButton}
+          alt="swap button"
+          className="exchange__swap-button"
+        />
+        <ExchangeField isReceive />
+      </div>
+      <div className="exchange__estimated-fee-container">
+        Estimated transfer fee:
+        <span className="exchange__estimated-fee">0.08 ETH.AM</span>
+      </div>
+      <button
+        type="button"
+        onClick={handleTransferButton}
+        className="button button_black exchange__button"
+      >
+        Transfer
+      </button>
     </div>
-    <div className="exchange__estimated-fee-container">
-      Estimated transfer fee:
-      <span className="exchange__estimated-fee">0.08 ETH.AM</span>
-    </div>
-    <button type="button" className="button button_black exchange__button">
-      Transfer
-    </button>
-  </div>
-);
+  );
+};
 
 export default Exchange;
 
