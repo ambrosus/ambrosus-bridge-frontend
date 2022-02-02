@@ -1,0 +1,52 @@
+.content {
+  width: var(--content-width);
+  margin: 0 auto;
+  z-index: 5;
+  position: relative;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    padding: 0 1rem;
+  }
+}
+
+.layout {
+  width: 100vw;
+  padding-top: 6.25rem;
+  background: #FAFAFA;
+}
+
+.layout__heading-container {
+  height: 5.5rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.layout__heading {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 100%;
+  color: $black;
+
+  margin-right: auto;
+}
+
+.layout__container {
+  border-top: #F4F5F6 1px solid;
+  width: 100%;
+  border-radius: 32px;
+  background: white;
+  overflow: hidden;
+}
+
+.layout__button {
+  height: 2.5rem;
+  margin-left: 0.5rem;
+}
+
+.layout__button-icon {
+  margin-right: 0.75rem;
+}
