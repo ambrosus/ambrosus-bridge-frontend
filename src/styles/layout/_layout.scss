@@ -1,0 +1,10 @@
+.content {
+  width: var(--content-width);
+  margin: 0 auto;
+  z-index: 5;
+  position: relative;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    padding: 0 1rem;
+  }
+}

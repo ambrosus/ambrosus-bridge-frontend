@@ -1,41 +1,41 @@
 * {
-    outline: none;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  outline: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-  
+
 html {
+  position: relative;
+  font-size: 20px;
+  scroll-behavior: smooth;
+  background-color: $black;
+}
+
+h1, h2, h3, h4, h5, h6, a, p {
+  white-space: pre-line;
+}
+
+@media screen and (max-width: 1800px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: $mobile-breakpoint) {
+  html {
     font-size: 14px;
+  }
 }
-  
-li {
-    list-style-type: none;
-}
-h2 {
-     font-size: 28px;
-     line-height: 1.2;
-}
-  
-a {
-  
-    &:hover {
-      text-decoration: none;
-    }
-  
-    &:visited {
-      text-decoration: none;
-    }
-  
-    &:link {
-      text-decoration: none;
-    }
-  
-    &:active {
-      text-decoration: none;
-    }
-}
-  
-p {
-    margin: 0;
+
+@media screen and (max-width: 320px) {
+  html {
+    font-size: 12px;
+  }
 }

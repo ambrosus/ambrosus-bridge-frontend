@@ -1,12 +1,19 @@
-# Simple React App template
+<p align="center">
+  <a href="">
+    <img src="https://ambrosus.io/favicon.png" />
+  </a>
+</p>
+<h1 align="center">
+  Ambrosus Bridge
+</h1>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 🚀 Start development server
+```shell
+yarn install
+yarn start
+```
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 🚀 Build static
+```shell
+yarn build
+```

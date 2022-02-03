@@ -1,2 +1,22 @@
 // Colors HEX
-$white: #FFFFFF;
+$white: #ffffff;
+$black: #212121;
+$lighter-black: #262626;
+$mobile-breakpoint: 768px;
+
+* {
+  --content-width: 90rem;
+}
+
+
+@media screen and (max-width: 1600px) {
+  * {
+    --content-width: 70rem;
+  }
+}
+
+@media screen and (max-width: $mobile-breakpoint) {
+  * {
+    --content-width: 100%;
+  }
+}
