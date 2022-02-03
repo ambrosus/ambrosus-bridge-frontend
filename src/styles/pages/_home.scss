@@ -1,0 +1,71 @@
+.connect-wallet__content {
+  width: 30rem;
+}
+
+.connect-wallet__heading {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 1.125rem;
+  line-height: 178%;
+  text-align: center;
+  color: $black;
+
+  margin-bottom: 1.5rem;
+}
+
+.wallet-button {
+  width: 100%;
+  height: 5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #F4F5F6;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  grid-column-gap: 0.75rem;
+  border-radius: 16px;
+}
+
+.wallet-button__logo-container {
+  height: 3rem;
+  width: 3rem;
+  background: white;
+  border-radius: 50%;
+  overflow: hidden;
+
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.wallet-button__logo {
+  height: 1.875rem;
+  width: 1.875rem;
+}
+
+.wallet-button__heading {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 100%;
+  color: $black;
+  margin-bottom: 0.875rem;
+}
+
+.wallet-button__text {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.875rem;
+  color: #58667E;
+}
+
+.wallet-button__chevron {
+  width: 1rem;
+  height: 1rem;
+  transform: rotate(-90deg);
+  margin-left: auto;
+}
