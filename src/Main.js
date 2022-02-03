@@ -1,12 +1,14 @@
 import React from 'react';
-import RenderRoutes from './components/RenderRoutes';
-import Layout from './layouts/Layout';
-import routes from './routes';
-import './styles/Main.scss';
+import { Redirect, Route, Switch } from 'react-router';
+import { Layout } from './components/Layout';
+import Home from './pages/Home';
 
 const Main = () => (
   <Layout>
-    <RenderRoutes routes={routes} />
+    <Switch>
+      <Route path="/" exact component={Home} />
+      <Redirect to="/" />
+    </Switch>
   </Layout>
 );
 
