@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
-import { Layout } from './components/Layout';
+import Layout from './components/Layout';
 import Home from './pages/Home';
 
 const Main = () => (
