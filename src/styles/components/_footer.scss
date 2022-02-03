@@ -1,0 +1,54 @@
+.footer {
+  height: 5rem;
+  width: 100%;
+  background: $black;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    height: fit-content;
+  }
+}
+
+.footer__content {
+  height: 100%;
+  margin: 0 auto;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    width: calc(100% - 2rem);
+    flex-flow: column nowrap;
+    padding: 2.5rem 0;
+  }
+}
+
+.footer__logo {
+  width: 12.25rem;
+  opacity: 0.6;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    margin-bottom: 2.5rem;
+  }
+}
+
+.footer__email {
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 300;
+  line-height: 140%;
+  font-size: 1rem;
+  color: #8f8f8f;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    margin-bottom: 2.5rem;
+  }
+}
+
+.footer__social-icons {
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: 1.875rem;
+  color: #565656;
+}
