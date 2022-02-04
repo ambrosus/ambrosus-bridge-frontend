@@ -40,6 +40,8 @@
   border-radius: 32px;
   background: white;
   overflow: hidden;
+  padding-top: 1.5rem;
+  min-height: calc(100vh - 6.25rem - 5.5rem - 1px - 5rem);
 }
 
 .layout__button {
