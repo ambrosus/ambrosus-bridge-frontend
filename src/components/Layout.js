@@ -33,7 +33,7 @@ export const Layout = ({ children, title }) => (
 );
 
 Layout.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.node,
   title: PropTypes.string,
 };
 
