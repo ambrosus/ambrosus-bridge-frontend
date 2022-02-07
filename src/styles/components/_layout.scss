@@ -13,6 +13,8 @@
   width: 100vw;
   padding-top: 6.25rem;
   background: #FAFAFA;
+  position: relative;
+  overflow: hidden;
 }
 
 .layout__heading-container {
@@ -51,4 +53,30 @@
 
 .layout__button-icon {
   margin-right: 0.75rem;
+}
+
+.layout__pyramid {
+  width: 14.5rem;
+  height: 14.5rem;
+  position: absolute;
+  top: 14.5rem;
+  left: -2rem;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: none;
+  }
+
+}
+
+.layout__sphere {
+  width: 25rem;
+  height: 25rem;
+  position: absolute;
+  bottom: -6.25rem;
+  right: 0;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: none;
+  }
+
 }
