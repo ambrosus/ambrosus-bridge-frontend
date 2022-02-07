@@ -49,11 +49,28 @@
 .layout__button {
   height: 2.5rem;
   margin-left: 0.5rem;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: none !important;
+  }
+
 }
 
 .layout__button-icon {
   margin-right: 0.75rem;
 }
+
+.layout__mobile-button {
+  display: none;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: block;
+    height: 1.75rem;
+    width: 1.75rem;
+    margin-left: 1rem;
+  }
+}
+
 
 .layout__pyramid {
   width: 14.5rem;
