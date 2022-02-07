@@ -8,13 +8,11 @@
 // Fonts
 @import "./fonts/fonts";
 
-// Layout
-@import "./layout/layout";
-@import "./layout/header";
-@import "./layout/footer";
-
-// components
-
+// Components
+@import "./components/header";
+@import "./components/footer";
+@import "./components/layout";
+@import "./components/button";
 
 //pages
 @import "./pages/home";
