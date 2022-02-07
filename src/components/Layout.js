@@ -53,19 +53,19 @@ export const Layout = ({ children, title, error }) => (
         {/* mobile buttons block end */}
       </div>
       <div className="layout__container">{children}</div>
-      <img
-        src={PyramidIllustration}
-        alt="pyramid illustration"
-        className="layout__pyramid"
-      />
-      <img
-        src={SphereIllustration}
-        alt="sphere illustration"
-        className="layout__sphere"
-      />
     </main>
     <Footer />
-  </>
+    <img
+      src={PyramidIllustration}
+      alt="pyramid illustration"
+      className="root__pyramid"
+    />
+    <img
+      src={SphereIllustration}
+      alt="sphere illustration"
+      className="root__sphere"
+    />
+  </div>
 );
 
 Layout.propTypes = {
