@@ -31,10 +31,10 @@
   color: white;
   font-family: 'Proxima Nova', sans-serif;
   font-weight: 400;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin-left: 4.5625rem;
+  margin-left: 2rem;
 
   @media screen and (max-width: $mobile-breakpoint) {
     display: none;
@@ -43,6 +43,59 @@
 
 .header__link:first-of-type {
   margin: 0;
+}
+
+.account {
+  padding: 0.5rem 1rem;
+  background: $lighter-black;
+  border: 1px solid white;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-left: 2rem;
+}
+
+.account__wallet-logo {
+  background: white;
+  height: 1.5rem;
+  width: 1.5rem;
+  object-position: center;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.account__address {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 100%;
+  color: #FFFFFF;
+}
+
+.logout {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-left: 2rem;
+  cursor: pointer;
+}
+
+.logout__icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  margin-right: 1rem;
+}
+
+.logout__text {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 100%;
+  letter-spacing: 0.22em;
+  color: #FFFFFF;
 }
 
 .burger-icon {
