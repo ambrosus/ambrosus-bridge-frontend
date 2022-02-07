@@ -13,6 +13,13 @@
   width: 100vw;
   padding-top: 6.25rem;
   background: #FAFAFA;
+  position: relative;
+  overflow: hidden;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    padding-top: 7.125rem;
+  }
+
 }
 
 .layout__heading-container {
@@ -41,14 +48,63 @@
   background: white;
   overflow: hidden;
   padding-top: 1.5rem;
-  min-height: calc(100vh - 6.25rem - 5.5rem - 1px - 5rem - 1.5rem);
+  min-height: calc(100vh - 6.25rem - 5.5rem - 1px - 5rem);
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    min-height: calc(100vh - 14.75rem - 5.5rem - 1px - 7.125rem);
+    padding-bottom: 6.25rem;
+  }
+
 }
 
 .layout__button {
   height: 2.5rem;
   margin-left: 0.5rem;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: none !important;
+  }
+
 }
 
 .layout__button-icon {
   margin-right: 0.75rem;
+}
+
+.layout__mobile-button {
+  display: none;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: block;
+    height: 1.75rem;
+    width: 1.75rem;
+    margin-left: 1rem;
+  }
+}
+
+
+.layout__pyramid {
+  width: 14.5rem;
+  height: 14.5rem;
+  position: absolute;
+  top: 14.5rem;
+  left: -2rem;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: none;
+  }
+
+}
+
+.layout__sphere {
+  width: 25rem;
+  height: 25rem;
+  position: absolute;
+  bottom: -6.25rem;
+  right: 0;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: none;
+  }
+
 }

@@ -9,7 +9,7 @@ import TwitterIcon from '../assets/svg/twitter-icon.svg';
 
 export const Footer = () => (
   <footer className="footer">
-    <div className="content footer__content">
+    <div className="footer__content content">
       <Link to="/">
         <img src={Logo} alt="logo" className="footer__logo" />
       </Link>

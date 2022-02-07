@@ -2,17 +2,10 @@
 $white: #ffffff;
 $black: #212121;
 $lighter-black: #262626;
-$mobile-breakpoint: 768px;
+$mobile-breakpoint: 1280px;
 
 * {
-  --content-width: 90rem;
-}
-
-
-@media screen and (max-width: 1600px) {
-  * {
-    --content-width: 70rem;
-  }
+  --content-width: 70rem;
 }
 
 @media screen and (max-width: $mobile-breakpoint) {
