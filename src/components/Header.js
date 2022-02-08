@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import Logo from '../assets/svg/logo.svg';
-import LogoutIcon from '../assets/svg/log-out.svg';
+import LogoutIcon from '../assets/svg/logout.svg';
 import WalletConnectLogo from '../assets/img/connect-wallet__wallet-connect.png';
 
 export const Header = () => {
