@@ -3,6 +3,7 @@
   height: 6.25rem;
   background: $black;
   z-index: 20;
+  position: relative;
 
   @media screen and (max-width: $mobile-breakpoint) {
     height: 7.125rem;
