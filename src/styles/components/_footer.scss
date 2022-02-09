@@ -3,6 +3,11 @@
   width: 100%;
   background: $black;
 
+  position: absolute;
+  bottom: 0;
+
+  z-index: 5;
+
   @media screen and (max-width: $mobile-breakpoint) {
     height: fit-content;
   }

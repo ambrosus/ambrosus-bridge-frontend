@@ -1,12 +1,22 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useWeb3React } from '@web3-react/core';
+import { useHistory } from 'react-router';
 import Logo from '../assets/svg/logo.svg';
+import LogoutIcon from '../assets/svg/logout.svg';
+import WalletConnectLogo from '../assets/img/connect-wallet__wallet-connect.png';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const { account, deactivate } = useWeb3React();
+  const history = useHistory();
+  const logout = () => {
+    history.push('/');
+    deactivate();
+  };
 
   return (
     <>
@@ -16,8 +26,11 @@ export const Header = () => {
             <img src={Logo} alt="logo" className="header__logo" />
           </Link>
 
-          <a href="https://ambrosus.io/about/" className="header__link">
-            About Ambrosus
+          <a href="https://ambrosus.io/" className="header__link">
+            Defi
+          </a>
+          <a href="https://ambrosus.io/community" className="header__link">
+            Community
           </a>
           <a href="https://ambrosus.io/business/" className="header__link">
             Business
@@ -25,9 +38,30 @@ export const Header = () => {
           <a href="https://ambrosus.io/developers" className="header__link">
             Developers
           </a>
-          <a href="https://ambrosus.io/community" className="header__link">
-            Community
-          </a>
+
+          {account ? (
+            <>
+              <div className="account">
+                <img
+                  src={WalletConnectLogo}
+                  alt="wallet icon"
+                  className="account__wallet-logo"
+                />
+                <span className="account__address">
+                  Account {account.slice(-4)}
+                </span>
+              </div>
+
+              <button type="button" onClick={logout} className="logout">
+                <img
+                  src={LogoutIcon}
+                  alt="wallet icon"
+                  className="logout__icon"
+                />
+                <span className="logout__text">LOG OUT</span>
+              </button>
+            </>
+          ) : null}
 
           <div
             className={`burger-icon ${isOpen ? 'burger-icon_open' : ''}`}
