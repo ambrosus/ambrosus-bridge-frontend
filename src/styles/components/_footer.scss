@@ -21,7 +21,7 @@
   @media screen and (max-width: $mobile-breakpoint) {
     width: calc(100% - 2rem);
     flex-flow: column nowrap;
-    padding: 2.5rem 0;
+    padding: 2.5rem 1rem !important;
   }
 }
 
