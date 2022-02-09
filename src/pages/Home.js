@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Layout } from '../components/Layout';
+import ConnectWallet from '../components/Home/ConnectWallet';
 
 const Home = () => (
   <Layout title="ETH to BSC Bridge">
-    <div className="content">Homepage</div>
+    <ConnectWallet />
   </Layout>
 );
 
