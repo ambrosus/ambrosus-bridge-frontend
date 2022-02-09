@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import Logo from '../assets/svg/logo.svg';
-// import { MobileMenu } from './MobileMenu';
+import { MobileMenu } from './MobileMenu';
 import WalletConnectLogo from '../assets/img/connect-wallet__wallet-connect.png';
 import LogoutIcon from '../assets/svg/logout.svg';
 
@@ -21,13 +21,13 @@ export const Header = () => {
         }}
         data={HEADER_DATA}
       />
-      {/* <MobileMenu */}
-      {/*  {...{ */}
-      {/*    isOpen, */}
-      {/*    toggleMenu, */}
-      {/*  }} */}
-      {/*  data={HEADER_DATA} */}
-      {/* /> */}
+      <MobileMenu
+        {...{
+          isOpen,
+          toggleMenu,
+        }}
+        data={HEADER_DATA}
+      />
     </>
   );
 };
