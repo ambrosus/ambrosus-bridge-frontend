@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 export const MobileMenu = ({
   data = [{}],
@@ -48,6 +49,12 @@ export const MobileMenu = ({
   );
 };
 
+MobileMenu.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  isOpen: PropTypes.bool,
+  toggleMenu: PropTypes.func,
+};
+
 const MobileSubmenu = ({
   name = '',
   data = [{}],
@@ -83,3 +90,12 @@ const MobileSubmenu = ({
     </div>
   </div>
 );
+
+MobileSubmenu.propTypes = {
+  name: PropTypes.string,
+  data: PropTypes.arrayOf(PropTypes.object),
+  index: PropTypes.number,
+  toggleSubmenu: PropTypes.func,
+  toggleMenu: PropTypes.func,
+  isOpen: PropTypes.bool,
+};

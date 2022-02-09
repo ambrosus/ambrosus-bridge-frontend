@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
+import PropTypes from 'prop-types';
 import Logo from '../assets/svg/logo.svg';
 import { MobileMenu } from './MobileMenu';
 import WalletConnectLogo from '../assets/img/connect-wallet__wallet-connect.png';
@@ -103,6 +104,12 @@ const HeaderLayout = ({
   );
 };
 
+HeaderLayout.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  isOpen: PropTypes.bool,
+  toggleMenu: PropTypes.func,
+};
+
 const Submenu = ({ name = '', data = [{}] }) => (
   <div className="submenu">
     <p className="submenu__name">
@@ -123,6 +130,11 @@ const Submenu = ({ name = '', data = [{}] }) => (
     </div>
   </div>
 );
+
+Submenu.propTypes = {
+  name: PropTypes.string,
+  data: PropTypes.arrayOf(PropTypes.object),
+};
 
 const HEADER_DATA = [
   {
