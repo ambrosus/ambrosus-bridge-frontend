@@ -19,7 +19,7 @@ const Home = () => {
   }, [web3]);
 
   return (
-    <Layout title="ETH to BSC Bridge" error={error}>
+    <Layout title="Bridge" error={error}>
       <Exchange />
     </Layout>
   );
