@@ -1,12 +1,30 @@
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { utils } from 'ethers';
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import getNetworks from './getNetworks';
 
 const networks = getNetworks();
-const chainIds = networks.map((network) => network.chainId);
 
+const chainIds = networks.map((network) => network.chainId);
 export const ConfiguredInjectedConnector = new InjectedConnector({
   supportedChainIds: chainIds,
+});
+
+const walletRPC = {};
+networks.forEach((network) => {
+  // eslint-disable-next-line prefer-destructuring
+  walletRPC[network.chainId] = network.rpcUrls[0];
+});
+
+export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
+  rpc: walletRPC,
+  chainId: 1,
+  bridge: 'https://bridge.walletconnect.org',
+  pollingInterval: 6000,
+  qrcode: true,
+  qrcodeModalOptions: {
+    mobileLinks: ['metamask'],
+  },
 });
 
 export const changeChainId = async (provider, network) => {
