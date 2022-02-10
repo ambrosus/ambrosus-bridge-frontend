@@ -97,8 +97,58 @@
   flex-flow: column nowrap;
   align-items: center;
   grid-row-gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.exchange__field {
+.exchange-field {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  grid-row-gap: 0.5rem;
+}
+
+.exchange-field__network-destination {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 171%;
+  color: #58667E;
+
+  min-width: 3.25rem;
+}
+
+.exchange-field__balance-container {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 171%;
+  color: #58667E;
+  margin-left: auto;
+}
+
+.exchange-field__balance {
+  font-weight: 600;
+  color: $green;
+  margin-left: 0.5rem;
+}
+
+.exchange__estimated-fee-container {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 171%;
+  color: #58667E;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.exchange__button {
   width: 100%;
 }
