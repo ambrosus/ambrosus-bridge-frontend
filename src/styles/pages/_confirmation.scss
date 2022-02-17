@@ -1,0 +1,114 @@
+.confirmation-page {
+  width: 30rem;
+  font-family: "Proxima Nova", 'sans-serif';
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    padding-bottom: 200px;
+  }
+
+  @media screen and (max-width: 450px) {
+    width: 100%;
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__amount {
+    margin: 1.5rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  &__btns-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+
+  &__btn {
+    flex-grow: 1;
+
+    &:first-child {
+      margin-right: 1.5rem;
+    }
+  }
+}
+
+.transaction-coins {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  @media screen and (max-width: 450px) {
+    flex-direction: column;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    background: $gray;
+    padding: 1rem;
+    border-radius: 1rem;
+    flex-grow: 1;
+
+    @media screen and (max-width: 450px) {
+      width: 100%;
+    }
+  }
+
+  &__img {
+    max-width: 2.15rem;
+    max-height: 2.15rem;
+    margin-right: 0.8rem;
+  }
+
+  &__title {
+    font-size: 0.75rem;
+    color: $dark-gray;
+  }
+
+  &__name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.35rem;
+  }
+
+  &__arrow {
+    margin: 0.85rem;
+
+    @media screen and (max-width: 450px) {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.confirmation-info {
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #EFF2F5;
+    font-size: 0.85rem;
+  }
+
+  &__label {
+    color: $dark-gray;
+  }
+
+  &__value {
+    font-weight: 600;
+    display: flex;
+  }
+
+  &__img {
+    max-width: 1rem;
+    max-height: 1rem;
+    margin-right: 0.85rem;
+  }
+}
+
