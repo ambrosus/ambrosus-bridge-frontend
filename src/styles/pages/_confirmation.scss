@@ -22,69 +22,6 @@
     font-size: 1.5rem;
     text-align: center;
   }
-
-  &__btns-wrapper {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-
-  &__btn {
-    flex-grow: 1;
-
-    &:first-child {
-      margin-right: 1.5rem;
-    }
-  }
-}
-
-.transaction-coins {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-
-  @media screen and (max-width: 450px) {
-    flex-direction: column;
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    background: $gray;
-    padding: 1rem;
-    border-radius: 1rem;
-    flex-grow: 1;
-
-    @media screen and (max-width: 450px) {
-      width: 100%;
-    }
-  }
-
-  &__img {
-    max-width: 2.15rem;
-    max-height: 2.15rem;
-    margin-right: 0.8rem;
-  }
-
-  &__title {
-    font-size: 0.75rem;
-    color: $dark-gray;
-  }
-
-  &__name {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 0.35rem;
-  }
-
-  &__arrow {
-    margin: 0.85rem;
-
-    @media screen and (max-width: 450px) {
-      transform: rotate(90deg);
-    }
-  }
 }
 
 .confirmation-info {
@@ -111,4 +48,3 @@
     margin-right: 0.85rem;
   }
 }
-

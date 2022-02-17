@@ -14,7 +14,10 @@
 @import "./components/layout";
 @import "./components/button";
 @import "./components/error-widget";
+@import "./components/transaction-coins";
+@import "./components/btns-wrapper";
 
 //pages
 @import "./pages/home";
 @import "./pages/confirmation";
+@import "./pages/status";

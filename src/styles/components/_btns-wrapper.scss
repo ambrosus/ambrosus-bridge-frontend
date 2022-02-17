@@ -1,0 +1,13 @@
+.btns-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+
+  &__btn {
+    flex-grow: 1;
+
+    &:first-child {
+      margin-right: 1.5rem;
+    }
+  }
+}
