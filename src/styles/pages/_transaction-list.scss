@@ -1,0 +1,100 @@
+.transaction-item {
+  border: 1px solid #EFF2F5;
+  padding: 1rem 1.5rem 1.5rem;
+  border-radius: 1rem;
+  font-family: "Proxima Nova", 'sans-serif';
+
+  &__img {
+    max-width: 1.5rem;
+    max-height: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      &:not(:first-child) {
+        flex-direction: column;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+
+    &:first-child {
+      margin-bottom: 1rem;
+    }
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      margin-bottom: 0!important;
+    }
+  }
+
+  &__mobile-row {
+    display: flex;
+    align-items: center;
+
+    &:last-child {
+      margin-left: auto;
+    }
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      margin-left: 0!important;
+      width: 100%;
+      height: 1.7rem;
+    }
+  }
+
+  &__right {
+    margin-left: auto;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      margin-left: 0;
+    }
+  }
+
+  &__black-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  &__grey-text {
+    font-size: 0.75rem;
+    color: #A6B0C3;
+    margin-right: 0.5rem;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      margin-right: auto;
+    }
+  }
+
+  &__clock {
+    margin-right: 0.35rem;
+  }
+
+  &__status {
+    padding: 0.4rem 1rem;
+    display: flex;
+    align-items: center;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #16C784;
+    color: white;
+
+    img {
+      margin-right: 0.35rem;
+    }
+  }
+
+  .icon-link {
+    margin: 0 1.5rem 0 0.25rem;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      margin-right: 0;
+    }
+  }
+}
