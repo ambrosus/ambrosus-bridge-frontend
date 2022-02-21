@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { useWeb3React } from '@web3-react/core';
-import { ConfiguredInjectedConnector } from '../../utils/web3';
+import {
+  ConfiguredInjectedConnector,
+  ConfiguredWalletConnectConnector,
+} from '../../utils/web3';
 import ChevronIcon from '../../assets/svg/chevron.svg';
 import MetaMaskIcon from '../../assets/img/connect-wallet__metamask.jpg';
 import WalletConnectIcon from '../../assets/img/connect-wallet__wallet-connect.png';
@@ -13,8 +16,7 @@ const ConnectWallet = () => {
   };
 
   const handleWalletConnectLogin = () => {
-    // eslint-disable-next-line no-console
-    console.log('soon');
+    context.activate(ConfiguredWalletConnectConnector);
   };
 
   return (
