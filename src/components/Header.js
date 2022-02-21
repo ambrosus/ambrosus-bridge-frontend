@@ -74,9 +74,7 @@ const HeaderLayout = ({
                 alt="wallet icon"
                 className="account__wallet-logo"
               />
-              <span className="account__address">
-                Account {account.slice(-4)}
-              </span>
+              <span className="account__address">{formatAddress(account)}</span>
             </div>
 
             <button type="button" onClick={logout} className="logout">
@@ -135,6 +133,8 @@ Submenu.propTypes = {
   name: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.object),
 };
+
+const formatAddress = (addr) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
 const HEADER_DATA = [
   {
