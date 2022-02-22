@@ -1,6 +1,7 @@
 .status-page {
-  width: 30rem;
+  width: 52rem;
   font-family: "Proxima Nova", 'sans-serif';
+  padding-bottom: 10rem;
 
   @media screen and (max-width: 450px) {
     padding-bottom: 200px;
@@ -17,13 +18,11 @@
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 0.8rem;
-    text-align: center;
   }
 
   &__subtitle {
     font-size: 0.85rem;
     color: $dark-gray;
-    text-align: center;
     margin-bottom: 1.5rem;
   }
 }
@@ -31,6 +30,19 @@
 .transaction-status {
   display: flex;
   justify-content: space-between;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 1.4rem;
+    width: 70%;
+    height: 1px;
+    background-image: linear-gradient(to left, #EFF2F5 0%, #EFF2F5 50%, transparent 50%);
+    background-size: 16px 1px;
+    background-repeat: repeat-x;
+  }
 
   @media screen and (max-width: 450px) {
     flex-direction: column;
@@ -54,7 +66,17 @@
   &__item {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    flex-grow: 1;
+    z-index: 1;
+
+    &:not(:first-child) {
+      padding-left: 1rem;
+    }
+
+    &:not(:last-child) .transaction-status__item-info{
+      padding-right: 1rem;
+      border-right: 1px solid #EFF2F5;
+    }
 
     @media screen and (max-width: 450px) {
       align-items: flex-start;
@@ -92,51 +114,109 @@
       stroke: #A6B0C3;
     }
 
-    &--selected {
+    &--loading, &--checked {
       background: #15D378;
+    }
+    
+    &--loading .transaction-status__img-icon {
+      background-image: url('../../assets/svg/spinner.svg');
+      animation: rotating 2s linear infinite;
+    }
 
-      @media screen and (max-width: 450px) {
-        &:before {
-          border-color: #15D378;
-          background: #15D378;
-        }
-      }
-
-      svg path {
-        stroke: white;
-      }
+    &--checked .transaction-status__img-icon {
+      background-image: url('../../assets/svg/check-circle.svg');
     }
   }
 
-  &__text {
-    font-size: 0.75rem;
-    text-align: center;
+  &__img-icon {
+    background-image: url('../../assets/svg/hourglass.svg');
+    background-size: contain;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &__item-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  &__stage {
+    font-weight: 600;
   }
 
   &__timing {
     background: $gray;
     font-size: 0.75rem;
-    padding: 0.3rem 0.85rem;
+    padding: 0.15rem 0.7rem;
     border-radius: 16px;
     display: flex;
     align-items: center;
     margin-top: 0.5rem;
 
     svg {
+      width: .85rem;
+      height: .85rem;
       margin-right: 0.4rem;
     }
   }
 
-  &__arrow {
-    margin-top: 1rem;
+  &__info-stage {
+    font-size: .85rem;
+    color: $dark-gray;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
 
-    @media screen and (max-width: 450px) {
-      display: none;
+    &:before {
+      content: '';
+      position: absolute;
+      top: 50%;
     }
 
-    svg path {
-      stroke: #A6B0C3;
+    &--loading:before, &--check:before {
+      left: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: url('../../assets/img/progress.png');
+      background-size: contain;
+      animation: rotating 2s linear infinite;
+      top: -.25rem;
     }
+
+    &--check:before {
+      background: url('../../assets/svg/check-circle.svg');
+      background-size: contain;
+      animation: none;
+    }
+
+    &:not(&--loading, &--check):before {
+      left: .6rem;
+      width: 0.35rem;
+      height: 0.35rem;
+      border-radius: 50%;
+      background: #A6B0C3;
+      transform: translateY(-50%);
+    }
+  }
+
+  &__info-stage-confirm {
+    padding: .3rem .5rem;
+    background: $gray;
+    border-radius: 1rem;
+    margin-left: .25rem;
+    font-size: .75rem;
+  }
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
