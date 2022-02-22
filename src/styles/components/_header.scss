@@ -1,9 +1,10 @@
 .header {
   width: 100%;
   height: 6.25rem;
+  //background: linear-gradient(180deg, #212121 39.84%, rgba(33, 33, 33, 0) 100%);
   background: $black;
+  position: fixed;
   z-index: 20;
-  position: relative;
 
   @media screen and (max-width: $mobile-breakpoint) {
     height: 7.125rem;
@@ -16,6 +17,7 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  grid-column-gap: 2rem;
 }
 
 .header__logo-wrapper {
@@ -35,16 +37,94 @@
   font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin-left: 2rem;
 
-  @media screen and (max-width: $mobile-breakpoint) {
+  @media screen and (max-width: 1024px) {
     display: none;
   }
 }
 
-.header__link:first-of-type {
-  margin: 0;
+.submenu {
+  position: relative;
+  height: 6.25rem;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    display: none;
+  }
+
 }
+
+.submenu__name {
+  color: white;
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.submenu:hover .submenu__name {
+  color: $green;
+  cursor: default;
+}
+
+.submenu__arrow {
+  height: 0.5rem;
+  width: 1rem;
+  margin-left: 0.75rem;
+  transform: rotate(0);
+  transition: transform .25s ease-in-out;
+}
+
+.submenu:hover .submenu__arrow {
+  transform: rotate(180deg);
+}
+
+.submenu__items {
+  width: 22rem;
+
+  position: absolute;
+  top: 6.25rem;
+  left: -1rem;
+
+  overflow: hidden;
+
+  background: $black;
+  box-shadow: 0 6px 10px rgba(37, 37, 37, 0.25), 0 4px 4px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+
+  transition: height .25s ease-in-out;
+
+  --items-amount: unset; //passed from html
+  height: 0;
+  // should be calc(2.875rem * var(--items-amount) + 1.5rem), when hovering .submenu,
+  // where 2.875rem = height + margins + some gap
+  // and 1.5rem is additional space at top and bottom
+  // this needed for equal animation speed for any amount of items inside
+}
+
+.submenu:hover .submenu__items {
+  //see explanation at .submenu__items ^^^
+  height: calc(2.875rem * var(--items-amount) + 1.5rem);
+}
+
+
+.submenu__item {
+  padding: 1rem 1.25rem;
+  color: white;
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
 
 .account {
   padding: 0.5rem 1rem;
@@ -53,7 +133,6 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  margin-left: 2rem;
 }
 
 .account__wallet-logo {
@@ -79,7 +158,6 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  margin-left: 2rem;
   cursor: pointer;
 }
 
@@ -155,66 +233,4 @@
     bottom: 2px;
     right: -2px;
   }
-}
-
-.mobile-menu {
-  display: none;
-
-  @media screen and (max-width: $mobile-breakpoint) {
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    height: 0;
-    width: 100vw;
-
-    background: $black;
-
-    z-index: 15;
-
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: flex-end;
-
-    overflow: hidden;
-
-    transition: all .25s ease-in-out;
-  }
-
-}
-
-.mobile-menu_open {
-  width: 100vw;
-  height: 100vh;
-}
-
-.mobile-menu__link {
-  font-family: Proxima Nova, sans-serif;
-  font-weight: 300;
-  font-size: 1.125rem;
-  line-height: 3.5rem;
-  text-align: right;
-  vertical-align: bottom;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: white;
-
-  width: fit-content;
-  margin: 0 4rem 4.25rem auto;
-}
-
-.mobile-menu__link:first-of-type {
-  margin-top: calc(7.125rem + 1rem);
-}
-
-.mobile-menu__link:after {
-  content: attr(data-number);
-
-  font-family: 'Neue Machina', sans-serif;
-  font-weight: 300;
-  font-size: 0.625rem;
-  line-height: 100%;
-  margin-left: 1rem;
-  color: rgba(255, 255, 255, 0.6);
-  vertical-align: top;
 }
