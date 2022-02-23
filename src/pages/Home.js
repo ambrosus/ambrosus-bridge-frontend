@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
 import { useEffect, useState } from 'react';
 import { Layout } from '../components/Layout';
-import Status from './Status';
+// import ConnectWallet from '../components/Home/ConnectWallet';
+import Exchange from '../components/Home/Exchange';
 
 const Home = () => {
   const web3 = useWeb3React();
@@ -18,8 +19,8 @@ const Home = () => {
   }, [web3]);
 
   return (
-    <Layout title="ETH to BSC Bridge" error={error}>
-      <Status />
+    <Layout title="Bridge" error={error}>
+      <Exchange />
     </Layout>
   );
 };
