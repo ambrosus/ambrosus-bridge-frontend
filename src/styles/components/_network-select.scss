@@ -4,6 +4,12 @@
   width: 12.5rem;
 }
 
+.network-select_disabled {
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+}
+
 .network-select__absolute-wrapper {
   background: #F4F5F6;
   border-radius: 16px;
@@ -40,6 +46,8 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+
+  cursor: pointer;
 }
 
 .network-select__currency-icon {
