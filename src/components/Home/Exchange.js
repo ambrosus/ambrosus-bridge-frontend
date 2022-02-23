@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import CurrencyInput from '../CurrencyInput';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import NetworkSelect from '../NetworkSelect';
@@ -8,8 +10,28 @@ import { AmbrosusNetwork, getSupportedNetworks } from '../../utils/networks';
 import useModal from '../../hooks/useModal';
 import InlineLoader from '../InlineLoader';
 import useCoinBalance from '../../hooks/useCoinBalance/useCoinBalance';
+import ErrorContext from '../../contexts/ErrorContext';
 
 const Exchange = () => {
+  const history = useHistory();
+  const web3 = useWeb3React();
+
+  const { setError } = useContext(ErrorContext);
+
+  useEffect(() => {
+    if (web3.error instanceof UnsupportedChainIdError) {
+      setError(
+          'Unsupported network. Please connect to a supported network in the dropdown menu or in your wallet.',
+      );
+    } else {
+      setError(null);
+    }
+  }, [web3]);
+
+  const handleTransferButton = () => {
+    history.push('/confirm');
+  };
+
   // networks with tokens
   const [{ sender, receiver }, setFieldsData] = useState({
     sender: {
@@ -106,7 +128,11 @@ const Exchange = () => {
           Estimated transfer fee:
           <span className="exchange__estimated-fee">0.08 ETH.AM</span>
         </div>
-        <button type="button" className="button button_black exchange__button">
+        <button
+            onClick={handleTransferButton}
+            type="button"
+            className="button button_black exchange__button"
+        >
           Transfer
         </button>
       </div>
