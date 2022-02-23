@@ -1,0 +1,147 @@
+.screen-overlay {
+  width: 100vw;
+  height: 100vh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.search-field {
+  height: 3rem;
+  width: 100%;
+  border-radius: 1.5rem;
+
+  background: #F4F5F6;
+
+  position: relative;
+  display: block;
+
+  margin-bottom: 1.5rem;
+}
+
+.search-field__icon {
+  position: absolute;
+  height: 1.5rem;
+  width: 1.5rem;
+  left: 0.75rem;
+  top: 0.75rem;
+}
+
+.search-field__input {
+  width: 100%;
+  height: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+}
+
+.search-field__input::placeholder {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 171%;
+  color: #58667E;
+}
+
+.token-select {
+  width: 30rem;
+  height: calc(100vh - 30vh);
+
+  position: absolute;
+  top: 15vh;
+  left: calc(50vw - 15rem);
+
+  z-index: 55;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+}
+
+.token-select__heading {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 178%;
+  margin-bottom: 1.5rem;
+}
+
+.token-select__cross {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+
+  height: 1.5rem;
+  width: 1.5rem;
+
+  cursor: pointer;
+}
+
+.token-select__token-list {
+  max-height: calc(100% - 8rem);
+  overflow-y: scroll;
+}
+
+.token-select__token {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  grid-column-gap: 1ch;
+
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  height: 3.5rem;
+  width: 100%;
+  background: white;
+
+  transition: background .25s ease-in-out;
+  cursor: pointer;
+
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-size: 0.875rem;
+}
+
+.token-select__token:hover {
+  background: #F4F5F6;
+}
+
+.token-select__token-icon {
+  height: 2rem;
+  width: 2rem;
+
+  border: 1px solid #eff2f5;
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  object-position: center;
+  object-fit: contain;
+
+}
+
+.token-select__token-shorthand {
+  font-weight: 600;
+  line-height: 171%;
+  color: #000000;
+}
+
+.token-select__token-name {
+  font-weight: 300;
+  line-height: 171%;
+  color: #58667E;
+}
+
+.token-select__token-balance {
+  margin-left: auto;
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-align: right;
+  color: #000000;
+}

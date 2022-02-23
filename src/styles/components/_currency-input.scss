@@ -9,6 +9,10 @@
   border-radius: 16px;
 }
 
+.currency-input_receive {
+  pointer-events: none;
+}
+
 .currency-input__label {
   grid-column: 1 / 4;
 
