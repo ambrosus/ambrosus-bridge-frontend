@@ -3,7 +3,7 @@
   height: 6.25rem;
   //background: linear-gradient(180deg, #212121 39.84%, rgba(33, 33, 33, 0) 100%);
   background: $black;
-  position: fixed;
+  position: relative;
   z-index: 20;
 
   @media screen and (max-width: $mobile-breakpoint) {
