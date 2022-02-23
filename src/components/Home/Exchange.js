@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import CurrencyInput from '../CurrencyInput';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import NetworkSelect from '../NetworkSelect';
+import ErrorContext from '../../contexts/ErrorContext';
 
 const Exchange = () => {
   const history = useHistory();
+  const web3 = useWeb3React();
+
+  const { setError } = useContext(ErrorContext);
+
+  useEffect(() => {
+    if (web3.error instanceof UnsupportedChainIdError) {
+      setError(
+        'Unsupported network. Please connect to a supported network in the dropdown menu or in your wallet.',
+      );
+    } else {
+      setError(null);
+    }
+  }, [web3]);
 
   const handleTransferButton = () => {
     history.push('/confirm');

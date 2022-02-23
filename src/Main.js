@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
 import { providers } from 'ethers';
@@ -8,21 +8,30 @@ import Exchange from './components/Home/Exchange';
 import Layout from './components/Layout';
 import ConnectWallet from './components/Home/ConnectWallet';
 import Confirmation from './pages/Confirmation';
+import ErrorContext from './contexts/ErrorContext';
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
-const Main = () => (
-  <Web3ReactProvider getLibrary={getLibrary}>
-    <Layout title="Bridge">
-      <Routing />
-    </Layout>
-  </Web3ReactProvider>
-);
+const Main = () => {
+  const [error, setError] = useState('');
+
+  return (
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <ErrorContext.Provider value={{ error, setError }}>
+        <Layout title="Bridge" error={error}>
+          <Routing setError={setError} />
+        </Layout>
+      </ErrorContext.Provider>
+    </Web3ReactProvider>
+  );
+};
 
 export default Main;
 
 const Routing = () => {
-  const { account } = useWeb3React();
+  const web3 = useWeb3React();
+
+  const { account } = web3;
   return (
     <Switch>
       <Route exact path="/" component={ConnectWallet} />
