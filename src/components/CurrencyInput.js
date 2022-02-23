@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../assets/svg/chevron.svg';
 
-const CurrencyInput = ({ isReceive = false }) => {
-  const [value, setValue] = useState(0.0);
-
-  const handleInput = (e) => setValue(e.target.value);
+const CurrencyInput = ({
+  disabled = false,
+  value = undefined,
+  onChange = () => {},
+  changeCoin = () => {},
+  selectedCoin = {},
+}) => {
+  const handleInput = ({ target: { value: rawValue } }) => {
+    try {
+      const inputValue = parseInt(rawValue, 10);
+      if (inputValue < 0) {
+        onChange(0);
+      } else if (selectedCoin.balance && inputValue > selectedCoin.balance) {
+        onChange(selectedCoin.balance);
+      } else {
+        onChange(inputValue);
+      }
+    } catch (e) {
+      onChange(0);
+    }
+  };
 
   return (
     <div
-      className={`currency-input ${isReceive ? 'currency-input_receive' : ''}`}
+      className={`currency-input ${disabled ? 'currency-input_receive' : ''}`}
     >
       <label className="currency-input__label">
-        {isReceive ? 'Receive:' : 'Send:'}
+        {disabled ? 'Receive:' : 'Send:'}
       </label>
       <input
         type="number"
@@ -20,19 +37,32 @@ const CurrencyInput = ({ isReceive = false }) => {
         value={value}
         className="currency-input__input"
         onChange={handleInput}
-        readOnly={isReceive}
+        readOnly={disabled}
+        max={selectedCoin.balance || null}
       />
-      <button type="button" className="currency-input__max-button">
+      <button
+        type="button"
+        className="currency-input__max-button"
+        onClick={
+          selectedCoin.balance
+            ? () => onChange(selectedCoin.balance)
+            : undefined
+        }
+      >
         Max
       </button>
-      <button type="button" className="currency-input__coin-button">
+      <button
+        type="button"
+        className="currency-input__coin-button"
+        onClick={changeCoin}
+      >
         {/* mock image */}
         <img
-          src="https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/WETH/logo.png"
+          src={selectedCoin.logo}
           alt="#"
           className="currency-input__currency-icon"
         />
-        ETH
+        {selectedCoin.code}
         <img
           src={ChevronIcon}
           alt="chevron icon"
@@ -44,7 +74,11 @@ const CurrencyInput = ({ isReceive = false }) => {
 };
 
 CurrencyInput.propTypes = {
-  isReceive: PropTypes.bool,
+  disabled: PropTypes.bool,
+  value: PropTypes.number,
+  onChange: PropTypes.func,
+  changeCoin: PropTypes.func,
+  selectedCoin: PropTypes.object,
 };
 
 export default CurrencyInput;
