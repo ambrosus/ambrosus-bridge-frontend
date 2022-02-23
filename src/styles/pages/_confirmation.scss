@@ -1,0 +1,50 @@
+.confirmation-page {
+  width: 30rem;
+  font-family: "Proxima Nova", 'sans-serif';
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    padding-bottom: 200px;
+  }
+
+  @media screen and (max-width: 450px) {
+    width: 100%;
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__amount {
+    margin: 1.5rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
+
+.confirmation-info {
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #EFF2F5;
+    font-size: 0.85rem;
+  }
+
+  &__label {
+    color: $dark-gray;
+  }
+
+  &__value {
+    font-weight: 600;
+    display: flex;
+  }
+
+  &__img {
+    max-width: 1rem;
+    max-height: 1rem;
+    margin-right: 0.85rem;
+  }
+}
