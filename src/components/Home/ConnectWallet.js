@@ -7,9 +7,8 @@ import WalletConnectIcon from '../../assets/img/connect-wallet__wallet-connect.p
 
 const ConnectWallet = () => {
   const context = useWeb3React();
-
-  const handleMetamaskLogin = () => {
-    context.activate(ConfiguredInjectedConnector);
+  const handleMetamaskLogin = async () => {
+    await context.activate(ConfiguredInjectedConnector);
   };
 
   const handleWalletConnectLogin = () => {

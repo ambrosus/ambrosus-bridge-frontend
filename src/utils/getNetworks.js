@@ -6,9 +6,21 @@ const getNetworks = () => [
     coins: [],
   },
   {
+    name: 'Rinkeby',
+    rpcUrls: '',
+    chainId: 4,
+    coins: [],
+  },
+  {
     name: 'Ambrosus',
     rpcUrls: ['https://network.ambrosus.io'],
-    chainId: 16718,
+    chainId: 22036,
+    coins: [],
+  },
+  {
+    name: 'Ambrosus dev',
+    rpcUrls: ['https://network.ambrosus-dev.io'],
+    chainId: 30741,
     coins: [],
   },
   {

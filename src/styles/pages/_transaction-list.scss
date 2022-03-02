@@ -1,8 +1,15 @@
+.transaction-list {
+  padding-bottom: 200px;
+  max-width: 50rem;
+}
+
 .transaction-item {
   border: 1px solid #EFF2F5;
   padding: 1rem 1.5rem 1.5rem;
   border-radius: 1rem;
   font-family: "Proxima Nova", 'sans-serif';
+  background: white;
+  margin-bottom: 1rem;
 
   &__img {
     max-width: 1.5rem;
@@ -72,7 +79,9 @@
   }
 
   &__clock {
-    margin-right: 0.35rem;
+    @media screen and (max-width: $mobile-breakpoint) {
+      margin: 0.35rem;
+    }
   }
 
   &__status {
