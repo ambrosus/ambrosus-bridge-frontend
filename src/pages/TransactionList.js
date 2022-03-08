@@ -34,7 +34,6 @@ const TransactionList = () => {
       .then((response) => {
         response.forEach((el) => {
           el.getTransaction().then((trans) => {
-            console.log(trans);
             setTransactionHistory((state) => [
               ...state,
               { ...trans, address: el.address },

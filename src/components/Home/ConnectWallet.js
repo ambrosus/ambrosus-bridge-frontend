@@ -1,28 +1,20 @@
 import * as React from 'react';
 import { useWeb3React } from '@web3-react/core';
-import { useHistory } from 'react-router';
-import {
-  ConfiguredInjectedConnector,
-  ConfiguredWalletConnectConnector,
-} from '../../utils/web3';
+import { ConfiguredInjectedConnector } from '../../utils/web3';
 import ChevronIcon from '../../assets/svg/chevron.svg';
 import MetaMaskIcon from '../../assets/img/connect-wallet__metamask.jpg';
 import WalletConnectIcon from '../../assets/img/connect-wallet__wallet-connect.png';
 
 const ConnectWallet = () => {
-  const web3 = useWeb3React();
-  const history = useHistory();
+  const context = useWeb3React();
 
   const handleMetamaskLogin = () => {
-    web3
-      .activate(ConfiguredInjectedConnector)
-      .then(() => history.push('/exchange'));
+    context.activate(ConfiguredInjectedConnector);
   };
 
   const handleWalletConnectLogin = () => {
-    web3
-      .activate(ConfiguredWalletConnectConnector)
-      .then(() => history.push('/exchange'));
+    // eslint-disable-next-line no-console
+    console.log('soon');
   };
 
   return (
