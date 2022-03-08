@@ -1,0 +1,75 @@
+.network-select {
+  position: relative;
+  height: 2rem;
+  width: 12.5rem;
+}
+
+.network-select_disabled {
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+}
+
+.network-select__absolute-wrapper {
+  background: #F4F5F6;
+  border-radius: 16px;
+  overflow: hidden;
+
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+
+  --items-amount: unset; //passed from html
+  height: 100%;
+  width: 100%;
+
+  transition: height .25s ease-in-out;
+
+}
+
+.network-select:hover .network-select__absolute-wrapper {
+  height: calc( var(--items-amount) * 2rem );
+}
+
+.network-select_disabled:hover .network-select__absolute-wrapper {
+  height: 2rem !important;
+}
+
+.network-select__option {
+  font-size: 0.875rem;
+  color: $black;
+  font-weight: 600;
+
+  height: 2rem;
+  padding: 0.25rem;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.network-select__currency-icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.network-select__chevron {
+  position: absolute;
+  height: 1rem;
+  width: 1rem;
+  right: 0.5rem;
+  top: 0.5rem;
+
+  transition: transform .25s ease-in-out;
+}
+
+.network-select:hover .network-select__chevron {
+  transform: rotate(180deg);
+}
+
+.network-select_disabled .network-select__chevron{
+  display: none;
+}

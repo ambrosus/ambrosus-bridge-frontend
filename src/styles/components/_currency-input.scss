@@ -1,0 +1,100 @@
+.currency-input {
+  width: 100%;
+  background: #F4F5F6;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 3.75rem 5.5rem;
+  grid-row-gap: 0.5rem;
+  grid-column-gap: 1rem;
+  border-radius: 16px;
+}
+
+.currency-input_receive {
+  pointer-events: none;
+}
+
+.currency-input__label {
+  grid-column: 1 / 4;
+
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.875rem;
+  line-height: 171%;
+  color: #58667E;
+}
+
+.currency-input__input {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  color: $black;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type=number] {
+    -moz-appearance: textfield;
+  }
+
+}
+
+.currency-input__max-button {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: $green;
+
+  padding: 0 1rem;
+  border-right: 1px solid #CFD6E4;
+}
+
+.currency-input_receive .currency-input__max-button {
+  display: none;
+}
+
+.currency-input__coin-button {
+  font-family: "Proxima Nova", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 171%;
+  color: #000000;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.currency-input_receive .currency-input__coin-button {
+  display: none;
+}
+
+.currency-input__currency-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  background: white;
+  border-radius: 50%;
+  object-fit: contain;
+  object-position: center;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.04);
+
+  margin-right: 0.375rem;
+}
+
+.currency-input__chevron-icon {
+  height: 1rem;
+  width: 1rem;
+  margin-left: 0.5rem;
+  color: #808A9D;
+  flex-shrink: 0;
+}
+
+
