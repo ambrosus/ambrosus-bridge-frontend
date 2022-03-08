@@ -2,7 +2,7 @@ const getNetworks = () => [
   {
     name: 'Ethereum',
     rpcUrls: [''],
-    chainId: 1,
+    chainId: 4,
     coins: [],
   },
   {
