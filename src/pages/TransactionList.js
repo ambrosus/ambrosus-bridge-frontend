@@ -34,7 +34,11 @@ const TransactionList = () => {
       .then((response) => {
         response.forEach((el) => {
           el.getTransaction().then((trans) => {
-            setTransactionHistory((state) => [...state, trans]);
+            console.log(trans);
+            setTransactionHistory((state) => [
+              ...state,
+              { ...trans, address: el.address },
+            ]);
           });
         });
       });
@@ -78,7 +82,7 @@ const TransactionList = () => {
                 Amount:
               </span>
               <span className="transaction-item__black-text">
-                {ethers.utils.formatEther(el.value)} BNB.AM
+                {el.value.toNumber()} BNB.AM
               </span>
             </div>
           </div>
@@ -86,7 +90,11 @@ const TransactionList = () => {
             <div className="transaction-item__mobile-row">
               <span className="transaction-item__grey-text">Destination:</span>
               <span className="transaction-item__black-text">
-                Account c082 - eth1ghjbjz...aksfgpa3
+                Account c082 -
+                {` ${el.address.substring(0, 9)}...${el.address.substring(
+                  el.address.length - 9,
+                  el.address.length,
+                )}`}
               </span>
             </div>
             <div className="transaction-item__mobile-row">
