@@ -3,22 +3,26 @@ import { ethers } from 'ethers';
 const { INFURA_KEY, NODE_ENV } = process.env;
 
 // ethereum read-only provider configuration
-const ethChainId = NODE_ENV === 'production' ? 1 : 4;
+export const ethChainId = NODE_ENV === 'production' ? 1 : 4;
 
 const ethProvider = new ethers.providers.FallbackProvider(
   [
-    new ethers.providers.InfuraProvider(4, INFURA_KEY),
+    new ethers.providers.InfuraProvider(ethChainId, INFURA_KEY),
     // new ethers.providers.EtherscanProvider(ethChainId),
   ],
   1,
 );
 
 // ambrosus read-only provider configuration
-const ambChainId = 30741;
+export const ambChainId = NODE_ENV === 'production' ? 16718 : 22035;
 
-export const ambProvider = new ethers.providers.JsonRpcProvider(
-  'https://network.ambrosus-dev.io',
-);
+const ambRPCUrl =
+  NODE_ENV === 'production'
+    ? 'https://network.ambrosus.io'
+    : 'https://network.ambrosus-test.io';
+
+export const ambProvider = new ethers.providers.JsonRpcProvider(ambRPCUrl);
+
 // binance smart chain read-only provider configuration
 const bscChainId = NODE_ENV === 'production' ? 56 : 97;
 

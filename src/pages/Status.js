@@ -4,10 +4,9 @@ import { ethers } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
 import warningImg from '../assets/svg/warning.svg';
-import providers from '../utils/providers';
+import providers, { ambChainId, ethChainId } from '../utils/providers';
 import { abi } from '../utils/abi';
 
-const networkIds = [4, 30741];
 const ethContractAddress = '0x7727F5e11D7b628f3D7215a113423151C43C7772';
 const ambContractAddress = '0xc5bBbF47f604adFDB7980BFa6115CfdBF992413c';
 const withDrawTitle = 'Withdraw(address,uint256)';
@@ -21,7 +20,7 @@ const Status = () => {
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
 
   useEffect(() => {
-    networkIds.forEach(async (networkId) => {
+    [ambChainId, ethChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
 
       if (tx) {
@@ -54,7 +53,7 @@ const Status = () => {
         }
 
         const otherNetworkContract = getContract(
-          networkIds.find((el) => el !== tx.chainId),
+          tx.chainId === ambChainId ? ethChainId : ambChainId,
           smartContractAddress,
         );
 
@@ -101,12 +100,13 @@ const Status = () => {
 
     const otherContractAddress =
       networkId === 4 ? ambContractAddress : ethContractAddress;
+
     const otherNetworkFilter = {
       otherContractAddress,
       topics: [ethers.utils.id(transferTitle)],
     };
 
-    providers[networkIds.find((el) => el !== networkId)].on(
+    providers[networkId === ambChainId ? ethChainId : ambChainId].on(
       otherNetworkFilter,
       () => {
         if (+stage < 4 && +stage > 3) {
