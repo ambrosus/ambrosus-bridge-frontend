@@ -49,7 +49,7 @@ const Routing = () => {
       />
       <ConditionalRoute
         exact
-        path="/status"
+        path="/status/:txHash"
         component={Status}
         condition={!!account}
       />

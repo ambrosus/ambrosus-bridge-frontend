@@ -16,7 +16,7 @@ const ConnectWallet = () => {
   const handleMetamaskLogin = () => {
     web3
       .activate(ConfiguredInjectedConnector)
-      .then(() => history.push('/status'));
+      .then(() => history.push('/exchange'));
   };
 
   const handleWalletConnectLogin = () => {
