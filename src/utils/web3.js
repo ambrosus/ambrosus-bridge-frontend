@@ -1,19 +1,21 @@
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { utils } from 'ethers';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import getNetworks from './getNetworks';
+import { AmbrosusNetwork, getSupportedNetworks } from './networks';
 
-const networks = getNetworks();
+const supportedNetworks = getSupportedNetworks();
 
-const chainIds = networks.map((network) => network.chainId);
+const chainIds = [...supportedNetworks, AmbrosusNetwork].map(
+  (network) => network.chainId,
+);
 export const ConfiguredInjectedConnector = new InjectedConnector({
   supportedChainIds: chainIds,
 });
 
 const walletRPC = {};
-networks.forEach((network) => {
+[...supportedNetworks, AmbrosusNetwork].forEach((network) => {
   // eslint-disable-next-line prefer-destructuring
-  walletRPC[network.chainId] = network.rpcUrls[0];
+  walletRPC[network.chainId] = network.rpcUrl;
 });
 
 export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
@@ -28,10 +30,12 @@ export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
 });
 
 export const changeChainId = async (provider, network) => {
+  const hexChainId = utils.hexValue(network.chainId);
+
   try {
     await provider.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: utils.hexlify(network.chainId) }],
+      params: [{ chainId: hexChainId }],
     });
   } catch (switchError) {
     // This error code indicates that the chain has not been added to MetaMask.
@@ -41,9 +45,9 @@ export const changeChainId = async (provider, network) => {
           method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: utils.hexlify(network.chainId),
+              chainId: hexChainId,
               chainName: network.name,
-              rpcUrls: network.rpcUrls,
+              rpcUrls: [network.rpcUrl],
             },
           ],
         });
@@ -53,6 +57,7 @@ export const changeChainId = async (provider, network) => {
         // handle "add" error
       }
     }
+    console.error(switchError);
     // handle other "switch" errors
   }
 };

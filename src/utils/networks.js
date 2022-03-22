@@ -13,9 +13,13 @@ export const AmbrosusNetwork =
   process.env.NODE_ENV === 'production'
     ? {
         name: 'Ambrosus',
+        code: 'AMB',
         chainId: 16718,
+        rpcUrl: 'https://network.ambrosus.io',
       }
     : {
-        name: 'Ambrosus Testnet',
-        chainId: 22035,
+        name: 'Ambrosus Devnet',
+        code: 'AMB',
+        chainId: 30741,
+        rpcUrl: 'https://network.ambrosus-dev.io',
       };

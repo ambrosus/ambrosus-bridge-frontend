@@ -2,11 +2,14 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
+import { InjectedConnector } from '@web3-react/injected-connector';
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import Logo from '../assets/svg/logo.svg';
 import { MobileMenu } from './MobileMenu';
 import WalletConnectLogo from '../assets/img/connect-wallet__wallet-connect.png';
+import MetaMaskLogo from '../assets/img/connect-wallet__metamask.jpg';
 import LogoutIcon from '../assets/svg/logout.svg';
 
 export const Header = () => {
@@ -38,7 +41,7 @@ const HeaderLayout = ({
   isOpen = false,
   toggleMenu = () => {},
 }) => {
-  const { account, deactivate } = useWeb3React();
+  const { account, deactivate, connector } = useWeb3React();
   const history = useHistory();
   const logout = () => {
     history.push('/');
@@ -69,11 +72,13 @@ const HeaderLayout = ({
         {account ? (
           <>
             <div className="account">
-              <img
-                src={WalletConnectLogo}
-                alt="wallet icon"
-                className="account__wallet-logo"
-              />
+              <div className="account__wallet-logo-container">
+                <img
+                  src={walletLogo(connector)}
+                  alt="wallet icon"
+                  className="account__wallet-logo"
+                />
+              </div>
               <span className="account__address">{formatAddress(account)}</span>
             </div>
 
@@ -132,6 +137,12 @@ const Submenu = ({ name = '', data = [{}] }) => (
 Submenu.propTypes = {
   name: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.object),
+};
+
+const walletLogo = (connector) => {
+  if (connector instanceof InjectedConnector) return MetaMaskLogo;
+  if (connector instanceof WalletConnectConnector) return WalletConnectLogo;
+  return null;
 };
 
 const formatAddress = (addr) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;

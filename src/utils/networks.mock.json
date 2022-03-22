@@ -1,15 +1,17 @@
 [
   {
     "name":"Ethereum Rinkeby",
+    "code": "ETH",
     "logo":"https://dummyimage.com/100x100/1446fa/fff.png&text=1",
-    "chainId":4,
+    "rpcUrl": "https://rinkeby.infura.io/v3/",
+    "chainId": 4,
     "tokens":[
       {
         "name":"Rupiah",
         "code":"IDR",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
         "nativeContractAddress":"0x50D697Fd57051573c00C305bb79f5978036d8BaA",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination": 6
       },
       {
@@ -17,7 +19,7 @@
         "code":"EUR",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
         "nativeContractAddress":"0x6d4287E23D544cab6d87518411FeAA2Ee36b26fd",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":6
       },
       {
@@ -25,7 +27,7 @@
         "code":"MYR",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
         "nativeContractAddress":"0x69832d2D963170991F40A4D84D2035fF9975eE7b",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":4
       },
       {
@@ -33,7 +35,7 @@
         "code":"KZT",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
         "nativeContractAddress":"0xC0d84FB65bCBbAA31dDA9b7cdDE55DbbD7Af4870",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":5
       },
       {
@@ -41,7 +43,7 @@
         "code":"IDR",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
         "nativeContractAddress":"0x3776C7df856c89106845dcfb6D6315ADB7B138F3",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":6
       },
       {
@@ -49,7 +51,7 @@
         "code":"IDR",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
         "nativeContractAddress":"0x0081482306D64920442526995D5c91d23e9feCAE",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -57,7 +59,7 @@
         "code":"PEN",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
         "nativeContractAddress":"0x7D9a4d5f80098583D5c974abf3657Bc7ffCE421C",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -65,7 +67,7 @@
         "code":"AFN",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
         "nativeContractAddress":"0x99a88dF85C3ffded0D7fF6B18596597e2ffcB3ee",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -73,7 +75,7 @@
         "code":"CNY",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress":"0x4D6c49Dd98A25AD7bDAA64aA9ad7e0E9221bC2Ce",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -81,7 +83,7 @@
         "code":"SEK",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress":"0xbBD56f104636df654f1eC5d14F119801B7C379a3",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -89,7 +91,7 @@
         "code":"CNY",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
         "nativeContractAddress":"0xdA55B1ad28e2fD452C8e0Bf5E2053b560D80E0f9",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -97,7 +99,7 @@
         "code":"CNY",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress":"0x8A3Ec9a7783C106dEE7D3E618ED41e7B10C8b72d",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -105,7 +107,7 @@
         "code":"IDR",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress":"0xb198bCc417FfEbb673d45c8079CEb4a47D36bC98",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -113,7 +115,7 @@
         "code":"PEN",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
         "nativeContractAddress":"0xf763336f0CEf9FfDDe29dBAAe7dB3C0Ff14F119B",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -121,7 +123,7 @@
         "code":"PLN",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress":"0x2a84d3f5e3105298e1f8645AFb59DbDdd10A1B8C",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -129,7 +131,7 @@
         "code":"IDR",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
         "nativeContractAddress":"0xAB4e124f9E52A897c148dD0fA61C689318b7a3ae",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -137,7 +139,7 @@
         "code":"JPY",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
         "nativeContractAddress":"0xC025129Dd64411B23A92B2A598EcdEfB65d61745",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -145,7 +147,7 @@
         "code":"PLN",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
         "nativeContractAddress":"0x4caaCb350882c300742a1bE2035aB765fB184e94",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination":8
       },
       {
@@ -153,7 +155,7 @@
         "code":"GTQ",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress":"0x32fac62b1196E03Ed3644a40DbFbe5728e31599A",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination": 8
       },
       {
@@ -161,14 +163,16 @@
         "code":"CNY",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
         "nativeContractAddress":"0xdbc292842e946b165B007748C4DF50491878DF7f",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination": 8
       }
     ]
   },
   {
     "name":"Binance Testnet",
+    "code": "BSC",
     "logo":"https://dummyimage.com/100x100/fc12fc/fff.png&text=2",
+    "rpcUrl": "https://bsc-dataseed.binance.org/",
     "chainId": 97,
     "tokens":[
       {
@@ -176,7 +180,7 @@
         "code":"WBTC",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress":"0xE55b2794d7c99Bd92401b36038759d630e32f672",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination": 16
       },
       {
@@ -184,7 +188,7 @@
         "code":"WBTC2",
         "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
         "nativeContractAddress": "0xaFFB41612A99a22BEBb23D186242a8b682083494",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination": 16
       },
       {
@@ -192,7 +196,7 @@
         "code": "WETH",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
         "nativeContractAddress": "0xB0F325bC32E10Fd76bbD2a3443C736EdEd914F0C",
-        "linkedContractAddress":"",
+        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
         "denomination": 5
       }
     ]

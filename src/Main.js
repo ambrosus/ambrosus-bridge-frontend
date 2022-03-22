@@ -4,9 +4,9 @@ import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
 import { providers } from 'ethers';
 import PropTypes from 'prop-types';
 import Status from './pages/Status';
-import Exchange from './components/Home/Exchange';
+import Exchange from './pages/Exchange';
 import Layout from './components/Layout';
-import ConnectWallet from './components/Home/ConnectWallet';
+import ConnectWallet from './pages/ConnectWallet';
 import Confirmation from './pages/Confirmation';
 import ErrorContext from './contexts/ErrorContext';
 
@@ -45,7 +45,7 @@ const Routing = () => {
         exact
         path="/confirm"
         component={Confirmation}
-        condition={!account}
+        condition={!!account}
       />
       <ConditionalRoute
         exact

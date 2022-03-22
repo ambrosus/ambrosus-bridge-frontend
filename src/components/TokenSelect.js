@@ -5,7 +5,7 @@ import MagnifyingGlassIcon from '../assets/svg/magnifying-glass.svg';
 import CrossIcon from '../assets/svg/cross.svg';
 import InlineLoader from './InlineLoader';
 import useTokenList from '../hooks/useTokenList';
-import useCoinBalance from '../hooks/useCoinBalance/useCoinBalance';
+import { useCoinBalance } from '../hooks/useCoinBalance/useCoinBalance';
 
 const TokenSelect = ({
   isOpen = false,
@@ -127,9 +127,9 @@ const TokenButton = ({ token, setCoin, toggle }) => {
       <img src={token.logo} alt="#" className="token-select__token-icon" />
       <span className="token-select__token-shorthand">{token.code}</span>
       <span className="token-select__token-name">{token.name}</span>
-      {balance ? (
+      {balance.formattedString ? (
         <span className="token-select__token-balance">
-          {balance} {token.code}
+          {balance.formattedString} {token.code}
         </span>
       ) : (
         <InlineLoader />
