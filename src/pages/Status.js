@@ -20,10 +20,14 @@ const Status = () => {
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
 
   useEffect(() => {
+    handleStatus();
+  }, []);
+
+  const handleStatus = () => {
     [ambChainId, ethChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
 
-      if (tx) {
+      if (tx && tx.blockNumber) {
         let currentStage = stage;
 
         const smartContractAddress =
@@ -71,9 +75,11 @@ const Status = () => {
         setStage(currentStage);
         setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
         eventsHandler(networkId, smartContractAddress);
+      } else if (tx && !tx.blockNumber) {
+        tx.wait().then(() => handleStatus());
       }
     });
-  }, []);
+  };
 
   const eventsHandler = (networkId, address) => {
     const firstStageFilter = {

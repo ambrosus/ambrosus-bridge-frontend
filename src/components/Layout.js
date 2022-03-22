@@ -24,7 +24,7 @@ export const Layout = ({ children, title, error }) => (
           Ambrosus Bridge Guide
         </a>
 
-        <Link to="/" className="button button_black layout__button">
+        <Link to="/history" className="button button_black layout__button">
           <img
             src={ClockIcon}
             alt="clock icon"
