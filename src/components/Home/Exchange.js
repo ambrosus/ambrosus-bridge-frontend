@@ -21,7 +21,7 @@ const Exchange = () => {
   useEffect(() => {
     if (web3.error instanceof UnsupportedChainIdError) {
       setError(
-          'Unsupported network. Please connect to a supported network in the dropdown menu or in your wallet.',
+        'Unsupported network. Please connect to a supported network in the dropdown menu or in your wallet.',
       );
     } else {
       setError(null);
@@ -129,9 +129,9 @@ const Exchange = () => {
           <span className="exchange__estimated-fee">0.08 ETH.AM</span>
         </div>
         <button
-            onClick={handleTransferButton}
-            type="button"
-            className="button button_black exchange__button"
+          onClick={handleTransferButton}
+          type="button"
+          className="button button_black exchange__button"
         >
           Transfer
         </button>

@@ -1,0 +1,13 @@
+.icon-link {
+  background: #F4F5F6;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.85rem;
+
+  &__img {
+    margin-right: 0.35rem;
+  }
+}
