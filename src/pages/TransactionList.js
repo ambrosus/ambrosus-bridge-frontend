@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Link } from 'react-router-dom';
-import { ethers } from 'ethers';
 import git from '../assets/svg/github-icon.svg';
 import clockIcon from '../assets/svg/clock.svg';
 import spinnerIcon from '../assets/svg/spinner.svg';
 import checkIcon from '../assets/svg/check.svg';
 import IconLink from '../components/IconLink';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
-import { abi } from '../utils/abi';
+import createBridgeContract from '../contracts';
 
 const TransactionList = () => {
   const { account } = useWeb3React();
@@ -21,13 +20,8 @@ const TransactionList = () => {
 
   const getHistory = (networkId) => {
     const provider = providers[networkId];
-    const contract = new ethers.Contract(
-      networkId === ethChainId
-        ? '0x7727F5e11D7b628f3D7215a113423151C43C7772'
-        : '0xc5bBbF47f604adFDB7980BFa6115CfdBF992413c',
-      abi,
-      provider,
-    );
+    const contract = createBridgeContract[networkId](provider);
+
     contract
       .queryFilter(contract.filters.Withdraw(account))
       .then((response) => {
@@ -36,7 +30,7 @@ const TransactionList = () => {
 
           el.getTransaction().then((trans) => {
             const isSuccess = false;
-            console.log(timestamp);
+
             setTransactionHistory((state) => [
               ...state,
               { ...trans, address: el.address, isSuccess, timestamp },

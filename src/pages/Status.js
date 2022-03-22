@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import { ethers } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
@@ -6,14 +7,14 @@ import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
 import warningImg from '../assets/svg/warning.svg';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
 import { abi } from '../utils/abi';
+import { ambContractAddress, ethContractAddress } from '../contracts';
 
-const ethContractAddress = '0x7727F5e11D7b628f3D7215a113423151C43C7772';
-const ambContractAddress = '0xc5bBbF47f604adFDB7980BFa6115CfdBF992413c';
 const withDrawTitle = 'Withdraw(address,uint256)';
 const transferTitle = 'Transfer(address,address,uint256)';
 
 const Status = () => {
   const { txHash } = useParams();
+  const history = useHistory();
 
   const [stage, setStage] = useState('1.1');
   const [confirmations, setConfirmations] = useState(0);
@@ -31,11 +32,15 @@ const Status = () => {
         let currentStage = stage;
 
         const smartContractAddress =
-          networkId === 4 ? ethContractAddress : ambContractAddress;
+          networkId === ethChainId ? ethContractAddress : ambContractAddress;
 
         const receipt = await providers[tx.chainId].getTransactionReceipt(
           txHash,
         );
+
+        if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
+          history.push('/');
+        }
 
         const isFirstStagePassed = receipt.logs.some((log) =>
           log.topics.some((topic) => topic === ethers.utils.id(withDrawTitle)),
