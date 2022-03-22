@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 const { INFURA_KEY, NODE_ENV } = process.env;
 
 // ethereum read-only provider configuration
-const ethChainId = NODE_ENV === 'production' ? 1 : 4;
+export const ethChainId = NODE_ENV === 'production' ? 1 : 4;
 
 const ethProvider = new ethers.providers.FallbackProvider(
   [
@@ -14,7 +14,7 @@ const ethProvider = new ethers.providers.FallbackProvider(
 );
 
 // ambrosus read-only provider configuration
-const ambChainId = NODE_ENV === 'production' ? 16718 : 22035;
+export const ambChainId = NODE_ENV === 'production' ? 16718 : 22035;
 
 const ambRPCUrl =
   NODE_ENV === 'production'

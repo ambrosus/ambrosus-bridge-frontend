@@ -176,7 +176,7 @@
       top: 50%;
     }
 
-    &--loading:before, &--check:before {
+    &--loading:before, &--checked:before {
       left: 0;
       width: 1.5rem;
       height: 1.5rem;
@@ -186,13 +186,13 @@
       top: -.25rem;
     }
 
-    &--check:before {
+    &--checked:before {
       background: url('../../assets/svg/check-circle.svg');
       background-size: contain;
       animation: none;
     }
 
-    &:not(&--loading, &--check):before {
+    &:not(&--loading, &--checked):before {
       left: .6rem;
       width: 0.35rem;
       height: 0.35rem;
