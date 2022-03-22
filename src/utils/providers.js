@@ -14,17 +14,17 @@ const ethProvider = new ethers.providers.FallbackProvider(
 );
 
 // ambrosus read-only provider configuration
-export const ambChainId = NODE_ENV === 'production' ? 16718 : 22035;
+export const ambChainId = NODE_ENV === 'production' ? 16718 : 30741;
 
 const ambRPCUrl =
   NODE_ENV === 'production'
     ? 'https://network.ambrosus.io'
-    : 'https://network.ambrosus-test.io';
+    : 'https://network.ambrosus-dev.io';
 
 export const ambProvider = new ethers.providers.JsonRpcProvider(ambRPCUrl);
 
 // binance smart chain read-only provider configuration
-const bscChainId = NODE_ENV === 'production' ? 56 : 97;
+export const bscChainId = NODE_ENV === 'production' ? 56 : 97;
 
 const bscRPCUrlList =
   NODE_ENV === 'production'
@@ -39,7 +39,6 @@ const bscProvider = new ethers.providers.FallbackProvider(
   1,
 );
 
-// exporting
 const providers = {
   [ethChainId]: ethProvider,
   [ambChainId]: ambProvider,

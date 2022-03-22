@@ -1,3 +1,4 @@
+import { utils } from 'ethers';
 import providers from '../../utils/providers';
 import { getSupportedNetworks, AmbrosusNetwork } from '../../utils/networks';
 import getTokenBalance from '../../utils/getTokenBalance';
@@ -8,7 +9,10 @@ const supportedNetworks = getSupportedNetworks();
 // it works in tandem with "useCoinBalance" hook
 // and using sessionStorage for caching
 
-// here we remapping supported networks to format [ { address: '', chainId: '' }, ... ] for all tokens
+// here we remapping supported networks to format
+// [ { address: _string_ , chainId: _string_ , denomination: _number_ }, ... ]
+// for all tokens
+
 const allTokensList = Object.values(supportedNetworks).reduce(
   (acc, network) => {
     // splitting token entity to native network token and ambrosus wrapped token
@@ -16,10 +20,12 @@ const allTokensList = Object.values(supportedNetworks).reduce(
       const nativeToken = {
         address: token.nativeContractAddress,
         chainId: network.chainId,
+        denomination: token.denomination,
       };
       const wrappedAmbToken = {
         address: token.linkedContractAddress,
         chainId: AmbrosusNetwork.chainId,
+        denomination: token.denomination,
       };
 
       return [...list, nativeToken, wrappedAmbToken];
@@ -30,7 +36,7 @@ const allTokensList = Object.values(supportedNetworks).reduce(
   [],
 );
 
-// here we asynchronously getting all balances and posting a message for "useCoinBalance" hook to catch
+// here we asynchronously getting all balances and sending a message for "useCoinBalance" hook to catch
 const fetchAllBalances = () => {
   // eslint-disable-next-line no-restricted-syntax
   for (const token of allTokensList) {
@@ -39,11 +45,22 @@ const fetchAllBalances = () => {
       provider,
       token.address,
       '0xaeE13A8db3e216A364255EFEbA171ce329100876',
-    ).then((balance) => {
+    ).then((bnBalance) => {
+      const balanceFormattedString = utils.formatUnits(
+        bnBalance,
+        token.denomination,
+      );
+
+      const balanceFloat = parseFloat(balanceFormattedString);
+
       postMessage({
         type: 'balance',
         address: token.address,
-        balance: balance.toString(),
+        balance: {
+          string: bnBalance.toString(),
+          formattedString: balanceFormattedString,
+          float: balanceFloat,
+        },
       });
     });
   }

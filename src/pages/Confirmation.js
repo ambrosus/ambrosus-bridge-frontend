@@ -1,44 +1,102 @@
-import React from 'react';
-import git from '../assets/svg/github-icon.svg';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import { useWeb3React } from '@web3-react/core';
+import { BigNumber, utils } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
+import createBridgeContract from '../contracts';
+import InlineLoader from '../components/InlineLoader';
 
-const Confirmation = () => (
-  <div className="content confirmation-page">
-    <h2 className="confirmation-page__title">Confirm</h2>
-    <p className="confirmation-page__amount">0.081640 ETH.AM</p>
-    <TransactionCoins from="Ethereum" to="Ambrosus" />
-    <div className="confirmation-info">
-      <div className="confirmation-info__item">
-        <span className="confirmation-info__label">Asset</span>
-        <span className="confirmation-info__value">
-          <img src={git} alt="ETH.AM" className="confirmation-info__img" />
-          ETH.AM
-        </span>
+const Confirmation = () => {
+  const { account, library } = useWeb3React();
+  const [transferFee, setTransferFee] = useState();
+
+  const {
+    location: {
+      state: { selectedChainId, selectedCoin, transactionAmount },
+    },
+    goBack,
+    push,
+  } = useHistory();
+
+  const BridgeContract = createBridgeContract[selectedChainId](library);
+  const ConnectedBridgeContract = BridgeContract.connect(library.getSigner());
+
+  useEffect(async () => {
+    const fee = await BridgeContract.callStatic.fee();
+    setTransferFee(fee);
+  }, []);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const bnTransactionAmount = BigNumber.from(
+      utils.parseUnits(transactionAmount, selectedCoin.denomination),
+    );
+    const bnTransferFee = BigNumber.from(transferFee);
+
+    ConnectedBridgeContract.withdraw(
+      selectedCoin.nativeContractAddress,
+      account,
+      bnTransactionAmount,
+      { value: bnTransferFee },
+    )
+      .then((res) => {
+        push(`/status/${res.hash}`);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="content confirmation-page">
+      <h2 className="confirmation-page__title">Confirm</h2>
+      <p className="confirmation-page__amount">
+        {transactionAmount} {selectedCoin.code}
+      </p>
+      <TransactionCoins from="Ethereum" to="Ambrosus" />
+      <div className="confirmation-info">
+        <div className="confirmation-info__item">
+          <span className="confirmation-info__label">Asset</span>
+          <span className="confirmation-info__value">
+            <img
+              src={selectedCoin.logo}
+              alt={selectedCoin.name}
+              className="confirmation-info__img"
+            />
+            {selectedCoin.name}
+          </span>
+        </div>
+        <div className="confirmation-info__item">
+          <span className="confirmation-info__label">Transfer fee</span>
+          <span className="confirmation-info__value">
+            {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
+            ETH
+          </span>
+        </div>
+        <div className="confirmation-info__item">
+          <span className="confirmation-info__label">Destination</span>
+          <span className="confirmation-info__value">
+            {formatAddress(account)}
+          </span>
+        </div>
       </div>
-      <div className="confirmation-info__item">
-        <span className="confirmation-info__label">Estimated transfer fee</span>
-        <span className="confirmation-info__value">0.0000128 ETH.AM</span>
+      <div className="btns-wrapper">
+        <button
+          type="button"
+          onClick={goBack}
+          className="button button_gray btns-wrapper__btn"
+        >
+          Back
+        </button>
+        <button type="submit" className="button button_black btns-wrapper__btn">
+          Confirm
+        </button>
       </div>
-      <div className="confirmation-info__item">
-        <span className="confirmation-info__label">Destination</span>
-        <span className="confirmation-info__value">
-          Account c082 - eth1ghjbjz...aksfgpa3
-        </span>
-      </div>
-      <div className="confirmation-info__item">
-        <span className="confirmation-info__label">Receiving</span>
-        <span className="confirmation-info__value">0.081512 ETH.AM</span>
-      </div>
-    </div>
-    <div className="btns-wrapper">
-      <button type="button" className="button button_gray btns-wrapper__btn">
-        Back
-      </button>
-      <button type="button" className="button button_black btns-wrapper__btn">
-        Confirm
-      </button>
-    </div>
-  </div>
-);
+    </form>
+  );
+};
+
+const formatAddress = (addr) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
 export default Confirmation;

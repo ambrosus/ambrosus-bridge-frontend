@@ -1,24 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { getCachedCoinBalance } from './utils';
+import ERC20BalanceWorkerContext from '../../contexts/ERC20BalanceWorkerContext';
 
-//  eslint-ignore-next-line
-const worker = new Worker(new URL('./worker.js', import.meta.url));
+export const useCoinBalance = (tokenAddress) => {
+  const worker = useContext(ERC20BalanceWorkerContext);
 
-worker.addEventListener('message', ({ data: { type, address, balance } }) => {
-  if (type === 'balance') {
-    sessionStorage.setItem(address, balance);
-  }
-});
-
-const useCoinBalance = (tokenAddress) => {
-  const [balance, setBalance] = useState(null);
+  const [balance, setBalance] = useState({
+    string: '0',
+    formattedString: '0.0',
+    float: 0.0,
+  });
 
   useEffect(() => {
-    setBalance(sessionStorage.getItem(tokenAddress));
+    const cachedBalance = getCachedCoinBalance(tokenAddress);
+    setBalance(cachedBalance);
 
-    const handleMessage = ({ data }) => {
-      if (data.address === tokenAddress) {
-        sessionStorage.setItem(data.address, data.balance);
-        setBalance(data.balance);
+    const handleMessage = ({ data: { address, balance: newBalance } }) => {
+      if (address === tokenAddress) {
+        setBalance(newBalance);
       }
     };
 
@@ -31,9 +30,9 @@ const useCoinBalance = (tokenAddress) => {
   return balance;
 };
 
-export default useCoinBalance;
-
 export const useSubscribeOnBalanceUpdate = (callback) => {
+  const worker = useContext(ERC20BalanceWorkerContext);
+
   useEffect(() => {
     worker.addEventListener('message', callback);
     return () => {

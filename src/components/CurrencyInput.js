@@ -4,50 +4,50 @@ import ChevronIcon from '../assets/svg/chevron.svg';
 
 const CurrencyInput = ({
   disabled = false,
-  value = undefined,
+  value = '0.0',
   onChange = () => {},
   changeCoin = () => {},
   selectedCoin = {},
+  balance = {},
+  isValueInvalid = false,
 }) => {
-  const handleInput = ({ target: { value: rawValue } }) => {
-    try {
-      const inputValue = parseInt(rawValue, 10);
-      if (inputValue < 0) {
-        onChange(0);
-      } else if (selectedCoin.balance && inputValue > selectedCoin.balance) {
-        onChange(selectedCoin.balance);
-      } else {
-        onChange(inputValue);
-      }
-    } catch (e) {
-      onChange(0);
+  const handleInput = ({ target: { value: newValue } }) => {
+    onChange(newValue);
+  };
+
+  const handleKeyPress = (e) => {
+    // discard all symbols except listed in regex
+    if (!/(1|2|3|4|5|6|7|8|9|0|,)/.test(e.key)) {
+      e.preventDefault();
     }
+  };
+
+  const setMax = () => {
+    onChange(balance.formattedString);
   };
 
   return (
     <div
-      className={`currency-input ${disabled ? 'currency-input_receive' : ''}`}
+      className={`currency-input
+       ${disabled ? 'currency-input_receive' : ''}
+       ${isValueInvalid ? 'currency-input_invalid' : ''}`}
     >
       <label className="currency-input__label">
         {disabled ? 'Receive:' : 'Send:'}
       </label>
       <input
         type="number"
-        placeholder="0.0"
+        placeholder="0,0"
         value={value}
         className="currency-input__input"
         onChange={handleInput}
+        onKeyPress={handleKeyPress}
         readOnly={disabled}
-        max={selectedCoin.balance || null}
       />
       <button
         type="button"
         className="currency-input__max-button"
-        onClick={
-          selectedCoin.balance
-            ? () => onChange(selectedCoin.balance)
-            : undefined
-        }
+        onClick={setMax}
       >
         Max
       </button>
@@ -75,10 +75,12 @@ const CurrencyInput = ({
 
 CurrencyInput.propTypes = {
   disabled: PropTypes.bool,
-  value: PropTypes.number,
+  value: PropTypes.string,
   onChange: PropTypes.func,
   changeCoin: PropTypes.func,
   selectedCoin: PropTypes.object,
+  balance: PropTypes.object,
+  isValueInvalid: PropTypes.bool,
 };
 
 export default CurrencyInput;
