@@ -105,7 +105,7 @@ const Status = () => {
     });
 
     const otherContractAddress =
-      networkId === 4 ? ambContractAddress : ethContractAddress;
+      networkId === ethChainId ? ambContractAddress : ethContractAddress;
 
     const otherNetworkFilter = {
       otherContractAddress,
