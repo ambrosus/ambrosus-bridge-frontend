@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ethers } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
@@ -226,9 +226,13 @@ const Status = () => {
         <button type="button" className="button button_gray btns-wrapper__btn">
           Go to home
         </button>
-        <button type="button" className="button button_black btns-wrapper__btn">
+        <Link
+          to="/history"
+          type="button"
+          className="button button_black btns-wrapper__btn"
+        >
           Transaction history
-        </button>
+        </Link>
       </div>
     </div>
   );

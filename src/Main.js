@@ -9,6 +9,7 @@ import Layout from './components/Layout';
 import ConnectWallet from './components/Home/ConnectWallet';
 import Confirmation from './pages/Confirmation';
 import ErrorContext from './contexts/ErrorContext';
+import TransactionList from './pages/TransactionList';
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
@@ -53,11 +54,10 @@ const Routing = () => {
         component={Status}
         condition={!!account}
       />
-      <Route exact path="/status/:txHash" component={Status} />
       <ConditionalRoute
         exact
         path="/history"
-        render={<p>history</p>}
+        component={TransactionList}
         condition={!!account}
       />
       <Redirect to="/" />
