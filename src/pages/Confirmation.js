@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
@@ -7,6 +7,7 @@ import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 
 const Confirmation = () => {
+  const { setError } = useContext();
   const { account, library } = useWeb3React();
   const [transferFee, setTransferFee] = useState();
 
@@ -45,6 +46,7 @@ const Confirmation = () => {
       })
       .catch((e) => {
         console.log(e);
+        setError('There is some error. Please refresh and try again');
       });
   };
 
