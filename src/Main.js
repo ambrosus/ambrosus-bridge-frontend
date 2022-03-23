@@ -9,6 +9,23 @@ import Layout from './components/Layout';
 import ConnectWallet from './pages/ConnectWallet';
 import Confirmation from './pages/Confirmation';
 import ErrorContext from './contexts/ErrorContext';
+import CoinBalanceWorkerContext from './contexts/CoinBalanceWorkerContext';
+
+// non-obvious block of code
+// web worker imported with webpack's worker-loader in "inline mode"
+// instead of creating custom webpack-config for one specific case
+// for details: https://v4.webpack.js.org/loaders/worker-loader/
+
+/* eslint-disable */
+import CoinBalanceWorker from 'worker-loader!./workers/coinBalanceWorker';
+const worker = new CoinBalanceWorker();
+/* eslint-enable */
+
+worker.addEventListener('message', ({ data: { balance, type, address } }) => {
+  if (type === 'balance') {
+    sessionStorage.setItem(address, JSON.stringify(balance));
+  }
+});
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
@@ -16,13 +33,15 @@ const Main = () => {
   const [error, setError] = useState('');
 
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <ErrorContext.Provider value={{ error, setError }}>
-        <Layout title="Bridge" error={error}>
-          <Routing setError={setError} />
-        </Layout>
-      </ErrorContext.Provider>
-    </Web3ReactProvider>
+    <CoinBalanceWorkerContext.Provider value={worker}>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <ErrorContext.Provider value={{ error, setError }}>
+          <Layout title="Bridge" error={error}>
+            <Routing setError={setError} />
+          </Layout>
+        </ErrorContext.Provider>
+      </Web3ReactProvider>
+    </CoinBalanceWorkerContext.Provider>
   );
 };
 
