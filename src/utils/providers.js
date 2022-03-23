@@ -1,9 +1,9 @@
 import { ethers } from 'ethers';
 
-const { INFURA_KEY, NODE_ENV } = process.env;
+const { INFURA_KEY, REACT_APP_ENV } = process.env;
 
 // ethereum read-only provider configuration
-export const ethChainId = NODE_ENV === 'production' ? 1 : 4;
+export const ethChainId = REACT_APP_ENV === 'production' ? 1 : 4;
 
 const ethProvider = new ethers.providers.FallbackProvider(
   [
@@ -14,20 +14,20 @@ const ethProvider = new ethers.providers.FallbackProvider(
 );
 
 // ambrosus read-only provider configuration
-export const ambChainId = NODE_ENV === 'production' ? 16718 : 30741;
+export const ambChainId = REACT_APP_ENV === 'production' ? 16718 : 30741;
 
 const ambRPCUrl =
-  NODE_ENV === 'production'
+  REACT_APP_ENV === 'production'
     ? 'https://network.ambrosus.io'
     : 'https://network.ambrosus-dev.io';
 
 export const ambProvider = new ethers.providers.JsonRpcProvider(ambRPCUrl);
 
 // binance smart chain read-only provider configuration
-export const bscChainId = NODE_ENV === 'production' ? 56 : 97;
+export const bscChainId = REACT_APP_ENV === 'production' ? 56 : 97;
 
 const bscRPCUrlList =
-  NODE_ENV === 'production'
+  REACT_APP_ENV === 'production'
     ? ['https://bsc-dataseed.binance.org/', 'https://bsc-dataseed4.defibit.io/']
     : [
         'https://data-seed-prebsc-1-s1.binance.org:8545/',

@@ -1,9 +1,7 @@
 import { utils } from 'ethers';
-import providers from '../../utils/providers';
-import { getSupportedNetworks, AmbrosusNetwork } from '../../utils/networks';
-import getTokenBalance from '../../utils/getTokenBalance';
-
-const supportedNetworks = getSupportedNetworks();
+import providers from '../utils/providers';
+import { getSupportedNetworks, AmbrosusNetwork } from '../utils/networks';
+import getTokenBalance from '../utils/getTokenBalance';
 
 // This worker needed to fetch balance for all presented coins
 // it works in tandem with "useCoinBalance" hook
@@ -12,6 +10,8 @@ const supportedNetworks = getSupportedNetworks();
 // here we remapping supported networks to format
 // [ { address: _string_ , chainId: _string_ , denomination: _number_ }, ... ]
 // for all tokens
+
+const supportedNetworks = getSupportedNetworks();
 
 const allTokensList = Object.values(supportedNetworks).reduce(
   (acc, network) => {
