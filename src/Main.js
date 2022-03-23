@@ -9,6 +9,7 @@ import Layout from './components/Layout';
 import ConnectWallet from './pages/ConnectWallet';
 import Confirmation from './pages/Confirmation';
 import ErrorContext from './contexts/ErrorContext';
+import TransactionList from './pages/TransactionList';
 import CoinBalanceWorkerContext from './contexts/CoinBalanceWorkerContext';
 
 // non-obvious block of code
@@ -72,11 +73,10 @@ const Routing = () => {
         component={Status}
         condition={!!account}
       />
-      <Route exact path="/status/:txHash" component={Status} />
       <ConditionalRoute
         exact
         path="/history"
-        render={<p>history</p>}
+        component={TransactionList}
         condition={!!account}
       />
       <Redirect to="/" />

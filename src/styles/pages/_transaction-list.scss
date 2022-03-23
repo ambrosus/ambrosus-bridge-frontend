@@ -22,6 +22,10 @@
     align-items: center;
 
     @media screen and (max-width: $mobile-breakpoint) {
+      &:first-child {
+        margin-bottom: .3rem;
+      }
+
       &:not(:first-child) {
         flex-direction: column;
       }
@@ -36,7 +40,9 @@
     }
 
     @media screen and (max-width: $mobile-breakpoint) {
-      margin-bottom: 0!important;
+      &:not(:first-child) {
+        margin-bottom: 0!important;
+      }
     }
   }
 
@@ -79,23 +85,59 @@
   }
 
   &__clock {
+    margin-right: .3rem;
     @media screen and (max-width: $mobile-breakpoint) {
+      display: none;
       margin: 0.35rem;
     }
   }
 
+  &__time {
+    @media screen and (max-width: $mobile-breakpoint) {
+      display: none;
+    }
+  }
+
   &__status {
-    padding: 0.4rem 1rem;
+    padding: .2rem .8em;
     display: flex;
     align-items: center;
     border-radius: 1rem;
     font-size: 0.75rem;
     font-weight: 600;
-    background: #16C784;
     color: white;
 
     img {
+      width: 1rem;
       margin-right: 0.35rem;
+    }
+
+    &--loading {
+      background-color: #F2C037;
+
+      img {
+        animation: rotating 2s linear infinite;
+      }
+    }
+
+    &--checked {
+      background: #16C784;
+
+      @media screen and (max-width: $mobile-breakpoint) {
+        margin-left: auto;
+      }
+    }
+  }
+
+  &__view-status {
+    font-size: .75rem;
+    margin-right: .5rem;
+    background: #F4F5F6;
+    padding:.3rem .75rem;
+    border-radius: 1rem;
+
+    @media screen and (max-width: $mobile-breakpoint) {
+      margin-left: auto;
     }
   }
 
