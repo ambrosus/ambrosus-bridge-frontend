@@ -23,3 +23,18 @@ export const AmbrosusNetwork =
         chainId: 30741,
         rpcUrl: 'https://network.ambrosus-dev.io',
       };
+
+export const getAllNetworks = () => {
+  const supportedNetworks = getSupportedNetworks();
+  return [AmbrosusNetwork, ...supportedNetworks];
+};
+
+export const getNetworkByChainId = (chainId) => {
+  const networks = getAllNetworks();
+  return networks.find((network) => network.chainId === chainId);
+};
+
+export const getAllChainIds = () => {
+  const networks = getAllNetworks();
+  return networks.map((network) => network.chainId);
+};

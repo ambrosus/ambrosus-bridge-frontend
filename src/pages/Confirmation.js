@@ -5,9 +5,10 @@ import { BigNumber, utils } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
 import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
+import ErrorContext from '../contexts/ErrorContext';
 
 const Confirmation = () => {
-  const { setError } = useContext();
+  const { setError } = useContext(ErrorContext);
   const { account, library } = useWeb3React();
   const [transferFee, setTransferFee] = useState();
 
