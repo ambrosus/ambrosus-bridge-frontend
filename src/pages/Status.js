@@ -6,8 +6,10 @@ import TransactionCoins from '../components/TransactionCoins';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
 import warningImg from '../assets/svg/warning.svg';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
-import { abi } from '../utils/abi';
-import { ambContractAddress, ethContractAddress } from '../contracts';
+import createBridgeContract, {
+  ambContractAddress,
+  ethContractAddress,
+} from '../contracts';
 
 const withDrawTitle = 'Withdraw(address,uint256)';
 const transferTitle = 'Transfer(address,address,uint256)';
@@ -52,7 +54,7 @@ const Status = () => {
 
         const eventId = receipt.logs[0].topics[1];
 
-        const contract = getContract(networkId, smartContractAddress);
+        const contract = createBridgeContract(providers[networkId]);
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
 
@@ -61,9 +63,11 @@ const Status = () => {
           currentStage = '3.1';
         }
 
-        const otherNetworkContract = getContract(
-          tx.chainId === ambChainId ? ethChainId : ambChainId,
-          smartContractAddress,
+        const otherProvider =
+          providers[tx.chainId === ambChainId ? ethChainId : ambChainId];
+
+        const otherNetworkContract = createBridgeContract(
+          tx.chainId === ambChainId ? otherProvider : ambChainId,
         );
 
         const otherNetworkFilter = await otherNetworkContract.filters.Transfer(
@@ -126,9 +130,6 @@ const Status = () => {
       },
     );
   };
-
-  const getContract = (networkId, address) =>
-    new ethers.Contract(address, abi, providers[networkId]);
 
   const handleLoadingClass = (currentStage, isMainLoader = false) => {
     const elClass = isMainLoader
