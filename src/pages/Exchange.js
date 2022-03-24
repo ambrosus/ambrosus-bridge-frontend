@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { utils } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
@@ -14,8 +14,10 @@ import { useCoinBalance } from '../hooks/useCoinBalance/useCoinBalance';
 import createBridgeContract from '../contracts';
 import getTokenBalance from '../utils/getTokenBalance';
 import { changeChainId } from '../utils/web3';
+import ErrorContext from '../contexts/ErrorContext';
 
 const Exchange = () => {
+  const { setError } = useContext(ErrorContext);
   const [networks, setNetworks] = useState(undefined);
 
   const [isFromAmb, setIsFromAmb] = useState(false);
@@ -87,10 +89,17 @@ const Exchange = () => {
       bnValue = utils.parseUnits(transactionAmount, selectedCoin.denomination);
     } catch (parseError) {
       isInvalid = true;
+      setError('Invalid value');
     }
 
-    if (bnValue.gt(actualBnBalance)) isInvalid = true;
-    if (bnValue.isZero()) isInvalid = true;
+    if (bnValue.gt(actualBnBalance)) {
+      isInvalid = true;
+      setError('Not enough coins on balance');
+    }
+    if (bnValue.isZero()) {
+      isInvalid = true;
+      setError('Your value is zero');
+    }
 
     if (isInvalid) {
       setIsInvalid(isInvalid);

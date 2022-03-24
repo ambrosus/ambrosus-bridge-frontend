@@ -5,7 +5,7 @@ import { AmbrosusNetwork, getSupportedNetworks } from './networks';
 
 const supportedNetworks = getSupportedNetworks();
 
-const chainIds = [...supportedNetworks, AmbrosusNetwork].map(
+export const chainIds = [...supportedNetworks, AmbrosusNetwork].map(
   (network) => network.chainId,
 );
 export const ConfiguredInjectedConnector = new InjectedConnector({

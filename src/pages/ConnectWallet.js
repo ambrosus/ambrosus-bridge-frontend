@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
+import { getSupportedNetworks } from '../utils/networks';
 import {
+  chainIds,
+  changeChainId,
   ConfiguredInjectedConnector,
   ConfiguredWalletConnectConnector,
 } from '../utils/web3';
@@ -14,9 +17,18 @@ const ConnectWallet = () => {
   const history = useHistory();
 
   const handleMetamaskLogin = () => {
-    web3
-      .activate(ConfiguredInjectedConnector)
-      .then(() => history.push('/exchange'));
+    web3.activate(ConfiguredInjectedConnector).then(async () => {
+      const id = await ConfiguredInjectedConnector.getChainId();
+
+      if (chainIds.includes(parseInt(id, 16))) {
+        history.push('/exchange');
+      } else {
+        const provider = await ConfiguredInjectedConnector.getProvider();
+        const ethNetwork = getSupportedNetworks()[0];
+
+        changeChainId(provider, ethNetwork);
+      }
+    });
   };
 
   const handleWalletConnectLogin = () => {
