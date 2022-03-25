@@ -19,6 +19,7 @@ import createBridgeContract from '../contracts';
 import getTokenBalance from '../utils/getTokenBalance';
 import changeChainId from '../utils/changeChainId';
 import ErrorContext from '../contexts/ErrorContext';
+import CoinBalanceWorkerContext from '../contexts/CoinBalanceWorkerContext';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
@@ -39,6 +40,8 @@ const Exchange = () => {
 
   const [isValueInvalid, setIsInvalid] = useState(false);
 
+  const worker = useContext(CoinBalanceWorkerContext);
+
   // setting init values
   useEffect(async () => {
     const supportedNetworks = getSupportedNetworks();
@@ -46,6 +49,8 @@ const Exchange = () => {
     setNetworks(supportedNetworks);
     setChainId(supportedNetworks[0].chainId);
     setCoin(supportedNetworks[0].tokens[0]);
+
+    worker.postMessage({ type: 'start', account });
   }, []);
 
   // if network changed, set first token presented in list

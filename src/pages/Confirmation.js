@@ -6,6 +6,7 @@ import TransactionCoins from '../components/TransactionCoins';
 import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
+import { AmbrosusNetwork } from '../utils/networks';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
@@ -14,14 +15,15 @@ const Confirmation = () => {
 
   const {
     location: {
-      state: { selectedChainId, selectedCoin, transactionAmount },
+      state: { selectedChainId, selectedCoin, transactionAmount, isFromAmb },
     },
     goBack,
     push,
   } = useHistory();
 
-  const BridgeContract = createBridgeContract[selectedChainId](library);
-  const ConnectedBridgeContract = BridgeContract.connect(library.getSigner());
+  const signer = library.getSigner();
+  const chainId = isFromAmb ? AmbrosusNetwork.chainId : selectedChainId;
+  const BridgeContract = createBridgeContract[chainId](signer);
 
   useEffect(async () => {
     const fee = await BridgeContract.callStatic.fee();
@@ -36,7 +38,7 @@ const Confirmation = () => {
     );
     const bnTransferFee = BigNumber.from(transferFee);
 
-    ConnectedBridgeContract.withdraw(
+    BridgeContract.withdraw(
       selectedCoin.nativeContractAddress,
       account,
       bnTransactionAmount,
