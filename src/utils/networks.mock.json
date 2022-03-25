@@ -10,194 +10,41 @@
         "name":"Rupiah",
         "code":"IDR",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress":"0x50D697Fd57051573c00C305bb79f5978036d8BaA",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination": 6
+        "nativeContractAddress":"0x5Dbd73A0405a719B586087EBDe586FFd52D0F86b",
+        "linkedContractAddress":"0x79d0707ff6c917907D9DbF1793EDF4df9B8b3cDF",
+        "denomination": 18
       },
       {
         "name":"Euro",
         "code":"EUR",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0x6d4287E23D544cab6d87518411FeAA2Ee36b26fd",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":6
+        "nativeContractAddress":"0xEfBc08faBb8017a72255D25eE61f16CD4D150EDc",
+        "linkedContractAddress":"0xc3C17eb0Bb0eC29F6220dF23B6f9F8F79fDFc70E",
+        "denomination": 18
       },
       {
         "name":"Ringgit",
         "code":"MYR",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0x69832d2D963170991F40A4D84D2035fF9975eE7b",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":4
+        "nativeContractAddress":"0x1E712576FA72fa90C445bf1FcCCD8807FFA89467",
+        "linkedContractAddress":"0xf814016F0fd6025631c234Cf3fCB05C0E8e19b92",
+        "denomination": 18
       },
       {
         "name":"Tenge",
         "code":"KZT",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0xC0d84FB65bCBbAA31dDA9b7cdDE55DbbD7Af4870",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":5
+        "nativeContractAddress":"0x160Be2BD0c5E7CBBDF02A34D2B8285941B5eD41b",
+        "linkedContractAddress":"0xBbDB84b91C7d1FD2A96C998913739437FAaB9564",
+        "denomination": 18
       },
       {
-        "name":"Rupiah",
-        "code":"IDR",
+        "name":"Hryvna",
+        "code":"UAH",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0x3776C7df856c89106845dcfb6D6315ADB7B138F3",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":6
-      },
-      {
-        "name":"Rupiah",
-        "code":"IDR",
-        "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0x0081482306D64920442526995D5c91d23e9feCAE",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Sol",
-        "code":"PEN",
-        "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress":"0x7D9a4d5f80098583D5c974abf3657Bc7ffCE421C",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Afghani",
-        "code":"AFN",
-        "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0x99a88dF85C3ffded0D7fF6B18596597e2ffcB3ee",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Yuan Renminbi",
-        "code":"CNY",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress":"0x4D6c49Dd98A25AD7bDAA64aA9ad7e0E9221bC2Ce",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Krona",
-        "code":"SEK",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress":"0xbBD56f104636df654f1eC5d14F119801B7C379a3",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Yuan Renminbi",
-        "code":"CNY",
-        "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress":"0xdA55B1ad28e2fD452C8e0Bf5E2053b560D80E0f9",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Yuan Renminbi",
-        "code":"CNY",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress":"0x8A3Ec9a7783C106dEE7D3E618ED41e7B10C8b72d",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Rupiah",
-        "code":"IDR",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress":"0xb198bCc417FfEbb673d45c8079CEb4a47D36bC98",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Sol",
-        "code":"PEN",
-        "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0xf763336f0CEf9FfDDe29dBAAe7dB3C0Ff14F119B",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Zloty",
-        "code":"PLN",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress":"0x2a84d3f5e3105298e1f8645AFb59DbDdd10A1B8C",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Rupiah",
-        "code":"IDR",
-        "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0xAB4e124f9E52A897c148dD0fA61C689318b7a3ae",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Yen",
-        "code":"JPY",
-        "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress":"0xC025129Dd64411B23A92B2A598EcdEfB65d61745",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Zloty",
-        "code":"PLN",
-        "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress":"0x4caaCb350882c300742a1bE2035aB765fB184e94",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination":8
-      },
-      {
-        "name":"Quetzal",
-        "code":"GTQ",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress":"0x32fac62b1196E03Ed3644a40DbFbe5728e31599A",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination": 8
-      },
-      {
-        "name":"Yuan Renminbi",
-        "code":"CNY",
-        "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0xdbc292842e946b165B007748C4DF50491878DF7f",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination": 8
-      }
-    ]
-  },
-  {
-    "name":"Binance Testnet",
-    "code": "BSC",
-    "logo":"https://dummyimage.com/100x100/fc12fc/fff.png&text=2",
-    "rpcUrl": "https://bsc-dataseed.binance.org/",
-    "chainId": 97,
-    "tokens":[
-      {
-        "name":"Wrapped Bitcoin 1",
-        "code":"WBTC",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress":"0xE55b2794d7c99Bd92401b36038759d630e32f672",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination": 16
-      },
-      {
-        "name":"Wrapped Bitcoin 2",
-        "code":"WBTC2",
-        "logo":"http://dummyimage.com/100x100.png/5fa2dd/ffffff",
-        "nativeContractAddress": "0xaFFB41612A99a22BEBb23D186242a8b682083494",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination": 16
-      },
-      {
-        "name": "Wrapped ETH",
-        "code": "WETH",
-        "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress": "0xB0F325bC32E10Fd76bbD2a3443C736EdEd914F0C",
-        "linkedContractAddress":"0xA3321b92D009d257A83994b5E3AD008040498F6C",
-        "denomination": 5
+        "nativeContractAddress":"0x407852C895cee4eD12A6367c8427C1a14ecBdf69",
+        "linkedContractAddress":"0xc0a2505a48F02F4fc4288B8e5bADd9e1deE95966",
+        "denomination": 18
       }
     ]
   }

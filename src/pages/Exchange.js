@@ -84,6 +84,7 @@ const Exchange = () => {
 
   // remove error on any change until new form submission
   useEffect(() => {
+    setError(null);
     setIsInvalid(false);
   }, [transactionAmount, selectedCoin, selectedChainId]);
 
