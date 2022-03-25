@@ -10,40 +10,40 @@
         "name":"Rupiah",
         "code":"IDR",
         "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress":"0x5Dbd73A0405a719B586087EBDe586FFd52D0F86b",
-        "linkedContractAddress":"0x79d0707ff6c917907D9DbF1793EDF4df9B8b3cDF",
+        "nativeContractAddress":"0x79d0707ff6c917907D9DbF1793EDF4df9B8b3cDF",
+        "linkedContractAddress":"0x7bd613b7b72BF66010b7d3203F5Bcf129165F422",
         "denomination": 18
       },
       {
         "name":"Euro",
         "code":"EUR",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0xEfBc08faBb8017a72255D25eE61f16CD4D150EDc",
-        "linkedContractAddress":"0xc3C17eb0Bb0eC29F6220dF23B6f9F8F79fDFc70E",
+        "nativeContractAddress":"0xc3C17eb0Bb0eC29F6220dF23B6f9F8F79fDFc70E",
+        "linkedContractAddress":"0x50D697Fd57051573c00C305bb79f5978036d8BaA",
         "denomination": 18
       },
       {
         "name":"Ringgit",
         "code":"MYR",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0x1E712576FA72fa90C445bf1FcCCD8807FFA89467",
-        "linkedContractAddress":"0xf814016F0fd6025631c234Cf3fCB05C0E8e19b92",
+        "nativeContractAddress":"0xf814016F0fd6025631c234Cf3fCB05C0E8e19b92",
+        "linkedContractAddress":"0x6d4287E23D544cab6d87518411FeAA2Ee36b26fd",
         "denomination": 18
       },
       {
         "name":"Tenge",
         "code":"KZT",
         "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0x160Be2BD0c5E7CBBDF02A34D2B8285941B5eD41b",
-        "linkedContractAddress":"0xBbDB84b91C7d1FD2A96C998913739437FAaB9564",
+        "nativeContractAddress":"0xBbDB84b91C7d1FD2A96C998913739437FAaB9564",
+        "linkedContractAddress":"0x69832d2D963170991F40A4D84D2035fF9975eE7b",
         "denomination": 18
       },
       {
         "name":"Hryvna",
         "code":"UAH",
         "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0x407852C895cee4eD12A6367c8427C1a14ecBdf69",
-        "linkedContractAddress":"0xc0a2505a48F02F4fc4288B8e5bADd9e1deE95966",
+        "nativeContractAddress":"0xc0a2505a48F02F4fc4288B8e5bADd9e1deE95966",
+        "linkedContractAddress":"0xC0d84FB65bCBbAA31dDA9b7cdDE55DbbD7Af4870",
         "denomination": 18
       }
     ]
