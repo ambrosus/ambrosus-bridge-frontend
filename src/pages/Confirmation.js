@@ -37,12 +37,12 @@ const Confirmation = () => {
       utils.parseUnits(transactionAmount, selectedCoin.denomination),
     );
     const bnTransferFee = BigNumber.from(transferFee);
-
+    const mintOpts = isFromAmb ? { gasLimit: 8000000, gasPrice: 1 } : {};
     BridgeContract.withdraw(
       selectedCoin.nativeContractAddress,
       account,
       bnTransactionAmount,
-      { value: bnTransferFee },
+      { value: bnTransferFee, ...mintOpts },
     )
       .then((res) => {
         push(`/status/${res.hash}`);
