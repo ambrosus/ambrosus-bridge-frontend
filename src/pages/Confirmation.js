@@ -5,9 +5,10 @@ import { BigNumber, utils } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
 import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
+import ErrorContext from '../contexts/ErrorContext';
 
 const Confirmation = () => {
-  const { setError } = useContext();
+  const { setError } = useContext(ErrorContext);
   const { account, library } = useWeb3React();
   const [transferFee, setTransferFee] = useState();
 
@@ -56,7 +57,7 @@ const Confirmation = () => {
       <p className="confirmation-page__amount">
         {transactionAmount} {selectedCoin.code}
       </p>
-      <TransactionCoins from="Ethereum" to="Ambrosus" />
+      <TransactionCoins selectedChainId={selectedChainId} />
       <div className="confirmation-info">
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>
