@@ -37,15 +37,11 @@ const allTokensList = Object.values(supportedNetworks).reduce(
 );
 
 // here we asynchronously getting all balances and sending a message for "useCoinBalance" hook to catch
-const fetchAllBalances = () => {
+const fetchAllBalances = (account) => {
   // eslint-disable-next-line no-restricted-syntax
   for (const token of allTokensList) {
     const provider = providers[token.chainId];
-    getTokenBalance(
-      provider,
-      token.address,
-      '0xaeE13A8db3e216A364255EFEbA171ce329100876',
-    ).then((bnBalance) => {
+    getTokenBalance(provider, token.address, account).then((bnBalance) => {
       const balanceFormattedString = utils.formatUnits(
         bnBalance,
         token.denomination,
@@ -66,4 +62,9 @@ const fetchAllBalances = () => {
   }
 };
 
-fetchAllBalances();
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener('message', ({ data: { type, account } }) => {
+  if (type === 'start') {
+    fetchAllBalances(account);
+  }
+});

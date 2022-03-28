@@ -7,14 +7,19 @@ import CurrencyInput from '../components/CurrencyInput';
 import SwapButton from '../assets/svg/exchange__swap-button.svg';
 import NetworkSelect from '../components/NetworkSelect';
 import TokenSelect from '../components/TokenSelect';
-import { AmbrosusNetwork, getSupportedNetworks } from '../utils/networks';
+import {
+  AmbrosusNetwork,
+  getNetworkByChainId,
+  getSupportedNetworks,
+} from '../utils/networks';
 import useModal from '../hooks/useModal';
 import InlineLoader from '../components/InlineLoader';
 import { useCoinBalance } from '../hooks/useCoinBalance/useCoinBalance';
 import createBridgeContract from '../contracts';
 import getTokenBalance from '../utils/getTokenBalance';
-import { changeChainId } from '../utils/web3';
+import changeChainId from '../utils/changeChainId';
 import ErrorContext from '../contexts/ErrorContext';
+import CoinBalanceWorkerContext from '../contexts/CoinBalanceWorkerContext';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
@@ -30,11 +35,14 @@ const Exchange = () => {
 
   const [isOpenCoinModal, toggleCoinModal] = useModal();
 
-  const { library, account } = useWeb3React();
+  const { library, account, chainId } = useWeb3React();
   const [transferFee, setTransferFee] = useState(null);
 
   const [isValueInvalid, setIsInvalid] = useState(false);
 
+  const worker = useContext(CoinBalanceWorkerContext);
+
+  // setting init values
   useEffect(async () => {
     const supportedNetworks = getSupportedNetworks();
 
@@ -42,32 +50,59 @@ const Exchange = () => {
     setChainId(supportedNetworks[0].chainId);
     setCoin(supportedNetworks[0].tokens[0]);
 
-    const BridgeContract =
-      createBridgeContract[supportedNetworks[0].chainId](library);
-
-    const fee = await BridgeContract.callStatic.fee();
-    setTransferFee(utils.formatEther(fee));
+    worker.postMessage({ type: 'start', account });
   }, []);
 
-  useEffect(async () => {
+  // if network changed, set first token presented in list
+  // (actually useless until bsc integration)
+  useEffect(() => {
     if (selectedChainId) {
-      const selectedNetwork = networks.find(
-        (network) => network.chainId === selectedChainId,
-      );
-
+      const selectedNetwork = getNetworkByChainId(selectedChainId);
       setCoin(selectedNetwork.tokens[0]);
-
-      await changeChainId(library.provider, selectedNetwork);
     }
   }, [selectedChainId]);
 
+  // switch network in wallet, if switched network in interface
+  // get transfer fee for new selected network
+  useEffect(async () => {
+    if (selectedChainId) {
+      let chainIdToSwitch;
+      if (isFromAmb) {
+        chainIdToSwitch = AmbrosusNetwork.chainId;
+      } else {
+        chainIdToSwitch = selectedChainId;
+      }
+
+      await changeChainId(library.provider, chainIdToSwitch);
+
+      const BridgeContract = createBridgeContract[chainIdToSwitch](library);
+
+      const fee = await BridgeContract.callStatic.fee();
+      setTransferFee(utils.formatEther(fee));
+    }
+  }, [selectedChainId, isFromAmb]);
+
+  // reset value if coin changed
   useEffect(() => {
     setTransactionAmount('0.0');
   }, [selectedCoin]);
 
+  // remove error on any change until new form submission
   useEffect(() => {
+    setError(null);
     setIsInvalid(false);
   }, [transactionAmount, selectedCoin, selectedChainId]);
+
+  // set chainId in interface if it was changed in wallet
+  // (unsupported chainId's handled in routing in Main.js)
+  useEffect(() => {
+    if (chainId === AmbrosusNetwork.chainId) {
+      setIsFromAmb(true);
+    } else {
+      setIsFromAmb(false);
+      setChainId(chainId);
+    }
+  }, [chainId]);
 
   const history = useHistory();
 
@@ -123,6 +158,7 @@ const Exchange = () => {
         toggle={toggleCoinModal}
         setCoin={setCoin}
         selectedChainId={selectedChainId}
+        isFromAmb={isFromAmb}
       />
       <form className="content exchange" onSubmit={handleTransaction}>
         <h2 className="exchange__heading">Select Network and enter amount</h2>
@@ -137,6 +173,7 @@ const Exchange = () => {
               transactionAmount,
               setTransactionAmount,
               isValueInvalid,
+              isFromAmb,
             }}
           />
           <button type="button" onClick={toggleDirection}>
@@ -155,6 +192,7 @@ const Exchange = () => {
               setChainId,
               transactionAmount,
               setTransactionAmount,
+              isFromAmb,
             }}
             isReceive
           />

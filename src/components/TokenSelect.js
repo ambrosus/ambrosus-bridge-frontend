@@ -12,6 +12,7 @@ const TokenSelect = ({
   toggle = () => {},
   setCoin = () => {},
   selectedChainId,
+  isFromAmb = false,
 }) => {
   const tokenList = useTokenList(selectedChainId);
   const [sortedTokenList, setSortedTokenList] = useState([]);
@@ -66,6 +67,7 @@ const TokenSelect = ({
                     token,
                     toggle,
                     setCoin,
+                    isFromAmb,
                   }}
                 />
               ))}
@@ -81,6 +83,7 @@ TokenSelect.propTypes = {
   toggle: PropTypes.func,
   tokenList: PropTypes.arrayOf(PropTypes.object),
   setCoin: PropTypes.func,
+  isFromAmb: PropTypes.bool,
 };
 
 export default TokenSelect;
@@ -113,8 +116,10 @@ SearchInput.propTypes = {
   onChange: PropTypes.func,
 };
 
-const TokenButton = ({ token, setCoin, toggle }) => {
-  const balance = useCoinBalance(token.nativeContractAddress);
+const TokenButton = ({ token, setCoin, toggle, isFromAmb }) => {
+  const balance = useCoinBalance(
+    isFromAmb ? token.linkedContractAddress : token.nativeContractAddress,
+  );
   return (
     <button
       type="button"
@@ -142,4 +147,5 @@ TokenButton.propTypes = {
   token: PropTypes.object,
   setCoin: PropTypes.func,
   toggle: PropTypes.func,
+  isFromAmb: PropTypes.bool,
 };
