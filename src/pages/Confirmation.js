@@ -59,7 +59,7 @@ const Confirmation = () => {
       <p className="confirmation-page__amount">
         {transactionAmount} {selectedCoin.code}
       </p>
-      <TransactionCoins from="Ethereum" to="Ambrosus" />
+      <TransactionCoins selectedChainId={selectedChainId} />
       <div className="confirmation-info">
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>

@@ -10,6 +10,7 @@ import createBridgeContract, {
   ambContractAddress,
   ethContractAddress,
 } from '../contracts';
+import getTxLastStageStatus from '../utils/getTxLastStageStatus';
 
 const withDrawTitle = 'Withdraw(address,uint256)';
 const transferTitle = 'Transfer(address,address,uint256)';
@@ -18,6 +19,7 @@ const Status = () => {
   const { txHash } = useParams();
   const history = useHistory();
 
+  const [currentChainId, setCurrentChainId] = useState(0);
   const [stage, setStage] = useState('1.1');
   const [confirmations, setConfirmations] = useState(0);
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
@@ -31,6 +33,7 @@ const Status = () => {
       const tx = await providers[networkId].getTransaction(txHash);
 
       if (tx && tx.blockNumber) {
+        setCurrentChainId(tx.chainId);
         let currentStage = stage;
 
         const smartContractAddress =
@@ -54,7 +57,7 @@ const Status = () => {
 
         const eventId = receipt.logs[0].topics[1];
 
-        const contract = createBridgeContract(providers[networkId]);
+        const contract = createBridgeContract[networkId](providers[networkId]);
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
 
@@ -63,21 +66,7 @@ const Status = () => {
           currentStage = '3.1';
         }
 
-        const otherProvider =
-          providers[tx.chainId === ambChainId ? ethChainId : ambChainId];
-
-        const otherNetworkContract = createBridgeContract(
-          tx.chainId === ambChainId ? otherProvider : ambChainId,
-        );
-
-        const otherNetworkFilter = await otherNetworkContract.filters.Transfer(
-          eventId,
-        );
-        const otherNetworkEvent = await otherNetworkContract.queryFilter(
-          otherNetworkFilter,
-        );
-
-        if (otherNetworkEvent.length) {
+        if (getTxLastStageStatus(tx.chainId, eventId)) {
           currentStage = '4';
         }
 
@@ -169,8 +158,7 @@ const Status = () => {
         Please wait some time for transactions to finish
       </p>
       <TransactionCoins
-        from="Ethereum"
-        to="Ambrosus"
+        selectedChainId={currentChainId}
         fromHash={txHash}
         toHash={otherNetworkTxHash || 'Transaction not started yet'}
       />
