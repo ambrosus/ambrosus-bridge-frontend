@@ -61,12 +61,12 @@ const Status = () => {
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
 
-        if (event) {
+        if (+stage > 2.1 && event) {
           setOtherNetworkTxHash(event[0].transactionHash);
           currentStage = '3.1';
         }
 
-        if (getTxLastStageStatus(tx.chainId, eventId)) {
+        if (+stage > 3.1 && getTxLastStageStatus(tx.chainId, eventId)) {
           currentStage = '4';
         }
 
@@ -80,6 +80,11 @@ const Status = () => {
   };
 
   const eventsHandler = (networkId, address) => {
+    providers[networkId].on('block', async () => {
+      const tx = await providers[networkId].getTransaction(txHash);
+      setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
+    });
+
     const firstStageFilter = {
       address,
       topics: [ethers.utils.id(withDrawTitle)],

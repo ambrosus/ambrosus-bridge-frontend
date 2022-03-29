@@ -19,7 +19,6 @@ const ConnectWallet = () => {
   const handleMetamaskLogin = () => {
     web3.activate(ConfiguredInjectedConnector).then(async () => {
       const id = await ConfiguredInjectedConnector.getChainId();
-
       if (chainIds.includes(parseInt(id, 16))) {
         history.push('/exchange');
       } else {
