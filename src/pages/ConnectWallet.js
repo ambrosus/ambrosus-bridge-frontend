@@ -1,40 +1,45 @@
 import * as React from 'react';
-import { useWeb3React } from '@web3-react/core';
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
-import { getSupportedNetworks } from '../utils/networks';
+import { useContext, useEffect } from 'react';
 import {
-  chainIds,
-  changeChainId,
   ConfiguredInjectedConnector,
   ConfiguredWalletConnectConnector,
-} from '../utils/web3';
+} from '../utils/web3ReactConnectors';
 import ChevronIcon from '../assets/svg/chevron.svg';
 import MetaMaskIcon from '../assets/img/connect-wallet__metamask.jpg';
 import WalletConnectIcon from '../assets/img/connect-wallet__wallet-connect.png';
+import ErrorContext from '../contexts/ErrorContext';
+import { getAllNetworks } from '../utils/networks';
 
 const ConnectWallet = () => {
-  const web3 = useWeb3React();
+  const { error, activate, account } = useWeb3React();
+  const { setError } = useContext(ErrorContext);
   const history = useHistory();
 
   const handleMetamaskLogin = () => {
-    web3.activate(ConfiguredInjectedConnector).then(async () => {
-      const id = await ConfiguredInjectedConnector.getChainId();
-      if (chainIds.includes(parseInt(id, 16))) {
-        history.push('/exchange');
-      } else {
-        const provider = await ConfiguredInjectedConnector.getProvider();
-        const ethNetwork = getSupportedNetworks()[0];
-
-        changeChainId(provider, ethNetwork);
-      }
-    });
+    activate(ConfiguredInjectedConnector).then(() => history.push('/exchange'));
   };
 
   const handleWalletConnectLogin = () => {
-    web3
-      .activate(ConfiguredWalletConnectConnector)
-      .then(() => history.push('/exchange'));
+    activate(ConfiguredWalletConnectConnector).then(() =>
+      history.push('/exchange'),
+    );
   };
+
+  useEffect(() => {
+    if (error instanceof UnsupportedChainIdError) {
+      const networks = getAllNetworks();
+      const networksNames = networks.map((network) => network.name).join(', ');
+      setError(
+        `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
+      );
+    }
+    if (account) {
+      setError(null);
+      history.push('/exchange');
+    }
+  }, [error]);
 
   return (
     <div className="content connect-wallet__content">

@@ -61,7 +61,7 @@ const Status = () => {
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
 
-        if (+stage > 2.1 && event) {
+        if (+stage > 2.1 && event.length) {
           setOtherNetworkTxHash(event[0].transactionHash);
           currentStage = '3.1';
         }
