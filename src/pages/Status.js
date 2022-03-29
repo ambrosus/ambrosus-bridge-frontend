@@ -61,18 +61,18 @@ const Status = () => {
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
 
-        if (+stage > 2.1 && event.length) {
+        if (+currentStage >= 2.1 && event.length) {
           setOtherNetworkTxHash(event[0].transactionHash);
           currentStage = '3.1';
         }
 
-        if (+stage > 3.1 && getTxLastStageStatus(tx.chainId, eventId)) {
+        if (+currentStage >= 3.1 && getTxLastStageStatus(tx.chainId, eventId)) {
           currentStage = '4';
         }
 
         setStage(currentStage);
         setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
-        eventsHandler(networkId, smartContractAddress);
+        eventsHandler(networkId, smartContractAddress, currentStage);
       } else if (tx && !tx.blockNumber) {
         tx.wait().then(() => handleStatus());
       }
