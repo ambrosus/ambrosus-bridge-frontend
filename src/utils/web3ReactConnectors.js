@@ -1,22 +1,23 @@
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { getAllChainIds, getAllNetworks } from './networks';
 
-const networks = getAllNetworks();
-const chainIds = getAllChainIds();
+const {
+  REACT_APP_ETH_CHAIN_ID,
+  REACT_APP_ETH_RPC_URL,
+  REACT_APP_INFURA_KEY,
+  REACT_APP_AMB_CHAIN_ID,
+  REACT_APP_AMB_RPC_URL,
+} = process.env;
 
 export const ConfiguredInjectedConnector = new InjectedConnector({
-  supportedChainIds: chainIds,
-});
-
-const walletRPC = {};
-networks.forEach((network) => {
-  // eslint-disable-next-line prefer-destructuring
-  walletRPC[network.chainId] = network.rpcUrl;
+  supportedChainIds: [+REACT_APP_ETH_CHAIN_ID, +REACT_APP_AMB_CHAIN_ID],
 });
 
 export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
-  rpc: walletRPC,
+  rpc: {
+    [+REACT_APP_ETH_CHAIN_ID]: REACT_APP_ETH_RPC_URL + REACT_APP_INFURA_KEY,
+    [+REACT_APP_AMB_CHAIN_ID]: REACT_APP_AMB_RPC_URL,
+  },
   chainId: 1,
   bridge: 'https://bridge.walletconnect.org',
   pollingInterval: 6000,
