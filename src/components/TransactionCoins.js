@@ -17,7 +17,6 @@ const TransactionCoins = ({ selectedChainId, fromHash, toHash }) => {
       ? networks.find((el) => el.chainId === ethChainId)
       : AmbrosusNetwork;
 
-  console.log(currentNetwork, otherNetwork);
   return (
     <div className="transaction-coins">
       <div
