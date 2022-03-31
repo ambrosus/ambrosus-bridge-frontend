@@ -10,12 +10,7 @@ import ChevronIcon from '../assets/svg/chevron.svg';
 import MetaMaskIcon from '../assets/img/connect-wallet__metamask.jpg';
 import WalletConnectIcon from '../assets/img/connect-wallet__wallet-connect.png';
 import ErrorContext from '../contexts/ErrorContext';
-import {
-  getAllChainIds,
-  getAllNetworks,
-  getSupportedNetworks,
-} from '../utils/networks';
-import changeChainId from '../utils/changeChainId';
+import { getAllNetworks } from '../utils/networks';
 
 const ConnectWallet = () => {
   const { error, activate, account } = useWeb3React();
@@ -23,18 +18,7 @@ const ConnectWallet = () => {
   const history = useHistory();
 
   const handleMetamaskLogin = () => {
-    activate(ConfiguredInjectedConnector).then(async () => {
-      const id = await ConfiguredInjectedConnector.getChainId();
-
-      if (getAllChainIds().includes(parseInt(id, 16))) {
-        history.push('/exchange');
-      } else {
-        const provider = await ConfiguredInjectedConnector.getProvider();
-        const ethNetwork = getSupportedNetworks()[0];
-
-        changeChainId(provider, ethNetwork);
-      }
-    });
+    activate(ConfiguredInjectedConnector).then(() => history.push('/exchange'));
   };
 
   const handleWalletConnectLogin = () => {

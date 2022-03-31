@@ -67,12 +67,7 @@ const Routing = () => {
         component={Confirmation}
         condition={!!account}
       />
-      <ConditionalRoute
-        exact
-        path="/status/:txHash"
-        component={Status}
-        condition={!!account}
-      />
+      <Route exact path="/status/:txHash" component={Status} />
       <ConditionalRoute
         exact
         path="/history"
