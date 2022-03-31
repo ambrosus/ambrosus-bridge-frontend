@@ -28,10 +28,7 @@ worker.addEventListener('message', ({ data: { balance, type, address } }) => {
   }
 });
 
-const getLibrary = (provider = null) => {
-  console.log(provider);
-  return new providers.Web3Provider(provider);
-};
+const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
 const Main = () => {
   const [error, setError] = useState('');

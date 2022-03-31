@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import git from '../assets/svg/github-icon.svg';
@@ -6,8 +6,17 @@ import clockIcon from '../assets/svg/clock.svg';
 import checkIcon from '../assets/svg/check.svg';
 import spinnerIcon from '../assets/svg/spinner.svg';
 import IconLink from './IconLink';
+import getTxLastStageStatus from '../utils/getTxLastStageStatus';
+import providers from '../utils/providers';
 
 const TransactionListItem = ({ tx }) => {
+  useEffect(async () => {
+    const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
+    const eventId = receipt.logs[0].topics[1];
+
+    getTxLastStageStatus(tx.chainId, eventId);
+  }, []);
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
 
