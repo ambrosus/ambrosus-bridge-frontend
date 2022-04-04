@@ -7,6 +7,10 @@
   grid-row-gap: 0.5rem;
   grid-column-gap: 1rem;
   border-radius: 16px;
+
+  @media screen and (max-width: 450px) {
+    grid-template-columns: minmax(auto, 50%) minmax(auto, 25%) minmax(auto, 25%);
+  }
 }
 
 .currency-input_receive {

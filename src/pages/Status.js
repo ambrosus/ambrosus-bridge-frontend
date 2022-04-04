@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
-/*eslint-disable*/
 import { ethers } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
@@ -44,10 +43,9 @@ const Status = () => {
           txHash,
         );
 
-        //
-        // if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
-        //   history.push('/');
-        // }
+        if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
+          history.push('/');
+        }
 
         const isFirstStagePassed = receipt.logs.some((log) =>
           log.topics.some((topic) => topic === ethers.utils.id(withDrawTitle)),
@@ -150,10 +148,12 @@ const Status = () => {
 
   let conditionalConfClass = '';
 
-  if (confirmations === 10) {
-    conditionalConfClass = 'transaction-status__info-stage--checked';
-  } else if (confirmations < 10 && +stage > 2.1) {
-    conditionalConfClass = 'transaction-status__info-stage--loading';
+  if (+stage > 2.1) {
+    if (confirmations === 10) {
+      conditionalConfClass = 'transaction-status__info-stage--checked';
+    } else if (confirmations < 10 && +stage > 2.1) {
+      conditionalConfClass = 'transaction-status__info-stage--loading';
+    }
   }
 
   const confirmationClass = `transaction-status__info-stage ${conditionalConfClass}`;
@@ -202,7 +202,7 @@ const Status = () => {
             <p className={confirmationClass}>
               Confirmations
               <span className="transaction-status__info-stage-confirm">
-                {confirmations}/10
+                {+stage > 2.1 ? confirmations : 0}/10
               </span>
             </p>
           </div>

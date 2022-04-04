@@ -1,28 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { utils } from 'ethers';
 import git from '../assets/svg/github-icon.svg';
 import clockIcon from '../assets/svg/clock.svg';
 import checkIcon from '../assets/svg/check.svg';
 import spinnerIcon from '../assets/svg/spinner.svg';
 import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/getTxLastStageStatus';
-import providers from '../utils/providers';
+import providers, { ambChainId, ethChainId } from '../utils/providers';
+import { getAllNetworks } from '../utils/networks';
 
 const TransactionListItem = ({ tx }) => {
+  const [isSuccess, setIsSuccess] = useState(false);
+
   useEffect(async () => {
     const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
     const eventId = receipt.logs[0].topics[1];
 
-    getTxLastStageStatus(tx.chainId, eventId);
+    setIsSuccess(await getTxLastStageStatus(tx.chainId, eventId));
   }, []);
 
   const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
+    const date = new Date(timestamp * 1000);
 
-    return `${date.getDate()}.${
+    return `${date.getDate().toString().padStart(2, '0')}.${(
       date.getMonth() + 1
-    }.${date.getFullYear()}, ${date
+    )
+      .toString()
+      .padStart(2, '0')}.${date.getFullYear()}, ${date
       .getHours()
       .toString()
       .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date
@@ -30,6 +36,16 @@ const TransactionListItem = ({ tx }) => {
       .toString()
       .padStart(2, '0')}`;
   };
+
+  const getNetworkName = (networkId) =>
+    getAllNetworks().find((el) => el.chainId === networkId).name;
+
+  const getTxLink = (isEth, hash) =>
+    `${
+      isEth
+        ? 'https://rinkeby.etherscan.io/tx/'
+        : 'https://explorer.ambrosus.com/tx/'
+    }${hash}`;
 
   return (
     <div className="transaction-item">
@@ -44,7 +60,7 @@ const TransactionListItem = ({ tx }) => {
         <span className="transaction-item__grey-text transaction-item__time">
           {formatDate(tx.timestamp)}
         </span>
-        {!tx.isSuccess && (
+        {!isSuccess && (
           <Link
             to={`/status/${tx.hash}`}
             className="transaction-item__view-status"
@@ -54,34 +70,41 @@ const TransactionListItem = ({ tx }) => {
         )}
         <div
           className={`transaction-item__status ${
-            tx.isSuccess
+            isSuccess
               ? 'transaction-item__status--checked'
               : 'transaction-item__status--loading'
           }`}
         >
-          <img src={tx.isSuccess ? checkIcon : spinnerIcon} alt="status" />
-          {tx.isSuccess ? 'Success' : 'Pending'}
+          <img src={isSuccess ? checkIcon : spinnerIcon} alt="status" />
+          {isSuccess ? 'Success' : 'Pending'}
         </div>
       </div>
       <div className="transaction-item__row">
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text">From:</span>
           <span className="transaction-item__black-text">
-            Binance Smart Chain
+            {getNetworkName(tx.chainId)}
           </span>
-          <IconLink href="/" />
+          <IconLink
+            href={getTxLink(tx.chainId === ethChainId, tx.hash)}
+            text="txHash"
+          />
         </div>
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text">To:</span>
-          <span className="transaction-item__black-text">Ambrosus</span>
-          <IconLink href="/" />
+          <span className="transaction-item__black-text">
+            {getNetworkName(
+              tx.chainId === ambChainId ? ethChainId : ambChainId,
+            )}
+          </span>
+          <IconLink href={getTxLink(tx.chainId !== ethChainId)} text="txHash" />
         </div>
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text transaction-item__right">
             Amount:
           </span>
           <span className="transaction-item__black-text">
-            {tx.value.toNumber()} BNB.AM
+            {utils.formatUnits(tx.value, 18)} BNB.AM
           </span>
         </div>
       </div>
@@ -108,7 +131,7 @@ const TransactionListItem = ({ tx }) => {
 };
 
 TransactionListItem.propTypes = {
-  tx: PropTypes.bool,
+  tx: PropTypes.object,
 };
 
 export default TransactionListItem;

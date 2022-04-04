@@ -58,6 +58,11 @@
   background: white;
   padding: 1.5rem;
   border-radius: 16px;
+
+  @media screen and (max-width: 450px) {
+    width: 100%;
+    left: calc(50vw - 50%);
+  }
 }
 
 .token-select__heading {

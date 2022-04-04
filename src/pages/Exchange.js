@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { utils } from 'ethers';
+import { Link } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import CurrencyInput from '../components/CurrencyInput';
@@ -206,6 +207,13 @@ const Exchange = () => {
         <button type="submit" className="button button_black exchange__button">
           Transfer
         </button>
+        <Link
+          to="/mint"
+          style={{ marginTop: 16 }}
+          className="button button_gray exchange__button"
+        >
+          Mint Coins
+        </Link>
       </form>
     </>
   );
@@ -261,6 +269,7 @@ const ExchangeField = ({
         changeCoin={changeCoin}
         selectedCoin={selectedCoin}
         balance={balance}
+        minValue={0.0001}
       />
     </div>
   );

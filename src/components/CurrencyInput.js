@@ -10,9 +10,14 @@ const CurrencyInput = ({
   selectedCoin = {},
   balance = {},
   isValueInvalid = false,
+  minValue = null,
 }) => {
   const handleInput = ({ target: { value: newValue } }) => {
-    onChange(newValue);
+    onChange(
+      newValue.length > 6 && minValue !== null
+        ? newValue.slice(0, 6)
+        : newValue,
+    );
   };
 
   const handleKeyPress = (e) => {
@@ -25,6 +30,9 @@ const CurrencyInput = ({
   const setMax = () => {
     onChange(balance.formattedString);
   };
+
+  const minValueAttr =
+    minValue === null ? {} : { min: minValue, step: minValue };
 
   return (
     <div
@@ -43,6 +51,8 @@ const CurrencyInput = ({
         onChange={handleInput}
         onKeyPress={handleKeyPress}
         readOnly={disabled}
+        maxLength={5}
+        {...minValueAttr}
       />
       <button
         type="button"
@@ -81,6 +91,7 @@ CurrencyInput.propTypes = {
   selectedCoin: PropTypes.object,
   balance: PropTypes.object,
   isValueInvalid: PropTypes.bool,
+  minValue: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([null])]),
 };
 
 export default CurrencyInput;

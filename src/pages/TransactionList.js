@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
-import createBridgeContract from '../contracts';
+import createBridgeContract, {
+  ambContractAddress,
+  ethContractAddress,
+} from '../contracts';
 import TransactionListItem from '../components/TransactionListItem';
 
 const TransactionList = () => {
@@ -24,10 +27,15 @@ const TransactionList = () => {
           const { timestamp } = await el.getBlock();
 
           el.getTransaction().then((trans) => {
-            setTransactionHistory((state) => [
-              ...state,
-              { ...trans, address: el.address, timestamp },
-            ]);
+            if (
+              trans.to === ambContractAddress ||
+              trans.to === ethContractAddress
+            ) {
+              setTransactionHistory((state) => [
+                ...state,
+                { ...trans, address: el.address, timestamp },
+              ]);
+            }
           });
         });
       });

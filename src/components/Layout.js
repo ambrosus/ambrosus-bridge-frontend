@@ -43,7 +43,7 @@ export const Layout = ({ children, title, error }) => (
           />
         </a>
 
-        <Link to="/" className="layout__mobile-button">
+        <Link to="/history" className="layout__mobile-button">
           <img
             src={ClockIcon}
             alt="clock icon"
