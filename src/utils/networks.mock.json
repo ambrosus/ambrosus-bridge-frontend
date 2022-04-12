@@ -7,12 +7,12 @@
       {
         "name": "wAmber",
         "symbol": "wAMB",
-        "address": "0xB16205eebC2AD458FE79c3b2124CCe7D84CF5A26",
+        "address": "0x442594A89F37318E5F6952C4dB83201c8029A43f",
         "logo": "http://dummyimage.com/100x100.png/dddddd/000000",
         "denomination": 18,
         "bridgeAddresses": [],
         "addressesOnOtherNetworks": {
-          "eth": "0x7bd613b7b72BF66010b7d3203F5Bcf129165F422",
+          "eth": "0xd1f26a16cf5C58E91DA996a228F050969910d4f4",
           "bsc": ""
         }
       }
@@ -27,12 +27,12 @@
       {
         "name": "wAmber",
         "symbol": "wAMB",
-        "address": "0xF5403ff735f94aC00894D0603f865ed3D951A610",
+        "address": "0xd1f26a16cf5C58E91DA996a228F050969910d4f4",
         "logo": "http://dummyimage.com/100x100.png/dddddd/000000",
         "denomination": 18,
         "bridgeAddresses": [],
         "addressesOnOtherNetworks": {
-          "eth": "0x79d0707ff6c917907D9DbF1793EDF4df9B8b3cDF",
+          "eth": "0x442594A89F37318E5F6952C4dB83201c8029A43f",
           "bsc": ""
         }
       }
