@@ -1,17 +1,17 @@
 import { ethers } from 'ethers';
 
-import ambBridgeABI from './AmbBridge.json';
-import ethBridgeABI from './EthBridge.json';
+import ABI from './abi.json';
+
 import { ambChainId, ethChainId } from '../utils/providers';
 
-export const ambContractAddress = '0xd390d1bFd4AAeCd1635da5dDa419d388a7CF8766';
-export const ethContractAddress = '0x3bc9473700bfECba201915e09207D42Af4CF0B63';
+export const ambContractAddress = '0x41E2661363228b6A211A9B4E7f74301303B425a5';
+export const ethContractAddress = '0x088f64638BF0ba326A3e12AD72fc1BcE7058Eb4E';
 
 const createAmbBridgeContract = (provider) =>
-  new ethers.Contract(ambContractAddress, ambBridgeABI, provider);
+  new ethers.Contract(ambContractAddress, ABI, provider);
 
 const createEthBridgeContract = (provider) =>
-  new ethers.Contract(ethContractAddress, ethBridgeABI, provider);
+  new ethers.Contract(ethContractAddress, ABI, provider);
 
 const createBridgeContract = {
   [ambChainId]: createAmbBridgeContract,

@@ -66,5 +66,9 @@ const fetchAllBalances = (account) => {
 self.addEventListener('message', ({ data: { type, account } }) => {
   if (type === 'start') {
     fetchAllBalances(account);
+
+    Object.values(providers).forEach((provider) => {
+      provider.on('block', () => fetchAllBalances(account));
+    });
   }
 });

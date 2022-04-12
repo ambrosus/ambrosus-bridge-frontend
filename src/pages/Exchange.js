@@ -32,7 +32,7 @@ const Exchange = () => {
   const [selectedChainId, setChainId] = useState(undefined);
   const [selectedCoin, setCoin] = useState({});
 
-  const [transactionAmount, setTransactionAmount] = useState('0.0');
+  const [transactionAmount, setTransactionAmount] = useState('');
 
   const [isOpenCoinModal, toggleCoinModal] = useModal();
 
@@ -85,7 +85,7 @@ const Exchange = () => {
 
   // reset value if coin changed
   useEffect(() => {
-    setTransactionAmount('0.0');
+    setTransactionAmount('');
   }, [selectedCoin]);
 
   // remove error on any change until new form submission
@@ -201,7 +201,7 @@ const Exchange = () => {
         <div className="exchange__estimated-fee-container">
           Transfer fee:
           <span className="exchange__estimated-fee">
-            {transferFee || <InlineLoader />} ETH
+            {transferFee || <InlineLoader />} {isFromAmb ? 'AMB' : 'ETH'}
           </span>
         </div>
         <button type="submit" className="button button_black exchange__button">
@@ -227,7 +227,7 @@ const ExchangeField = ({
   setChainId = () => {},
   selectedChainId = 0,
   selectedCoin = {},
-  transactionAmount = '0.0',
+  transactionAmount = '',
   setTransactionAmount = () => {},
   changeCoin = () => {},
   isValueInvalid = false,
@@ -254,7 +254,7 @@ const ExchangeField = ({
         Balance:
         {balance.formattedString ? (
           <span className="exchange-field__balance">
-            {balance.formattedString} {selectedCoin.code}
+            {sliceBalance(balance.formattedString)} {selectedCoin.code}
           </span>
         ) : (
           <InlineLoader />
@@ -285,4 +285,17 @@ ExchangeField.propTypes = {
   changeCoin: PropTypes.func,
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
+};
+
+const sliceBalance = (balance) => {
+  const [intPart, floatPart] = balance.split('.');
+  let formattedBalance;
+  if (floatPart && floatPart.length > 6) {
+    formattedBalance = `${intPart}.${floatPart.slice(0, 6)}…`;
+  } else if (floatPart) {
+    formattedBalance = `${intPart}.${floatPart}`;
+  } else {
+    formattedBalance = intPart;
+  }
+  return formattedBalance;
 };

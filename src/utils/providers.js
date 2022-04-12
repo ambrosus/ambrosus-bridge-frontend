@@ -1,27 +1,26 @@
 import { ethers } from 'ethers';
 
-const { INFURA_KEY, REACT_APP_ENV } = process.env;
+const {
+  REACT_APP_ETH_CHAIN_ID,
+  REACT_APP_AMB_CHAIN_ID,
+  REACT_APP_AMB_RPC_URL,
+  REACT_APP_INFURA_KEY,
+} = process.env;
 
 // ethereum read-only provider configuration
-export const ethChainId = REACT_APP_ENV === 'production' ? 1 : 4;
+export const ethChainId = +REACT_APP_ETH_CHAIN_ID;
 
-const ethProvider = new ethers.providers.FallbackProvider(
-  [
-    new ethers.providers.InfuraProvider(ethChainId, INFURA_KEY),
-    // new ethers.providers.EtherscanProvider(ethChainId),
-  ],
-  1,
+const ethProvider = new ethers.providers.InfuraProvider(
+  ethChainId,
+  REACT_APP_INFURA_KEY,
 );
 
 // ambrosus read-only provider configuration
-export const ambChainId = REACT_APP_ENV === 'production' ? 16718 : 30741;
+export const ambChainId = +REACT_APP_AMB_CHAIN_ID;
 
-const ambRPCUrl =
-  REACT_APP_ENV === 'production'
-    ? 'https://network.ambrosus.io'
-    : 'https://network.ambrosus-dev.io';
-
-export const ambProvider = new ethers.providers.JsonRpcProvider(ambRPCUrl);
+export const ambProvider = new ethers.providers.JsonRpcProvider(
+  REACT_APP_AMB_RPC_URL,
+);
 
 // binance smart chain read-only provider configuration
 // export const bscChainId = REACT_APP_ENV === 'production' ? 56 : 97;
