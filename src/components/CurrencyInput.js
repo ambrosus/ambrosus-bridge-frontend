@@ -4,7 +4,7 @@ import ChevronIcon from '../assets/svg/chevron.svg';
 
 const CurrencyInput = ({
   disabled = false,
-  value = '0.0',
+  value = '',
   onChange = () => {},
   changeCoin = () => {},
   selectedCoin = {},
@@ -30,7 +30,9 @@ const CurrencyInput = ({
     <div
       className={`currency-input
        ${disabled ? 'currency-input_receive' : ''}
-       ${isValueInvalid ? 'currency-input_invalid' : ''}`}
+       ${isValueInvalid ? 'currency-input_invalid' : ''}
+       ${value.length > 12 ? 'currency-input_too-long' : ''}
+       `}
     >
       <label className="currency-input__label">
         {disabled ? 'Receive:' : 'Send:'}

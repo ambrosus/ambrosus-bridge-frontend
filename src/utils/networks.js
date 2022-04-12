@@ -1,42 +1,61 @@
 import NetworkMock from './networks.mock.json';
-
-export const getSupportedNetworks = () =>
-  process.env.REACT_APP_ENV === 'production'
-    ? {
-        // ...
-        // some fetching stuff
-        // ...
-      }
-    : NetworkMock;
-
-export const AmbrosusNetwork =
-  process.env.REACT_APP_ENV === 'production'
-    ? {
-        name: 'Ambrosus',
-        code: 'AMB',
-        chainId: 16718,
-        logo: 'https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps',
-        rpcUrl: 'https://network.ambrosus.io',
-      }
-    : {
-        name: 'Ambrosus Devnet',
-        code: 'AMB',
-        chainId: 30741,
-        logo: 'https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps',
-        rpcUrl: 'https://network.ambrosus-dev.io',
-      };
+const {
+  REACT_APP_ETH_CHAIN_ID,
+  REACT_APP_AMB_CHAIN_ID,
+  REACT_APP_ETH_RPC_URL,
+  REACT_APP_AMB_RPC_URL,
+} = process.env;
 
 export const getAllNetworks = () => {
-  const supportedNetworks = getSupportedNetworks();
-  return [AmbrosusNetwork, ...supportedNetworks];
+  let networks;
+  if (process.env.REACT_APP_ENV === 'production') {
+    // ...
+    // fetching
+    // ...
+  } else {
+    networks = NetworkMock;
+  }
+
+  const [amb, eth] = Object.values(networks).map((network) => {
+    const formattedTokens = network.tokens.map((token) => {
+      const {
+        name,
+        symbol: code,
+        logo,
+        denomination,
+        address: nativeContractAddress,
+        addressesOnOtherNetworks: { eth: linkedContractAddress },
+      } = token;
+      return {
+        name,
+        code,
+        logo,
+        denomination,
+        nativeContractAddress,
+        linkedContractAddress,
+      };
+    });
+
+    return { ...network, tokens: formattedTokens };
+  });
+
+  amb.chainId = +REACT_APP_AMB_CHAIN_ID;
+  eth.chainId = +REACT_APP_ETH_CHAIN_ID;
+
+  amb.rpcUrl = REACT_APP_AMB_RPC_URL;
+  eth.rpcUrl = REACT_APP_ETH_RPC_URL;
+
+  return [amb, eth];
 };
+
+export const getSupportedNetworks = () => {
+  const [, eth] = getAllNetworks();
+  return [eth];
+};
+
+export const [AmbrosusNetwork] = getAllNetworks();
 
 export const getNetworkByChainId = (chainId) => {
   const networks = getAllNetworks();
   return networks.find((network) => network.chainId === chainId);
-};
-
-export const getAllChainIds = () => {
-  const networks = getAllNetworks();
-  return networks.map((network) => network.chainId);
 };

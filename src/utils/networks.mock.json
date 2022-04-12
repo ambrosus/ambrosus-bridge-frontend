@@ -1,51 +1,42 @@
-[
-  {
-    "name":"Ethereum Rinkeby",
-    "code": "ETH",
-    "logo":"https://dummyimage.com/100x100/1446fa/fff.png&text=1",
-    "rpcUrl": "https://rinkeby.infura.io/v3/",
-    "chainId": 4,
-    "tokens":[
+{
+  "amb": {
+    "name": "Ambrosus Devnet",
+    "logo": "https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps",
+    "code": "AMB",
+    "tokens": [
       {
-        "name":"Rupiah",
-        "code":"IDR",
-        "logo":"http://dummyimage.com/100x100.png/ff4444/ffffff",
-        "nativeContractAddress":"0x79d0707ff6c917907D9DbF1793EDF4df9B8b3cDF",
-        "linkedContractAddress":"0x7bd613b7b72BF66010b7d3203F5Bcf129165F422",
-        "denomination": 18
-      },
-      {
-        "name":"Euro",
-        "code":"EUR",
-        "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0xc3C17eb0Bb0eC29F6220dF23B6f9F8F79fDFc70E",
-        "linkedContractAddress":"0x50D697Fd57051573c00C305bb79f5978036d8BaA",
-        "denomination": 18
-      },
-      {
-        "name":"Ringgit",
-        "code":"MYR",
-        "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0xf814016F0fd6025631c234Cf3fCB05C0E8e19b92",
-        "linkedContractAddress":"0x6d4287E23D544cab6d87518411FeAA2Ee36b26fd",
-        "denomination": 18
-      },
-      {
-        "name":"Tenge",
-        "code":"KZT",
-        "logo":"http://dummyimage.com/100x100.png/dddddd/000000",
-        "nativeContractAddress":"0xBbDB84b91C7d1FD2A96C998913739437FAaB9564",
-        "linkedContractAddress":"0x69832d2D963170991F40A4D84D2035fF9975eE7b",
-        "denomination": 18
-      },
-      {
-        "name":"Hryvna",
-        "code":"UAH",
-        "logo":"http://dummyimage.com/100x100.png/cc0000/ffffff",
-        "nativeContractAddress":"0xc0a2505a48F02F4fc4288B8e5bADd9e1deE95966",
-        "linkedContractAddress":"0xC0d84FB65bCBbAA31dDA9b7cdDE55DbbD7Af4870",
-        "denomination": 18
+        "name": "wAmber",
+        "symbol": "wAMB",
+        "address": "0xB16205eebC2AD458FE79c3b2124CCe7D84CF5A26",
+        "logo": "http://dummyimage.com/100x100.png/dddddd/000000",
+        "denomination": 18,
+        "bridgeAddresses": [],
+        "addressesOnOtherNetworks": {
+          "eth": "0x7bd613b7b72BF66010b7d3203F5Bcf129165F422",
+          "bsc": ""
+        }
       }
-    ]
+    ],
+    "bridgeAddress": ""
+  },
+  "eth": {
+    "name": "Ethereum",
+    "logo": "https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps",
+    "code": "ETH",
+    "tokens": [
+      {
+        "name": "wAmber",
+        "symbol": "wAMB",
+        "address": "0xF5403ff735f94aC00894D0603f865ed3D951A610",
+        "logo": "http://dummyimage.com/100x100.png/dddddd/000000",
+        "denomination": 18,
+        "bridgeAddresses": [],
+        "addressesOnOtherNetworks": {
+          "eth": "0x79d0707ff6c917907D9DbF1793EDF4df9B8b3cDF",
+          "bsc": ""
+        }
+      }
+    ],
+    "bridgeAddress": ""
   }
-]
+}
