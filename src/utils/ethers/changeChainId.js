@@ -1,5 +1,5 @@
 import { utils } from 'ethers';
-import { getNetworkByChainId } from './networks';
+import { getNetworkByChainId } from '../networks';
 
 const changeChainId = async (provider, chainId) => {
   const selectedNetwork = getNetworkByChainId(chainId);

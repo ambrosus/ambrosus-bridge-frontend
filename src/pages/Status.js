@@ -10,7 +10,7 @@ import createBridgeContract, {
   ambContractAddress,
   ethContractAddress,
 } from '../contracts';
-import getTxLastStageStatus from '../utils/getTxLastStageStatus';
+import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 /*eslint-disable*/
 import ABI from '../contracts/abi.json';
 const withDrawTitle = 'Withdraw(address,uint256,uint256)';

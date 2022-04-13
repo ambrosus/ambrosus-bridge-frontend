@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { getSupportedNetworks } from '../utils/networks';
-import { useSubscribeOnBalanceUpdate } from './useCoinBalance/useCoinBalance';
-import { getCachedCoinBalance } from './useCoinBalance/utils';
+import { getAllNetworks } from '../utils/networks';
+import { useSubscribeOnBalanceUpdate } from './useCoinBalance';
+import getCachedCoinBalance from '../utils/helpers/getCachedCoinBalance';
 
 const useTokenList = (chainId) => {
   const [tokenList, setTokenList] = useState([]);
 
   useEffect(() => {
-    const supportedNetworks = getSupportedNetworks();
+    const supportedNetworks = getAllNetworks();
     const currentNetwork = chainId
       ? supportedNetworks.find((network) => network.chainId === chainId)
       : supportedNetworks[0];

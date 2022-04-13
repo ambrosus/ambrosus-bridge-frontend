@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ChevronIcon from '../assets/svg/chevron.svg';
+import ChevronIcon from '../../assets/svg/chevron.svg';
 
 const CurrencyInput = ({
   disabled = false,
