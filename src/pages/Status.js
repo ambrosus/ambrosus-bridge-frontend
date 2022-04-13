@@ -11,8 +11,7 @@ import createBridgeContract, {
   ethContractAddress,
 } from '../contracts';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
-/*eslint-disable*/
-import ABI from '../contracts/abi.json';
+
 const withDrawTitle = 'Withdraw(address,uint256,uint256)';
 const transferTitle = 'Transfer(uint256,(address,address,uint256)[])';
 
@@ -55,7 +54,7 @@ const Status = () => {
         if (isFirstStagePassed) {
           currentStage = '2.1';
         }
-        const eventId = receipt.logs[3].topics[1];
+        const eventId = receipt.logs[0].topics[1];
         const contract = createBridgeContract[networkId](providers[networkId]);
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);

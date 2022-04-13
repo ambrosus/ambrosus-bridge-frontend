@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import changeChainId from '../utils/ethers/changeChainId';
 import { ambChainId } from '../utils/providers';
 import { ambContractAddress } from '../contracts';
