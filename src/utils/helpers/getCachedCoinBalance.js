@@ -1,4 +1,4 @@
-export const getCachedCoinBalance = (tokenAddress) => {
+const getCachedCoinBalance = (tokenAddress) => {
   const cachedBalanceString = sessionStorage.getItem(tokenAddress);
   if (cachedBalanceString) {
     return JSON.parse(cachedBalanceString);
@@ -9,3 +9,5 @@ export const getCachedCoinBalance = (tokenAddress) => {
     float: 0.0,
   };
 };
+
+export default getCachedCoinBalance;

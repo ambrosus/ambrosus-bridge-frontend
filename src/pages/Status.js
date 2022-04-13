@@ -10,7 +10,7 @@ import createBridgeContract, {
   ambContractAddress,
   ethContractAddress,
 } from '../contracts';
-import getTxLastStageStatus from '../utils/getTxLastStageStatus';
+import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 
 const withDrawTitle = 'Withdraw(address,uint256)';
 const transferTitle = 'Transfer(address,address,uint256)';

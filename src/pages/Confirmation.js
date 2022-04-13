@@ -36,7 +36,7 @@ const Confirmation = () => {
     const bnTransactionAmount = BigNumber.from(
       utils.parseUnits(transactionAmount, selectedCoin.denomination),
     );
-    const bnTransferFee = BigNumber.from(transferFee);
+    const bnTransferFee = transferFee;
     const mintOpts = isFromAmb ? { gasLimit: 8000000, gasPrice: 1 } : {};
     BridgeContract.withdraw(
       selectedCoin.nativeContractAddress,

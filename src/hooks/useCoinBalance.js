@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
-import { getCachedCoinBalance } from './utils';
-import ERC20BalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext';
+import getCachedCoinBalance from '../utils/helpers/getCachedCoinBalance';
+import ERC20BalanceWorkerContext from '../contexts/CoinBalanceWorkerContext';
 
 export const useCoinBalance = (tokenAddress) => {
   const worker = useContext(ERC20BalanceWorkerContext);

@@ -7,7 +7,7 @@ import clockIcon from '../assets/svg/clock.svg';
 import checkIcon from '../assets/svg/check.svg';
 import spinnerIcon from '../assets/svg/spinner.svg';
 import IconLink from './IconLink';
-import getTxLastStageStatus from '../utils/getTxLastStageStatus';
+import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
 import { getAllNetworks } from '../utils/networks';
 

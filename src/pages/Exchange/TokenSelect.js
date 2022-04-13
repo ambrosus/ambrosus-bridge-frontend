@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import MagnifyingGlassIcon from '../assets/svg/magnifying-glass.svg';
-import CrossIcon from '../assets/svg/cross.svg';
-import InlineLoader from './InlineLoader';
-import useTokenList from '../hooks/useTokenList';
-import { useCoinBalance } from '../hooks/useCoinBalance/useCoinBalance';
+import MagnifyingGlassIcon from '../../assets/svg/magnifying-glass.svg';
+import CrossIcon from '../../assets/svg/cross.svg';
+import InlineLoader from '../../components/InlineLoader';
+import useTokenList from '../../hooks/useTokenList';
+import { useCoinBalance } from '../../hooks/useCoinBalance';
 
 const TokenSelect = ({
   isOpen = false,

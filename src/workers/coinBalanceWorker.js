@@ -1,7 +1,7 @@
 import { utils } from 'ethers';
 import providers from '../utils/providers';
 import { getSupportedNetworks, AmbrosusNetwork } from '../utils/networks';
-import getTokenBalance from '../utils/getTokenBalance';
+import getTokenBalance from '../utils/ethers/getTokenBalance';
 
 // This worker needed to fetch balance for all presented coins
 // it works in tandem with "useCoinBalance" hook
