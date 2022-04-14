@@ -23,7 +23,7 @@ const withdrawWrappedCoins = async (
   }
 
   return BridgeContract.withdraw(
-    selectedCoin.nativeContractAddress,
+    selectedCoin.addresses[chainId],
     account,
     bnTransactionAmount,
     { value: transferFee, ...gasOpts },

@@ -6,23 +6,21 @@ import TransactionCoins from '../components/TransactionCoins';
 import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
-import { AmbrosusNetwork } from '../utils/networks';
 import withdrawWrappedCoins from '../utils/ethers/withdrawWrappedCoins';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
   const [transferFee, setTransferFee] = useState();
 
   const {
     location: {
-      state: { selectedChainId, selectedCoin, transactionAmount, isFromAmb },
+      state: { selectedChainId, selectedCoin, transactionAmount },
     },
     goBack,
     push,
   } = useHistory();
 
-  const chainId = isFromAmb ? AmbrosusNetwork.chainId : selectedChainId;
   const BridgeContract = createBridgeContract[chainId](library.getSigner());
 
   useEffect(async () => {
@@ -45,7 +43,7 @@ const Confirmation = () => {
         push(`/status/${res.hash}`);
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         setError('There is some error. Please refresh and try again');
       });
   };
