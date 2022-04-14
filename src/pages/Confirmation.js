@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
-import { BigNumber, utils } from 'ethers';
+import { utils } from 'ethers';
 import TransactionCoins from '../components/TransactionCoins';
 import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
 import { AmbrosusNetwork } from '../utils/networks';
+import withdrawWrappedCoins from '../utils/ethers/withdrawWrappedCoins';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
@@ -21,28 +22,24 @@ const Confirmation = () => {
     push,
   } = useHistory();
 
-  const signer = library.getSigner();
   const chainId = isFromAmb ? AmbrosusNetwork.chainId : selectedChainId;
-  const BridgeContract = createBridgeContract[chainId](signer);
+  const BridgeContract = createBridgeContract[chainId](library.getSigner());
 
   useEffect(async () => {
     const fee = await BridgeContract.callStatic.fee();
     setTransferFee(fee);
   }, []);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const bnTransactionAmount = BigNumber.from(
-      utils.parseUnits(transactionAmount, selectedCoin.denomination),
-    );
-    const bnTransferFee = transferFee;
-    const mintOpts = isFromAmb ? { gasLimit: 8000000, gasPrice: 1 } : {};
-    BridgeContract.withdraw(
-      selectedCoin.nativeContractAddress,
+    withdrawWrappedCoins(
+      transactionAmount,
+      selectedCoin,
+      transferFee,
       account,
-      bnTransactionAmount,
-      { value: bnTransferFee, ...mintOpts },
+      chainId,
+      BridgeContract,
     )
       .then((res) => {
         push(`/status/${res.hash}`);
@@ -57,7 +54,7 @@ const Confirmation = () => {
     <form onSubmit={handleSubmit} className="content confirmation-page">
       <h2 className="confirmation-page__title">Confirm</h2>
       <p className="confirmation-page__amount">
-        {transactionAmount} {selectedCoin.code}
+        {transactionAmount} {selectedCoin.symbol}
       </p>
       <TransactionCoins selectedChainId={selectedChainId} />
       <div className="confirmation-info">

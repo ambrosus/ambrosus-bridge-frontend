@@ -17,11 +17,7 @@ const ExchangeField = ({
   changeCoin = () => {},
   isValueInvalid = false,
 }) => {
-  const balance = useCoinBalance(
-    isReceive
-      ? selectedCoin.linkedContractAddress
-      : selectedCoin.nativeContractAddress,
-  );
+  const balance = useCoinBalance(selectedCoin.addresses[networks[0].chainId]);
 
   return (
     <div className="exchange-field">
@@ -39,7 +35,7 @@ const ExchangeField = ({
         Balance:
         {balance.formattedString ? (
           <span className="exchange-field__balance">
-            {formatBalance(balance.formattedString)} {selectedCoin.code}
+            {formatBalance(balance.formattedString)} {selectedCoin.symbol}
           </span>
         ) : (
           <InlineLoader />

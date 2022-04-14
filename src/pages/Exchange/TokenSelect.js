@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import MagnifyingGlassIcon from '../../assets/svg/magnifying-glass.svg';
 import CrossIcon from '../../assets/svg/cross.svg';
 import InlineLoader from '../../components/InlineLoader';
-import useTokenList from '../../hooks/useTokenList';
 import { useCoinBalance } from '../../hooks/useCoinBalance';
+import TokenListContext from '../../contexts/TokenListContext/context';
 
 const TokenSelect = ({
   isOpen = false,
   toggle = () => {},
   setCoin = () => {},
   selectedChainId,
-  isFromAmb = false,
 }) => {
-  const tokenList = useTokenList(selectedChainId);
+  const tokenList = useContext(TokenListContext);
   const [sortedTokenList, setSortedTokenList] = useState([]);
 
   // lock scrolling of entire page if modal is open
@@ -25,11 +24,11 @@ const TokenSelect = ({
 
   const [searchString, setSearchString] = useState('');
 
-  const filterListBySearch = (token = { name: '', code: '' }) => {
-    const [ss, name, code] = [searchString, token.name, token.code].map((str) =>
-      str.toLowerCase(),
+  const filterListBySearch = (token = { name: '', symbol: '' }) => {
+    const [ss, name, symbol] = [searchString, token.name, token.symbol].map(
+      (str) => str.toLowerCase(),
     );
-    return name.startsWith(ss) || code.startsWith(ss);
+    return name.startsWith(ss) || symbol.startsWith(ss);
   };
 
   const sortListByBalance = (token) => (token.withBalance ? -1 : 1);
@@ -62,13 +61,13 @@ const TokenSelect = ({
             <div className="token-select__token-list">
               {sortedTokenList.map((token) => (
                 <TokenButton
-                  key={token.nativeContractAddress}
+                  key={token.symbol}
                   {...{
                     token,
                     toggle,
                     setCoin,
-                    isFromAmb,
                   }}
+                  address={token.addresses[selectedChainId]}
                 />
               ))}
             </div>
@@ -116,10 +115,8 @@ SearchInput.propTypes = {
   onChange: PropTypes.func,
 };
 
-const TokenButton = ({ token, setCoin, toggle, isFromAmb }) => {
-  const balance = useCoinBalance(
-    isFromAmb ? token.linkedContractAddress : token.nativeContractAddress,
-  );
+const TokenButton = ({ token, setCoin, toggle, address }) => {
+  const balance = useCoinBalance(address);
   return (
     <button
       type="button"
@@ -130,11 +127,11 @@ const TokenButton = ({ token, setCoin, toggle, isFromAmb }) => {
       className="token-select__token"
     >
       <img src={token.logo} alt="#" className="token-select__token-icon" />
-      <span className="token-select__token-shorthand">{token.code}</span>
+      <span className="token-select__token-shorthand">{token.symbol}</span>
       <span className="token-select__token-name">{token.name}</span>
       {balance.formattedString ? (
         <span className="token-select__token-balance">
-          {balance.formattedString} {token.code}
+          {balance.formattedString} {token.symbol}
         </span>
       ) : (
         <InlineLoader />
@@ -147,5 +144,5 @@ TokenButton.propTypes = {
   token: PropTypes.object,
   setCoin: PropTypes.func,
   toggle: PropTypes.func,
-  isFromAmb: PropTypes.bool,
+  address: PropTypes.string,
 };

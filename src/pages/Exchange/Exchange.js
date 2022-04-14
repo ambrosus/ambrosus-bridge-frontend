@@ -5,34 +5,31 @@ import { utils } from 'ethers';
 import { Link } from 'react-router-dom';
 import ErrorContext from '../../contexts/ErrorContext';
 import useModal from '../../hooks/useModal';
-import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext';
-import {
-  AmbrosusNetwork,
-  getNetworkByChainId,
-  getSupportedNetworks,
-} from '../../utils/networks';
+import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
+import { AmbrosusNetwork, getSupportedNetworks } from '../../utils/networks';
 import changeChainId from '../../utils/ethers/changeChainId';
-import getTokenBalance from '../../utils/ethers/getTokenBalance';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import InlineLoader from '../../components/InlineLoader';
 import ExchangeField from './ExchangeField';
 import createBridgeContract from '../../contracts';
 import TokenSelect from './TokenSelect';
 import { ambChainId, ethChainId } from '../../utils/providers';
+import TokenListContext from '../../contexts/TokenListContext/context';
+import validateTransactionAmount from '../../utils/ethers/validateTransactionAmount';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
+  const tokenList = useContext(TokenListContext);
   const [networks, setNetworks] = useState(undefined);
 
   const { library, account, chainId } = useWeb3React();
   const isFromAmb = chainId === ambChainId;
-  console.log(isFromAmb);
   const toggleDirection = async () => {
     const newChainId = isFromAmb ? ethChainId : ambChainId;
     await changeChainId(library.provider, newChainId);
   };
 
-  const [selectedCoin, setCoin] = useState({});
+  const [selectedCoin, setCoin] = useState(tokenList[0]);
 
   const [transactionAmount, setTransactionAmount] = useState('');
 
@@ -40,27 +37,18 @@ const Exchange = () => {
 
   const [transferFee, setTransferFee] = useState(null);
 
-  const [isValueInvalid, setIsInvalid] = useState(false);
-
   const worker = useContext(CoinBalanceWorkerContext);
 
   // setting init values
   useEffect(async () => {
     const supportedNetworks = getSupportedNetworks();
-
     setNetworks(supportedNetworks);
-    setCoin(supportedNetworks[0].tokens[0]);
-
     worker.postMessage({ type: 'start', account });
   }, []);
 
-  // if network changed, set first token presented in list and update transaction fee
-  // (actually useless until bsc integration)
+  // if network changed update transaction fee
   useEffect(async () => {
-    const selectedNetwork = getNetworkByChainId(chainId);
-    setCoin(selectedNetwork.tokens[0]);
     const BridgeContract = createBridgeContract[chainId](library);
-
     const fee = await BridgeContract.callStatic.fee();
     setTransferFee(utils.formatEther(fee));
   }, [chainId]);
@@ -70,54 +58,22 @@ const Exchange = () => {
     setTransactionAmount('');
   }, [selectedCoin]);
 
-  // remove error on any change until new form submission
-  useEffect(() => {
-    setError(null);
-    setIsInvalid(false);
-  }, [transactionAmount, selectedCoin, chainId]);
-
-  // // set chainId in interface if it was changed in wallet
-  // // (unsupported chainId's handled in routing in Main.js)
-  // useEffect(() => {
-  //   if (chainId === AmbrosusNetwork.chainId) {
-  //     setIsFromAmb(true);
-  //   } else {
-  //     setIsFromAmb(false);
-  //   }
-  // }, [chainId]);
-
+  const [isValueInvalid, setIsInvalid] = useState(false);
   const history = useHistory();
 
   const handleTransaction = async (e) => {
     e.preventDefault();
-    const tokenAddress = selectedCoin.nativeContractAddress;
-
-    let isInvalid = false;
-    const actualBnBalance = await getTokenBalance(
+    const errorMessage = await validateTransactionAmount(
       library,
-      tokenAddress,
+      selectedCoin.addresses[chainId],
+      transactionAmount,
+      selectedCoin.denomination,
       account,
     );
 
-    let bnValue;
-    try {
-      bnValue = utils.parseUnits(transactionAmount, selectedCoin.denomination);
-    } catch (parseError) {
-      isInvalid = true;
-      setError('Invalid value');
-    }
-
-    if (bnValue.gt(actualBnBalance)) {
-      isInvalid = true;
-      setError('Not enough coins on balance');
-    }
-    if (bnValue.isZero()) {
-      isInvalid = true;
-      setError('Your value is zero');
-    }
-
-    if (isInvalid) {
-      setIsInvalid(isInvalid);
+    if (errorMessage) {
+      setIsInvalid(!!errorMessage);
+      setError(errorMessage);
     } else {
       history.push({
         pathname: '/confirm',
@@ -130,6 +86,12 @@ const Exchange = () => {
       });
     }
   };
+
+  // remove error on any change until new form submission
+  useEffect(() => {
+    setError(null);
+    setIsInvalid(false);
+  }, [transactionAmount, selectedCoin, chainId]);
 
   return (
     <>

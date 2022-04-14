@@ -68,13 +68,12 @@ const CurrencyInput = ({
         className="currency-input__coin-button"
         onClick={changeCoin}
       >
-        {/* mock image */}
         <img
           src={selectedCoin.logo}
           alt="#"
           className="currency-input__currency-icon"
         />
-        {selectedCoin.code}
+        {selectedCoin.symbol}
         <img
           src={ChevronIcon}
           alt="chevron icon"
