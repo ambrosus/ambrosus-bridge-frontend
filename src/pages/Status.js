@@ -56,7 +56,7 @@ const Status = () => {
               topic === getEventSignatureByName(contract, withDrawName),
           ),
         );
-
+        console.log(receipt.logs);
         if (withDrawEvent) {
           currentStage = '2.1';
         }
@@ -66,6 +66,7 @@ const Status = () => {
         )[0];
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
+        console.log(eventId);
 
         if (+currentStage >= 2.1 && event.length) {
           setOtherNetworkTxHash(event[0].transactionHash);
