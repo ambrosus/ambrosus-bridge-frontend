@@ -26,7 +26,7 @@
       "name": "Wrapped Ether",
       "symbol": "WETH",
       "denomination": 18,
-      "logo": "todo",
+      "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
       "primaryNet": "eth",
       "addresses": {
         "amb": "0xE0b5DfA73BF1299e131000d5279a871c0ae1c17e",
