@@ -5,6 +5,9 @@ const getTokenBalance = async (
   tokenContractAddress,
   ownerAddress,
 ) => {
+  if (!tokenContractAddress) {
+    return provider.getBalance(ownerAddress);
+  }
   const minABI = [
     {
       constant: true,

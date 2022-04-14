@@ -10,10 +10,11 @@ import ChevronIcon from '../assets/svg/chevron.svg';
 import MetaMaskIcon from '../assets/img/connect-wallet__metamask.jpg';
 import WalletConnectIcon from '../assets/img/connect-wallet__wallet-connect.png';
 import ErrorContext from '../contexts/ErrorContext';
-import { getAllNetworks } from '../utils/networks';
+import changeChainId from '../utils/ethers/changeChainId';
+import { ambChainId } from '../utils/providers';
 
 const ConnectWallet = () => {
-  const { error, activate, account } = useWeb3React();
+  const { error, activate, account, library } = useWeb3React();
   const { setError } = useContext(ErrorContext);
   const history = useHistory();
 
@@ -27,13 +28,14 @@ const ConnectWallet = () => {
     );
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (error instanceof UnsupportedChainIdError) {
-      const networks = getAllNetworks();
-      const networksNames = networks.map((network) => network.name).join(', ');
-      setError(
-        `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
-      );
+      // const networks = getAllNetworks();
+      // const networksNames = networks.map((network) => network.name).join(', ');
+      // setError(
+      //   `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
+      // );
+      await changeChainId(library.provider, ambChainId);
     }
     if (account) {
       setError(null);

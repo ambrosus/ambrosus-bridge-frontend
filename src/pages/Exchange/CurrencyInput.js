@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ChevronIcon from '../assets/svg/chevron.svg';
+import ChevronIcon from '../../assets/svg/chevron.svg';
 
 const CurrencyInput = ({
   disabled = false,
@@ -68,13 +68,12 @@ const CurrencyInput = ({
         className="currency-input__coin-button"
         onClick={changeCoin}
       >
-        {/* mock image */}
         <img
           src={selectedCoin.logo}
           alt="#"
           className="currency-input__currency-icon"
         />
-        {selectedCoin.code}
+        {selectedCoin.symbol}
         <img
           src={ChevronIcon}
           alt="chevron icon"
