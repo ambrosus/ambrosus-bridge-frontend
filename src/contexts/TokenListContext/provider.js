@@ -5,7 +5,7 @@ import CoinBalanceWorkerContext from '../CoinBalanceWorkerContext/context';
 import { ambChainId, ethChainId } from '../../utils/providers';
 
 const TokenListContextProvider = (props) => {
-  const [tokenList, setTokenList] = useState();
+  const [tokenList, setTokenList] = useState([]);
   const worker = useContext(CoinBalanceWorkerContext);
 
   useEffect(() => {
