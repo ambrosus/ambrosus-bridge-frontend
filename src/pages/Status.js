@@ -91,18 +91,29 @@ const Status = () => {
 
         setStage(currentStage);
         setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
-        eventsHandler(networkId, smartContractAddress, contract);
+        eventsHandler(networkId, smartContractAddress, contract, currentStage);
       } else if (tx && !tx.blockNumber) {
         tx.wait().then(() => handleStatus());
       }
     });
   };
 
-  const eventsHandler = (networkId, address, contract) => {
-    providers[networkId].on('block', async () => {
-      const tx = await providers[networkId].getTransaction(txHash);
-      setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
-    });
+  const eventsHandler = (networkId, address, contract, currentStage) => {
+    const subscribeToConfirmations = () => {
+      providers[networkId].removeAllListeners('block');
+
+      providers[networkId].on('block', async () => {
+        const tx = await providers[networkId].getTransaction(txHash);
+        setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
+        if (tx.confirmations >= 10) {
+          providers[networkId].removeAllListeners('block');
+        }
+      });
+    };
+
+    if (+currentStage > 2.1) {
+      subscribeToConfirmations();
+    }
 
     const firstStageFilter = {
       address,
@@ -110,7 +121,7 @@ const Status = () => {
     };
 
     providers[networkId].on(firstStageFilter, () => {
-      if (+stage < 2) {
+      if (+currentStage < 2) {
         setStage('2.1');
       }
     });
@@ -121,7 +132,8 @@ const Status = () => {
     };
 
     providers[networkId].on(currentNetworkFilter, () => {
-      if (+stage < 3) {
+      if (+currentStage < 3) {
+        subscribeToConfirmations();
         setStage('3.1');
       }
     });
@@ -170,7 +182,7 @@ const Status = () => {
   if (+stage > 2.1) {
     if (confirmations === 10) {
       conditionalConfClass = 'transaction-status__info-stage--checked';
-    } else if (confirmations < 10 && +stage > 2.1) {
+    } else if (confirmations < 10) {
       conditionalConfClass = 'transaction-status__info-stage--loading';
     }
   }
