@@ -56,7 +56,7 @@ const Status = () => {
               topic === getEventSignatureByName(contract, withDrawName),
           ),
         );
-
+        console.log(receipt.logs);
         if (withDrawEvent) {
           currentStage = '2.1';
         }
