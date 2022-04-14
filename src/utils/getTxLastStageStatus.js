@@ -7,7 +7,7 @@ const getTxLastStageStatus = async (chainId, eventId) => {
 
   const otherNetworkContract = createBridgeContract[otherNetId](otherProvider);
 
-  const otherNetworkFilter = await otherNetworkContract.filters.Transfer(
+  const otherNetworkFilter = await otherNetworkContract.filters.TransferFinish(
     eventId,
   );
   const otherNetworkEvent = await otherNetworkContract.queryFilter(

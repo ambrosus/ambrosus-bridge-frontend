@@ -11,10 +11,10 @@ import createBridgeContract, {
   ethContractAddress,
 } from '../contracts';
 import getTxLastStageStatus from '../utils/getTxLastStageStatus';
-/*eslint-disable*/
-import ABI from '../contracts/abi.json';
-const withDrawTitle = 'Withdraw(address,uint256,uint256)';
-const transferTitle = 'Transfer(uint256,(address,address,uint256)[])';
+import getEventSignatureByName from '../utils/getEventSignatureByName';
+/* eslint-disable*/
+const withDrawName = 'Withdraw';
+const transferName = 'Transfer';
 
 const Status = () => {
   const { txHash } = useParams();
@@ -48,15 +48,16 @@ const Status = () => {
           history.push('/');
         }
 
-        const isFirstStagePassed = receipt.logs.some((log) =>
-          log.topics.some((topic) => topic === ethers.utils.id(withDrawTitle)),
+        const contract = createBridgeContract[networkId](providers[networkId]);
+
+        const withDrawEvent = receipt.logs.find((log) =>
+          log.topics.some((topic) => topic === getEventSignatureByName(contract, withDrawName)),
         );
 
-        if (isFirstStagePassed) {
+        if (withDrawEvent) {
           currentStage = '2.1';
         }
-        const eventId = receipt.logs[3].topics[1];
-        const contract = createBridgeContract[networkId](providers[networkId]);
+        const eventId = ethers.utils.defaultAbiCoder.decode(['address'], withDrawEvent.data)[0];
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
 
@@ -64,21 +65,28 @@ const Status = () => {
           setOtherNetworkTxHash(event[0].transactionHash);
           currentStage = '3.1';
         }
+        const transferSubmitFilter = await contract.filters.TransferSubmit(eventId);
+        const transferSubmitEvent = await contract.queryFilter(transferSubmitFilter);
 
-        if (+currentStage >= 3.1 && getTxLastStageStatus(tx.chainId, eventId)) {
+        if (+currentStage >= 3.1 && transferSubmitEvent.length) {
+          currentStage = '3.2'
+        }
+
+        if (+currentStage >= 3.2 && await getTxLastStageStatus(tx.chainId, eventId)) {
+          console.log(getTxLastStageStatus(tx.chainId, eventId));
           currentStage = '4';
         }
 
         setStage(currentStage);
         setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
-        eventsHandler(networkId, smartContractAddress, currentStage);
+        eventsHandler(networkId, smartContractAddress, contract);
       } else if (tx && !tx.blockNumber) {
         tx.wait().then(() => handleStatus());
       }
     });
   };
 
-  const eventsHandler = (networkId, address) => {
+  const eventsHandler = (networkId, address, contract) => {
     providers[networkId].on('block', async () => {
       const tx = await providers[networkId].getTransaction(txHash);
       setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
@@ -86,7 +94,7 @@ const Status = () => {
 
     const firstStageFilter = {
       address,
-      topics: [ethers.utils.id(withDrawTitle)],
+      topics: [getEventSignatureByName(contract, withDrawName)],
     };
 
     providers[networkId].on(firstStageFilter, () => {
@@ -97,7 +105,7 @@ const Status = () => {
 
     const currentNetworkFilter = {
       address,
-      topics: [ethers.utils.id(transferTitle)],
+      topics: [getEventSignatureByName(contract, transferName)],
     };
 
     providers[networkId].on(currentNetworkFilter, () => {
@@ -111,7 +119,7 @@ const Status = () => {
 
     const otherNetworkFilter = {
       otherContractAddress,
-      topics: [ethers.utils.id(transferTitle)],
+      topics: [getEventSignatureByName(contract, transferName)],
     };
 
     providers[networkId === ambChainId ? ethChainId : ambChainId].on(
@@ -218,6 +226,7 @@ const Status = () => {
               </div>
             </div>
             <p className={handleLoadingClass('3.1')}>Pending transaction.</p>
+            <p className={handleLoadingClass('3.2')}>Pending transaction.</p>
           </div>
         </div>
       </div>
