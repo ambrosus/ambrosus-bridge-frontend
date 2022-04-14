@@ -51,13 +51,19 @@ const Status = () => {
         const contract = createBridgeContract[networkId](providers[networkId]);
 
         const withDrawEvent = receipt.logs.find((log) =>
-          log.topics.some((topic) => topic === getEventSignatureByName(contract, withDrawName)),
+          log.topics.some(
+            (topic) =>
+              topic === getEventSignatureByName(contract, withDrawName),
+          ),
         );
 
         if (withDrawEvent) {
           currentStage = '2.1';
         }
-        const eventId = ethers.utils.defaultAbiCoder.decode(['address'], withDrawEvent.data)[0];
+        const eventId = ethers.utils.defaultAbiCoder.decode(
+          ['address'],
+          withDrawEvent.data,
+        )[0];
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
 
@@ -65,15 +71,21 @@ const Status = () => {
           setOtherNetworkTxHash(event[0].transactionHash);
           currentStage = '3.1';
         }
-        const transferSubmitFilter = await contract.filters.TransferSubmit(eventId);
-        const transferSubmitEvent = await contract.queryFilter(transferSubmitFilter);
+        const transferSubmitFilter = await contract.filters.TransferSubmit(
+          eventId,
+        );
+        const transferSubmitEvent = await contract.queryFilter(
+          transferSubmitFilter,
+        );
 
         if (+currentStage >= 3.1 && transferSubmitEvent.length) {
-          currentStage = '3.2'
+          currentStage = '3.2';
         }
 
-        if (+currentStage >= 3.2 && await getTxLastStageStatus(tx.chainId, eventId)) {
-          console.log(getTxLastStageStatus(tx.chainId, eventId));
+        if (
+          +currentStage >= 3.2 &&
+          (await getTxLastStageStatus(tx.chainId, eventId))
+        ) {
           currentStage = '4';
         }
 
