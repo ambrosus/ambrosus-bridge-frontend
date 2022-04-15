@@ -161,7 +161,7 @@ const Status = () => {
 
     otherProvider.on(otherNetworkSubmitFilter, () => {
       if (+stage < 4 && +stage > 3) {
-        setStage('3.1');
+        setStage('3.2');
       }
     });
 
