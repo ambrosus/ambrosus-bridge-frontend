@@ -46,6 +46,8 @@ const Status = () => {
           txHash,
         );
 
+        console.log('tx:', tx, 'receipt:', receipt);
+
         if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
           history.push('/');
         }
@@ -271,7 +273,7 @@ const Status = () => {
               </div>
             </div>
             <p className={handleLoadingClass('3.1')}>Pending transaction.</p>
-            <p className={handleLoadingClass('3.2')}>Pending transaction.</p>
+            <p className={handleLoadingClass('3.2')}>Transaction finish.</p>
           </div>
         </div>
       </div>
