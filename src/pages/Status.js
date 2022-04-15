@@ -15,6 +15,8 @@ import getEventSignatureByName from '../utils/getEventSignatureByName';
 
 const withDrawName = 'Withdraw';
 const transferName = 'Transfer';
+const transferSubmitName = 'TransferSubmit';
+const transferFinishName = 'TransferFinish';
 
 const Status = () => {
   const { txHash } = useParams();
@@ -149,19 +151,30 @@ const Status = () => {
     const otherContractAddress =
       networkId === ethChainId ? ambContractAddress : ethContractAddress;
 
-    const otherNetworkFilter = {
+    const otherNetworkSubmitFilter = {
       otherContractAddress,
-      topics: [getEventSignatureByName(contract, transferName)],
+      topics: [getEventSignatureByName(contract, transferSubmitName)],
     };
 
-    providers[networkId === ambChainId ? ethChainId : ambChainId].on(
-      otherNetworkFilter,
-      () => {
-        if (+stage < 4 && +stage > 3) {
-          setStage('2.1');
-        }
-      },
-    );
+    const otherProvider =
+      providers[networkId === ambChainId ? ethChainId : ambChainId];
+
+    otherProvider.on(otherNetworkSubmitFilter, () => {
+      if (+stage < 4 && +stage > 3) {
+        setStage('3.1');
+      }
+    });
+
+    const otherNetworkFinishFilter = {
+      otherContractAddress,
+      topics: [getEventSignatureByName(contract, transferFinishName)],
+    };
+
+    otherProvider.on(otherNetworkFinishFilter, () => {
+      if (stage === '3.1') {
+        setStage('4');
+      }
+    });
   };
 
   const handleLoadingClass = (currentStage, isMainLoader = false) => {
