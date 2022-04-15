@@ -69,17 +69,24 @@ const Status = () => {
         console.log(eventId);
 
         if (+currentStage >= 2.1 && event.length) {
-          setOtherNetworkTxHash(event[0].transactionHash);
           currentStage = '3.1';
         }
-        const transferSubmitFilter = await contract.filters.TransferSubmit(
-          eventId,
-        );
-        const transferSubmitEvent = await contract.queryFilter(
+
+        const otherNetId = tx.chainId === ambChainId ? ethChainId : ambChainId;
+        const otherProvider = providers[otherNetId];
+
+        const otherNetworkContract =
+          createBridgeContract[otherNetId](otherProvider);
+
+        const transferSubmitFilter =
+          await otherNetworkContract.filters.TransferSubmit(eventId);
+
+        const transferSubmitEvent = await otherNetworkContract.queryFilter(
           transferSubmitFilter,
         );
 
         if (+currentStage >= 3.1 && transferSubmitEvent.length) {
+          setOtherNetworkTxHash(transferSubmitEvent[0].transactionHash);
           currentStage = '3.2';
         }
 
