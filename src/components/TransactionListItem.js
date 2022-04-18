@@ -47,7 +47,9 @@ const TransactionListItem = ({ tx }) => {
     const currentCoin = Object.values(tokens).find((token) =>
       Object.values(token.addresses).some((el) => el && el === tokenAddress),
     );
-    setCurrentToken(currentCoin);
+    if (currentCoin) {
+      setCurrentToken(currentCoin);
+    }
 
     const lastStage = await getTxLastStageStatus(tx.chainId, eventId);
     setIsSuccess(lastStage.length);
