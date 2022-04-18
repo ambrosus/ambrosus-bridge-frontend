@@ -90,15 +90,14 @@ const Status = () => {
         );
 
         if (+currentStage >= 3.1 && transferSubmitEvent.length) {
-          setOtherNetworkTxHash(transferSubmitEvent[0].transactionHash);
           currentStage = '3.2';
         }
 
-        if (
-          +currentStage >= 3.2 &&
-          (await getTxLastStageStatus(tx.chainId, eventId))
-        ) {
+        const lastTx = await getTxLastStageStatus(tx.chainId, eventId);
+
+        if (+currentStage >= 3.2 && lastTx.length) {
           currentStage = '4';
+          setOtherNetworkTxHash(lastTx[0].transactionHash);
         }
 
         setStage(currentStage);
@@ -154,7 +153,7 @@ const Status = () => {
       networkId === ethChainId ? ambContractAddress : ethContractAddress;
 
     const otherNetworkSubmitFilter = {
-      otherContractAddress,
+      address: otherContractAddress,
       topics: [getEventSignatureByName(contract, transferSubmitName)],
     };
 
@@ -168,7 +167,7 @@ const Status = () => {
     });
 
     const otherNetworkFinishFilter = {
-      otherContractAddress,
+      address: otherContractAddress,
       topics: [getEventSignatureByName(contract, transferFinishName)],
     };
 
@@ -221,7 +220,7 @@ const Status = () => {
       <TransactionCoins
         selectedChainId={currentChainId}
         fromHash={txHash}
-        toHash={otherNetworkTxHash || 'Transaction not started yet'}
+        toHash={otherNetworkTxHash || null}
       />
       <hr />
       <div className="transaction-status">

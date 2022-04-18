@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import arrowIcon from '../assets/svg/green-arrow-right.svg';
 import { ethChainId } from '../utils/providers';
 import { AmbrosusNetwork, getSupportedNetworks } from '../utils/networks';
+import getTxLink from '../utils/helpers/getTxLink';
 
 const TransactionCoins = ({ selectedChainId, fromHash, toHash }) => {
   const networks = getSupportedNetworks();
@@ -40,7 +41,12 @@ const TransactionCoins = ({ selectedChainId, fromHash, toHash }) => {
         {fromHash && (
           <span className="transaction-coins__hash-wrapper">
             <span className="transaction-coins__hash">txHash:</span>
-            {fromHash}
+            <a
+              target="_blank"
+              href={getTxLink(selectedChainId === ethChainId, fromHash)}
+            >
+              {fromHash}
+            </a>
           </span>
         )}
       </div>
@@ -51,7 +57,7 @@ const TransactionCoins = ({ selectedChainId, fromHash, toHash }) => {
       />
       <div
         className={`transaction-coins__item ${
-          toHash ? 'transaction-coins__item--hash' : ''
+          toHash === null || toHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
         {!!selectedChainId && (
@@ -67,10 +73,19 @@ const TransactionCoins = ({ selectedChainId, fromHash, toHash }) => {
             <p className="transaction-coins__name">{otherNetwork.name}</p>
           )}
         </div>
-        {toHash && (
+        {(toHash === null || toHash) && (
           <span className="transaction-coins__hash-wrapper">
             <span className="transaction-coins__hash">txHash:</span>
-            {toHash}
+            {toHash === null ? (
+              <span>Transaction not started yet</span>
+            ) : (
+              <a
+                target="_blank"
+                href={getTxLink(selectedChainId !== ethChainId, toHash)}
+              >
+                {toHash}
+              </a>
+            )}
           </span>
         )}
       </div>

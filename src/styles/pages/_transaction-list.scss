@@ -11,10 +11,16 @@
   background: white;
   margin-bottom: 1rem;
 
+  &__not-started {
+    margin-left: 0.8rem;
+    font-size: 0.75rem;
+  }
+
   &__img {
     max-width: 1.5rem;
     max-height: 1.5rem;
     margin-right: 0.5rem;
+    border-radius: 50%;
   }
 
   &__row {

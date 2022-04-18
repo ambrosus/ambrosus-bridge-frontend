@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { utils } from 'ethers';
-import git from '../assets/svg/github-icon.svg';
+import { ethers } from 'ethers';
 import clockIcon from '../assets/svg/clock.svg';
 import checkIcon from '../assets/svg/check.svg';
 import spinnerIcon from '../assets/svg/spinner.svg';
@@ -10,15 +9,52 @@ import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
 import { getAllNetworks } from '../utils/networks';
+import createBridgeContract from '../contracts';
+import getEventSignatureByName from '../utils/getEventSignatureByName';
+import { tokens } from '../bridge-config.mock.json';
+import getTxLink from '../utils/helpers/getTxLink';
 
 const TransactionListItem = ({ tx }) => {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
+  const [currentToken, setCurrentToken] = useState({});
 
   useEffect(async () => {
     const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
-    const eventId = receipt.logs[0].topics[1];
+    const contract = createBridgeContract[tx.chainId](providers[tx.chainId]);
 
-    setIsSuccess(await getTxLastStageStatus(tx.chainId, eventId));
+    const withDrawEvent = receipt.logs.find((log) =>
+      log.topics.some(
+        (topic) => topic === getEventSignatureByName(contract, 'Withdraw'),
+      ),
+    );
+    const transferEvent = receipt.logs.find((log) =>
+      log.topics.some(
+        (topic) => topic === getEventSignatureByName(contract, 'Transfer'),
+      ),
+    );
+
+    const eventId = ethers.utils.defaultAbiCoder.decode(
+      ['address'],
+      withDrawEvent.data,
+    )[0];
+
+    const tokenAddress = ethers.utils.defaultAbiCoder.decode(
+      ['address', 'address', 'address'],
+      transferEvent.data,
+    )[2];
+
+    const currentCoin = Object.values(tokens).find((token) =>
+      Object.values(token.addresses).some((el) => el && el === tokenAddress),
+    );
+    setCurrentToken(currentCoin);
+
+    const lastStage = await getTxLastStageStatus(tx.chainId, eventId);
+    setIsSuccess(lastStage.length);
+
+    setDestinationNetTxHash(
+      lastStage.length ? lastStage[0].transactionHash : '',
+    );
   }, []);
 
   const formatDate = (timestamp) => {
@@ -40,18 +76,19 @@ const TransactionListItem = ({ tx }) => {
   const getNetworkName = (networkId) =>
     getAllNetworks().find((el) => el.chainId === networkId).name;
 
-  const getTxLink = (isEth, hash) =>
-    `${
-      isEth
-        ? 'https://rinkeby.etherscan.io/tx/'
-        : 'https://explorer.ambrosus.com/tx/'
-    }${hash}`;
-
   return (
     <div className="transaction-item">
       <div className="transaction-item__row">
-        <img src={git} alt="coin" className="transaction-item__img" />
-        <span className="transaction-item__black-text">BNB.AM</span>
+        {currentToken.logo && (
+          <img
+            src={currentToken.logo}
+            alt="coin"
+            className="transaction-item__img"
+          />
+        )}
+        <span className="transaction-item__black-text">
+          {currentToken.symbol}
+        </span>
         <img
           src={clockIcon}
           alt="when"
@@ -97,14 +134,27 @@ const TransactionListItem = ({ tx }) => {
               tx.chainId === ambChainId ? ethChainId : ambChainId,
             )}
           </span>
-          <IconLink href={getTxLink(tx.chainId !== ethChainId)} text="txHash" />
+          {destinationNetTxHash !== null &&
+            (destinationNetTxHash ? (
+              <IconLink
+                href={getTxLink(
+                  tx.chainId !== ethChainId,
+                  destinationNetTxHash,
+                )}
+                text="txHash"
+              />
+            ) : (
+              <span className="transaction-item__not-started">
+                Transaction not started yet
+              </span>
+            ))}
         </div>
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text transaction-item__right">
             Amount:
           </span>
           <span className="transaction-item__black-text">
-            {utils.formatUnits(tx.value, 18)} BNB.AM
+            {ethers.utils.formatUnits(tx.value, 18)} {currentToken.symbol}
           </span>
         </div>
       </div>

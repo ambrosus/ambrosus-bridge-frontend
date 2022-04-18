@@ -13,7 +13,7 @@ const getTxLastStageStatus = async (chainId, eventId) => {
   const otherNetworkEvent = await otherNetworkContract.queryFilter(
     otherNetworkFilter,
   );
-  return !!otherNetworkEvent.length;
+  return otherNetworkEvent;
 };
 
 export default getTxLastStageStatus;

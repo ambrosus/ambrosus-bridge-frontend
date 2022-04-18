@@ -15,7 +15,7 @@ const Confirmation = () => {
 
   const {
     location: {
-      state: { selectedChainId, selectedCoin, transactionAmount },
+      state: { chainId: selectedChainId, selectedCoin, transactionAmount },
     },
     goBack,
     push,
