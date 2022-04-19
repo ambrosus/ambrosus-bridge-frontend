@@ -175,7 +175,9 @@ const TransactionListItem = ({ tx }) => {
           <span className="transaction-item__grey-text transaction-item__right">
             Transaction fee:
           </span>
-          <span className="transaction-item__black-text">≈ $0</span>
+          <span className="transaction-item__black-text">
+            {ethers.utils.formatUnits(tx.gasPrice, 18)} {currentToken.symbol}
+          </span>
         </div>
       </div>
     </div>
