@@ -156,7 +156,8 @@ const TransactionListItem = ({ tx }) => {
             Amount:
           </span>
           <span className="transaction-item__black-text">
-            {ethers.utils.formatUnits(tx.value, 18)} {currentToken.symbol}
+            {ethers.utils.formatUnits(tx.value, currentToken.denomination)}{' '}
+            {currentToken.symbol}
           </span>
         </div>
       </div>
@@ -176,7 +177,8 @@ const TransactionListItem = ({ tx }) => {
             Transaction fee:
           </span>
           <span className="transaction-item__black-text">
-            {ethers.utils.formatUnits(tx.gasPrice, 18)} {currentToken.symbol}
+            {ethers.utils.formatUnits(tx.gasPrice, currentToken.denomination)}{' '}
+            {currentToken.symbol}
           </span>
         </div>
       </div>
