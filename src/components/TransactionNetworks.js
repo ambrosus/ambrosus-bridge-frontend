@@ -5,7 +5,7 @@ import { ethChainId } from '../utils/providers';
 import { AmbrosusNetwork, getSupportedNetworks } from '../utils/networks';
 import getTxLink from '../utils/helpers/getTxLink';
 
-const TransactionCoins = ({ selectedChainId, fromHash, toHash }) => {
+const TransactionNetworks = ({ selectedChainId, fromHash, toHash }) => {
   const networks = getSupportedNetworks();
 
   const currentNetwork =
@@ -93,10 +93,10 @@ const TransactionCoins = ({ selectedChainId, fromHash, toHash }) => {
   );
 };
 
-TransactionCoins.propTypes = {
+TransactionNetworks.propTypes = {
   selectedChainId: PropTypes.number,
   fromHash: PropTypes.string,
   toHash: PropTypes.string,
 };
 
-export default TransactionCoins;
+export default TransactionNetworks;

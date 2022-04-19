@@ -14,15 +14,6 @@ const CoinBalanceWorkerProvider = (props) => {
   useEffect(() => {
     const newWorker = new CoinBalanceWorker();
 
-    newWorker.addEventListener(
-      'message',
-      ({ data: { balance, type, address } }) => {
-        if (type === 'balance') {
-          sessionStorage.setItem(address, JSON.stringify(balance));
-        }
-      },
-    );
-
     setWorker(newWorker);
   }, []);
 

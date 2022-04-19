@@ -1,38 +1,19 @@
-import { useEffect, useState } from 'react';
-import { getAllNetworks } from '../utils/networks';
-import { useSubscribeOnBalanceUpdate } from './useCoinBalance';
-import getCachedCoinBalance from '../utils/helpers/getCachedCoinBalance';
+import { useState } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '../db';
 
 const useTokenList = (chainId) => {
-  const [tokenList, setTokenList] = useState([]);
+  const [tokenListWithNativeCoin, setTokenListWithNativeCoin] = useState([{}]);
 
-  useEffect(() => {
-    const supportedNetworks = getAllNetworks();
-    const currentNetwork = chainId
-      ? supportedNetworks.find((network) => network.chainId === chainId)
-      : supportedNetworks[0];
-
-    const tokenListWithBalances = currentNetwork.tokens.map(
-      addWithBalancePropertyToList,
-    );
-
-    setTokenList(tokenListWithBalances);
+  useLiveQuery(async () => {
+    const tokenList = await db.tokens.where({ chainId }).toArray();
+    const nativeCoin = await db.nativeTokens.get({
+      chainId,
+    });
+    setTokenListWithNativeCoin([nativeCoin, ...tokenList]);
   }, [chainId]);
 
-  useSubscribeOnBalanceUpdate(() => {
-    if (tokenList.length) {
-      const tokenListWithBalances = tokenList.map(addWithBalancePropertyToList);
-      setTokenList(tokenListWithBalances);
-    }
-  });
-
-  return tokenList;
-};
-
-const addWithBalancePropertyToList = (token) => {
-  const cachedBalance = getCachedCoinBalance(token.nativeContractAddress);
-  const withBalance = cachedBalance.float > 0;
-  return { ...token, withBalance };
+  return tokenListWithNativeCoin;
 };
 
 export default useTokenList;

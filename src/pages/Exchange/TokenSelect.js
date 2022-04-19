@@ -1,20 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import MagnifyingGlassIcon from '../../assets/svg/magnifying-glass.svg';
 import CrossIcon from '../../assets/svg/cross.svg';
 import InlineLoader from '../../components/InlineLoader';
-import { useCoinBalance } from '../../hooks/useCoinBalance';
-import TokenListContext from '../../contexts/TokenListContext/context';
+import formatBalance from '../../utils/helpers/formatBalance';
 
 const TokenSelect = ({
   isOpen = false,
   toggle = () => {},
   setCoin = () => {},
-  selectedChainId,
+  tokenList = [{}],
 }) => {
-  const tokenList = useContext(TokenListContext);
-  const [sortedTokenList, setSortedTokenList] = useState([]);
+  // const [sortedTokenList, setSortedTokenList] = useState([]);
 
   // lock scrolling of entire page if modal is open
   useEffect(() => {
@@ -24,24 +22,24 @@ const TokenSelect = ({
 
   const [searchString, setSearchString] = useState('');
 
-  const filterListBySearch = (token = { name: '', symbol: '' }) => {
-    const [ss, name, symbol] = [searchString, token.name, token.symbol].map(
-      (str) => str.toLowerCase(),
-    );
-    return name.startsWith(ss) || symbol.startsWith(ss);
-  };
-
-  const sortListByBalance = (token) => (token.withBalance ? -1 : 1);
-
-  useEffect(() => {
-    let sorted;
-    if (searchString) {
-      sorted = tokenList.filter(filterListBySearch);
-    } else {
-      sorted = [...tokenList].sort(sortListByBalance);
-    }
-    setSortedTokenList(sorted);
-  }, [tokenList, searchString]);
+  // const filterListBySearch = (token = { name: '', symbol: '' }) => {
+  //   const [ss, name, symbol] = [searchString, token.name, token.symbol].map(
+  //     (str) => str.toLowerCase(),
+  //   );
+  //   return name.startsWith(ss) || symbol.startsWith(ss);
+  // };
+  //
+  // const sortListByBalance = (token) => (token.withBalance ? -1 : 1);
+  //
+  // useEffect(() => {
+  //   let sorted;
+  //   if (searchString) {
+  //     sorted = tokenList.filter(filterListBySearch);
+  //   } else {
+  //     sorted = [...tokenList].sort(sortListByBalance);
+  //   }
+  //   setSortedTokenList(sorted);
+  // }, [tokenList, searchString]);
 
   return !isOpen
     ? null
@@ -59,7 +57,7 @@ const TokenSelect = ({
             />
             <SearchInput onChange={setSearchString} value={searchString} />
             <div className="token-select__token-list">
-              {sortedTokenList.map((token) => (
+              {tokenList.map((token) => (
                 <TokenButton
                   key={token.symbol}
                   {...{
@@ -67,7 +65,6 @@ const TokenSelect = ({
                     toggle,
                     setCoin,
                   }}
-                  address={token.addresses[selectedChainId]}
                 />
               ))}
             </div>
@@ -115,34 +112,33 @@ SearchInput.propTypes = {
   onChange: PropTypes.func,
 };
 
-const TokenButton = ({ token, setCoin, toggle, address }) => {
-  const balance = useCoinBalance(address);
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        setCoin(token);
-        toggle();
-      }}
-      className="token-select__token"
-    >
-      <img src={token.logo} alt="#" className="token-select__token-icon" />
-      <span className="token-select__token-shorthand">{token.symbol}</span>
-      <span className="token-select__token-name">{token.name}</span>
-      {balance.formattedString ? (
-        <span className="token-select__token-balance">
-          {balance.formattedString} {token.symbol}
+const TokenButton = ({ token, setCoin, toggle }) => (
+  <button
+    type="button"
+    onClick={() => {
+      setCoin(token);
+      toggle();
+    }}
+    className="token-select__token"
+  >
+    <img src={token.logo} alt="#" className="token-select__token-icon" />
+    <span className="token-select__token-shorthand">{token.symbol}</span>
+    <span className="token-select__token-name">{token.name}</span>
+    <div className="exchange-field__balance-container">
+      Balance:
+      {token.balance ? (
+        <span className="exchange-field__balance">
+          {formatBalance(token.balance)} {token.symbol}
         </span>
       ) : (
         <InlineLoader />
       )}
-    </button>
-  );
-};
+    </div>
+  </button>
+);
 
 TokenButton.propTypes = {
   token: PropTypes.object,
   setCoin: PropTypes.func,
   toggle: PropTypes.func,
-  address: PropTypes.string,
 };

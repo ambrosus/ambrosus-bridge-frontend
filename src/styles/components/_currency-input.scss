@@ -95,10 +95,8 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-}
 
-.currency-input_receive .currency-input__coin-button {
-  display: none;
+  grid-column: 3/4;
 }
 
 .currency-input__currency-icon {

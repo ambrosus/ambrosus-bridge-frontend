@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
 import { utils } from 'ethers';
-import TransactionCoins from '../components/TransactionCoins';
+import TransactionNetworks from '../components/TransactionNetworks';
 import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
-import withdrawWrappedCoins from '../utils/ethers/withdrawWrappedCoins';
+import withdrawCoins from '../utils/ethers/withdrawCoins';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
@@ -15,7 +15,7 @@ const Confirmation = () => {
 
   const {
     location: {
-      state: { chainId: selectedChainId, selectedCoin, transactionAmount },
+      state: { selectedChainId, selectedCoin, receivedCoin, transactionAmount },
     },
     goBack,
     push,
@@ -31,13 +31,14 @@ const Confirmation = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    withdrawWrappedCoins(
+    withdrawCoins(
       transactionAmount,
       selectedCoin,
+      receivedCoin,
       transferFee,
       account,
       chainId,
-      BridgeContract,
+      library.getSigner(),
     )
       .then((res) => {
         push(`/status/${res.hash}`);
@@ -54,7 +55,7 @@ const Confirmation = () => {
       <p className="confirmation-page__amount">
         {transactionAmount} {selectedCoin.symbol}
       </p>
-      <TransactionCoins selectedChainId={selectedChainId} />
+      <TransactionNetworks selectedChainId={selectedChainId} />
       <div className="confirmation-info">
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>
@@ -65,6 +66,17 @@ const Confirmation = () => {
               className="confirmation-info__img"
             />
             {selectedCoin.name}
+            {selectedCoin.name !== receivedCoin.name ? (
+              <>
+                <span>→</span>
+                <img
+                  src={receivedCoin.logo}
+                  alt={receivedCoin.name}
+                  className="confirmation-info__img"
+                />
+                {receivedCoin.name}
+              </>
+            ) : null}
           </span>
         </div>
         <div className="confirmation-info__item">
