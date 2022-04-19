@@ -69,11 +69,6 @@ const withdrawCoins = async (
     chainId === ambChainId ? { gasLimit: 8000000, gasPrice: 1 } : {};
 
   const BridgeContract = createBridgeContract[chainId](signer);
-  const TokenContract = new ethers.Contract(
-    selectedCoin.address,
-    increaseAllowanceAbi,
-    signer,
-  );
 
   // if native coin
   if (selectedCoin.wrappedAnalog) {
@@ -84,6 +79,13 @@ const withdrawCoins = async (
   }
 
   // if wrapped coin
+
+  const TokenContract = new ethers.Contract(
+    selectedCoin.address,
+    increaseAllowanceAbi,
+    signer,
+  );
+
   await TokenContract.increaseAllowance(
     bridgeContractAddress[chainId],
     selectedCoin.address,
