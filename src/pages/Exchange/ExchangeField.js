@@ -50,7 +50,6 @@ const ExchangeField = ({
         changeCoin={changeCoin}
         selectedCoin={selectedCoin}
         balance={balance}
-        minValue={0.0001}
       />
     </div>
   );

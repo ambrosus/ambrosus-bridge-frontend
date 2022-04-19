@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import { ethers } from 'ethers';
@@ -27,9 +27,15 @@ const Status = () => {
   const [confirmations, setConfirmations] = useState(0);
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
 
+  const refStage = useRef(stage);
+
   useEffect(() => {
     handleStatus();
   }, []);
+
+  useEffect(() => {
+    refStage.current = stage;
+  }, [stage]);
 
   const handleStatus = () => {
     [ambChainId, ethChainId].forEach(async (networkId) => {
@@ -102,52 +108,52 @@ const Status = () => {
 
         setStage(currentStage);
         setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
-        eventsHandler(networkId, smartContractAddress, contract, currentStage);
+        eventsHandler(networkId, smartContractAddress, contract);
       } else if (tx && !tx.blockNumber) {
         tx.wait().then(() => handleStatus());
       }
     });
   };
 
-  const eventsHandler = (networkId, address, contract, currentStage) => {
-    const subscribeToConfirmations = () => {
-      providers[networkId].removeAllListeners('block');
+  const eventsHandler = (networkId, address, contract) => {
+    const handleBlock = async () => {
+      const tx = await providers[networkId].getTransaction(txHash);
+      setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
 
-      providers[networkId].on('block', async () => {
-        const tx = await providers[networkId].getTransaction(txHash);
-        setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
-        if (tx.confirmations >= 10) {
-          providers[networkId].removeAllListeners('block');
-        }
-      });
+      if (tx.confirmations >= 10) {
+        providers[networkId].off('block', handleBlock);
+      }
     };
-
-    if (+currentStage > 2.1) {
-      subscribeToConfirmations();
-    }
+    providers[networkId].on('block', handleBlock);
 
     const firstStageFilter = {
       address,
       topics: [getEventSignatureByName(contract, withDrawName)],
     };
 
-    providers[networkId].on(firstStageFilter, () => {
-      if (+currentStage < 2) {
-        setStage('2.1');
-      }
-    });
+    const { current } = refStage;
+
+    const handleWithdraw = () => {
+      setStage('2.1');
+      providers[networkId].off(firstStageFilter, handleWithdraw);
+    };
+
+    if (current === '1.1') {
+      providers[networkId].on(firstStageFilter, handleWithdraw);
+    }
 
     const currentNetworkFilter = {
       address,
       topics: [getEventSignatureByName(contract, transferName)],
     };
 
-    providers[networkId].on(currentNetworkFilter, () => {
-      if (+currentStage < 3) {
-        subscribeToConfirmations();
+    const handleTransfer = () => {
+      if (current === '2.1') {
         setStage('3.1');
+        providers[networkId].off(currentNetworkFilter, handleTransfer);
       }
-    });
+    };
+    providers[networkId].on(currentNetworkFilter, handleTransfer);
 
     const otherContractAddress =
       networkId === ethChainId ? ambContractAddress : ethContractAddress;
@@ -160,22 +166,26 @@ const Status = () => {
     const otherProvider =
       providers[networkId === ambChainId ? ethChainId : ambChainId];
 
-    otherProvider.on(otherNetworkSubmitFilter, () => {
-      if (+stage < 4 && +stage > 3) {
+    const handleTransferSubmit = () => {
+      if (current === '3.1') {
         setStage('3.2');
+        otherProvider.off(otherNetworkSubmitFilter, handleTransferSubmit);
       }
-    });
+    };
+    otherProvider.on(otherNetworkSubmitFilter, handleTransferSubmit);
 
     const otherNetworkFinishFilter = {
       address: otherContractAddress,
       topics: [getEventSignatureByName(contract, transferFinishName)],
     };
 
-    otherProvider.on(otherNetworkFinishFilter, () => {
-      if (stage === '3.1') {
+    const handleTransferFinish = () => {
+      if (current === '3.2') {
         setStage('4');
+        otherProvider.off(otherNetworkFinishFilter, handleTransferFinish);
       }
-    });
+    };
+    otherProvider.on(otherNetworkFinishFilter, handleTransferFinish);
   };
 
   const handleLoadingClass = (currentStage, isMainLoader = false) => {
@@ -209,6 +219,7 @@ const Status = () => {
     }
   }
 
+  const goHome = () => history.push('/exchange');
   const confirmationClass = `transaction-status__info-stage ${conditionalConfClass}`;
 
   return (
@@ -284,7 +295,11 @@ const Status = () => {
         </span>
       </div>
       <div className="btns-wrapper btns-wrapper--right">
-        <button type="button" className="button button_gray btns-wrapper__btn">
+        <button
+          onClick={goHome}
+          type="button"
+          className="button button_gray btns-wrapper__btn"
+        >
           Go to home
         </button>
         <Link

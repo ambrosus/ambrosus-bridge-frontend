@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import getTokenBalance from './getTokenBalance';
 
 const validateTransactionAmount = async (
@@ -21,13 +21,17 @@ const validateTransactionAmount = async (
   } catch (parseError) {
     errorMessage = 'Invalid value';
   }
-  if (bnValue.gt(actualBnBalance)) {
-    errorMessage = 'Not enough coins on balance';
-  }
-  if (bnValue.isZero()) {
+  if (!bnValue || bnValue.isZero()) {
     errorMessage = 'Your value is zero';
+  } else {
+    if (bnValue.gt(actualBnBalance)) {
+      errorMessage = 'Not enough coins on balance';
+    }
+    const minValue = BigNumber.from(utils.parseUnits('0.0001', denomination));
+    if (bnValue.lt(minValue)) {
+      errorMessage = 'Min value is 0,0001';
+    }
   }
-
   return errorMessage;
 };
 
