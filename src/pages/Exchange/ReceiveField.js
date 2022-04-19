@@ -86,6 +86,7 @@ const ReceiveField = ({
         </div>
 
         <div className="currency-input">
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label className="currency-input__label">Receive:</label>
           <input
             type="number"
