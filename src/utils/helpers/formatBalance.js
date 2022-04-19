@@ -1,5 +1,12 @@
-const formatBalance = (balance) => {
-  const [intPart, floatPart] = balance.split('.');
+import { BigNumber, utils } from 'ethers';
+
+const formatBalance = (balance, denomination) => {
+  const balanceFloatString = utils.formatUnits(
+    BigNumber.from(balance),
+    denomination,
+  );
+
+  const [intPart, floatPart] = balanceFloatString.split('.');
   let formattedBalance;
   if (floatPart && floatPart.length > 6) {
     formattedBalance = `${intPart}.${floatPart.slice(0, 6)}…`;

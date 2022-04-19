@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import { ethers } from 'ethers';
-import TransactionCoins from '../components/TransactionCoins';
+import TransactionNetworks from '../components/TransactionNetworks';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
 import warningImg from '../assets/svg/warning.svg';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
@@ -228,7 +228,7 @@ const Status = () => {
       <p className="status-page__subtitle">
         Please wait some time for transactions to finish
       </p>
-      <TransactionCoins
+      <TransactionNetworks
         selectedChainId={currentChainId}
         fromHash={txHash}
         toHash={otherNetworkTxHash || null}

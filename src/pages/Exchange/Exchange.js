@@ -4,7 +4,6 @@ import { useHistory } from 'react-router';
 import { utils } from 'ethers';
 import { Link } from 'react-router-dom';
 import ErrorContext from '../../contexts/ErrorContext';
-import useModal from '../../hooks/useModal';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
 import { AmbrosusNetwork, getSupportedNetworks } from '../../utils/networks';
 import changeChainId from '../../utils/ethers/changeChainId';
@@ -12,29 +11,27 @@ import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import InlineLoader from '../../components/InlineLoader';
 import ExchangeField from './ExchangeField';
 import createBridgeContract from '../../contracts';
-import TokenSelect from './TokenSelect';
 import { ambChainId, ethChainId } from '../../utils/providers';
-import TokenListContext from '../../contexts/TokenListContext/context';
 import validateTransactionAmount from '../../utils/ethers/validateTransactionAmount';
+import ReceiveField from './ReceiveField';
+import { nativeTokensById } from '../../utils/nativeTokens';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
-  const tokenList = useContext(TokenListContext);
   const [networks, setNetworks] = useState(undefined);
 
   const { library, account, chainId } = useWeb3React();
+
   const isFromAmb = chainId === ambChainId;
   const toggleDirection = async () => {
     const newChainId = isFromAmb ? ethChainId : ambChainId;
     await changeChainId(library.provider, newChainId);
   };
 
-  const [selectedCoin, setCoin] = useState(tokenList[0]);
-
+  const [selectedCoin, setCoin] = useState();
+  console.log('selected coin', selectedCoin);
+  const [receivedCoin, setReceivedCoin] = useState();
   const [transactionAmount, setTransactionAmount] = useState('');
-
-  const [isOpenCoinModal, toggleCoinModal] = useModal();
-
   const [transferFee, setTransferFee] = useState(null);
 
   const worker = useContext(CoinBalanceWorkerContext);
@@ -43,6 +40,7 @@ const Exchange = () => {
   useEffect(async () => {
     const supportedNetworks = getSupportedNetworks();
     setNetworks(supportedNetworks);
+    setCoin(nativeTokensById[chainId]);
     worker.postMessage({ type: 'start', account });
   }, []);
 
@@ -65,7 +63,7 @@ const Exchange = () => {
     e.preventDefault();
     const errorMessage = await validateTransactionAmount(
       library,
-      selectedCoin.addresses[chainId],
+      selectedCoin.address,
       transactionAmount,
       selectedCoin.denomination,
       account,
@@ -78,9 +76,9 @@ const Exchange = () => {
       history.push({
         pathname: '/confirm',
         state: {
-          chainId,
+          selectedChainId: chainId,
           selectedCoin,
-          isFromAmb,
+          receivedCoin,
           transactionAmount,
         },
       });
@@ -94,67 +92,56 @@ const Exchange = () => {
   }, [transactionAmount, selectedCoin, chainId]);
 
   return (
-    <>
-      <TokenSelect
-        isOpen={isOpenCoinModal}
-        toggle={toggleCoinModal}
-        setCoin={setCoin}
-        selectedChainId={chainId}
-        isFromAmb={isFromAmb}
-      />
-      <form className="content exchange" onSubmit={handleTransaction}>
-        <h2 className="exchange__heading">Select Network and enter amount</h2>
-        <div className="exchange__fields">
-          <ExchangeField
-            {...{
-              networks: isFromAmb ? [AmbrosusNetwork] : networks,
-              changeCoin: toggleCoinModal,
-              selectedChainId: chainId,
-              selectedCoin,
-              transactionAmount,
-              setTransactionAmount,
-              isValueInvalid,
-              isFromAmb,
-            }}
+    <form className="content exchange" onSubmit={handleTransaction}>
+      <h2 className="exchange__heading">Select Network and enter amount</h2>
+      <div className="exchange__fields">
+        <ExchangeField
+          {...{
+            networks: isFromAmb ? [AmbrosusNetwork] : networks,
+            selectedChainId: chainId,
+            selectedCoin,
+            transactionAmount,
+            setTransactionAmount,
+            isValueInvalid,
+            isFromAmb,
+            setCoin,
+          }}
+        />
+        <button type="button" onClick={toggleDirection}>
+          <img
+            src={SwapButton}
+            alt="swap button"
+            className="exchange__swap-button"
           />
-          <button type="button" onClick={toggleDirection}>
-            <img
-              src={SwapButton}
-              alt="swap button"
-              className="exchange__swap-button"
-            />
-          </button>
-          <ExchangeField
-            {...{
-              networks: isFromAmb ? networks : [AmbrosusNetwork],
-              changeCoin: toggleCoinModal,
-              selectedChainId: chainId,
-              selectedCoin,
-              transactionAmount,
-              setTransactionAmount,
-              isFromAmb,
-            }}
-            isReceive
-          />
-        </div>
-        <div className="exchange__estimated-fee-container">
-          Transfer fee:
-          <span className="exchange__estimated-fee">
-            {transferFee || <InlineLoader />} {isFromAmb ? 'AMB' : 'ETH'}
-          </span>
-        </div>
-        <button type="submit" className="button button_black exchange__button">
-          Transfer
         </button>
-        <Link
-          to="/mint"
-          style={{ marginTop: 16 }}
-          className="button button_gray exchange__button"
-        >
-          Mint Coins
-        </Link>
-      </form>
-    </>
+        <ReceiveField
+          {...{
+            networks: isFromAmb ? networks : [AmbrosusNetwork],
+            selectedChainId: chainId,
+            setCoin: setReceivedCoin,
+            selectedCoin,
+            receivedCoin,
+            transactionAmount,
+          }}
+        />
+      </div>
+      <div className="exchange__estimated-fee-container">
+        Transfer fee:
+        <span className="exchange__estimated-fee">
+          {transferFee || <InlineLoader />} {isFromAmb ? 'AMB' : 'ETH'}
+        </span>
+      </div>
+      <button type="submit" className="button button_black exchange__button">
+        Transfer
+      </button>
+      <Link
+        to="/mint"
+        style={{ marginTop: 16 }}
+        className="button button_gray exchange__button"
+      >
+        Mint Coins
+      </Link>
+    </form>
   );
 };
 

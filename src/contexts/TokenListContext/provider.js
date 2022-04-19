@@ -17,18 +17,6 @@ const TokenListContextProvider = (props) => {
       };
       return { ...token, addresses };
     });
-    formattedTokenList.unshift({
-      name: 'Amber',
-      symbol: 'AMB',
-      logo: 'https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps',
-      denomination: 18,
-      primaryNet: 'amb',
-      isNativeCoin: true,
-      addresses: {
-        [ambChainId]: '',
-        [ethChainId]: '0xD45698dA44D8Dda5c80911617FA57fd5e39099c4',
-      },
-    });
     setTokenList(formattedTokenList);
   }, []);
 

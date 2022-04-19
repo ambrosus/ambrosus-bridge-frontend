@@ -12,6 +12,7 @@ import WalletConnectIcon from '../assets/img/connect-wallet__wallet-connect.png'
 import ErrorContext from '../contexts/ErrorContext';
 import changeChainId from '../utils/ethers/changeChainId';
 import { ambChainId } from '../utils/providers';
+import { getAllNetworks } from '../utils/networks';
 
 const ConnectWallet = () => {
   const { error, activate, account, library } = useWeb3React();
@@ -30,11 +31,11 @@ const ConnectWallet = () => {
 
   useEffect(async () => {
     if (error instanceof UnsupportedChainIdError) {
-      // const networks = getAllNetworks();
-      // const networksNames = networks.map((network) => network.name).join(', ');
-      // setError(
-      //   `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
-      // );
+      const networks = getAllNetworks();
+      const networksNames = networks.map((network) => network.name).join(', ');
+      setError(
+        `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
+      );
       await changeChainId(library.provider, ambChainId);
     }
     if (account) {

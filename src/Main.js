@@ -12,7 +12,7 @@ import Mint from './pages/Mint';
 import ErrorContext from './contexts/ErrorContext';
 import TransactionList from './pages/TransactionList';
 import CoinBalanceWorkerProvider from './contexts/CoinBalanceWorkerContext/provider';
-import TokenListContextProvider from './contexts/TokenListContext/provider';
+// import TokenListContextProvider from './contexts/TokenListContext/provider';
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
@@ -21,15 +21,15 @@ const Main = () => {
 
   return (
     <CoinBalanceWorkerProvider>
-      <TokenListContextProvider>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <ErrorContext.Provider value={{ error, setError }}>
-            <Layout title="Bridge" error={error}>
-              <Routing setError={setError} />
-            </Layout>
-          </ErrorContext.Provider>
-        </Web3ReactProvider>
-      </TokenListContextProvider>
+      {/* <TokenListContextProvider> */}
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <ErrorContext.Provider value={{ error, setError }}>
+          <Layout title="Bridge" error={error}>
+            <Routing setError={setError} />
+          </Layout>
+        </ErrorContext.Provider>
+      </Web3ReactProvider>
+      {/* </TokenListContextProvider> */}
     </CoinBalanceWorkerProvider>
   );
 };
