@@ -54,9 +54,9 @@ const Status = () => {
 
         console.log('tx:', tx, 'receipt:', receipt);
 
-        if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
-          history.push('/');
-        }
+        // if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
+        //   history.push('/');
+        // }
 
         const contract = createBridgeContract[networkId](providers[networkId]);
 
@@ -66,17 +66,17 @@ const Status = () => {
               topic === getEventSignatureByName(contract, withDrawName),
           ),
         );
-        console.log(receipt.logs);
+        console.log(withDrawEvent);
         if (withDrawEvent) {
           currentStage = '2.1';
         }
         const eventId = ethers.utils.defaultAbiCoder.decode(
-          ['address'],
+          ['address', 'address', 'address'],
           withDrawEvent.data,
-        )[0];
+        )[2];
+        console.log(eventId);
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
-        console.log(eventId);
 
         if (+currentStage >= 2.1 && event.length) {
           currentStage = '3.1';
