@@ -12,9 +12,13 @@ import { db } from '../db';
 
 // eslint-disable-next-line no-restricted-globals
 self.addEventListener('message', ({ data: message }) => {
+  let isActive = false;
   if (message.type === 'start') {
-    console.log('worker started');
-    startBalanceMonitoring(message.account);
+    if (!isActive) {
+      console.log('worker started');
+      startBalanceMonitoring(message.account);
+      isActive = true;
+    }
   }
 });
 
