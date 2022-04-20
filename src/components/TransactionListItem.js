@@ -158,7 +158,6 @@ const TransactionListItem = ({ tx }) => {
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text">Destination:</span>
           <span className="transaction-item__black-text">
-            Account c082 -
             {` ${tx.address.substring(0, 9)}...${tx.address.substring(
               tx.address.length - 9,
               tx.address.length,
