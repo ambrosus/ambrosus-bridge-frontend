@@ -2,7 +2,7 @@ import { BigNumber, ethers, utils } from 'ethers';
 import { ambChainId } from '../providers';
 import createBridgeContract, { bridgeContractAddress } from '../../contracts';
 
-const increaseAllowanceAbi = [
+const approveAbi = [
   {
     inputs: [
       {
@@ -12,11 +12,11 @@ const increaseAllowanceAbi = [
       },
       {
         internalType: 'uint256',
-        name: 'addedValue',
+        name: 'amount',
         type: 'uint256',
       },
     ],
-    name: 'increaseAllowance',
+    name: 'approve',
     outputs: [
       {
         internalType: 'bool',
@@ -82,17 +82,30 @@ const withdrawCoins = async (
 
   const TokenContract = new ethers.Contract(
     selectedCoin.address,
-    increaseAllowanceAbi,
+    approveAbi,
     signer,
   );
 
-  await TokenContract.increaseAllowance(
+  const allowance = await TokenContract.allowance(
+    account,
     bridgeContractAddress[chainId],
-    selectedCoin.address,
-  ).then((res) => res.wait());
+  );
+
+  if (allowance.lt(bnTransactionAmount)) {
+    await TokenContract.approve(
+      bridgeContractAddress[chainId],
+      BigNumber.from('100000000000000000000000'),
+    ).then((tx) => tx.wait());
+  }
 
   let res;
   try {
+    console.log(
+      selectedCoin.address,
+      account,
+      bnTransactionAmount,
+      !!receivedCoin.wrappedAnalog, // true
+    );
     res = await BridgeContract.withdraw(
       selectedCoin.address,
       account,
@@ -100,7 +113,8 @@ const withdrawCoins = async (
       !!receivedCoin.wrappedAnalog, // true
       { value: transferFee, ...gasOpts },
     );
-    await res.wait();
+    const receipt = await res.wait();
+    console.log('im inside withdrawCoins, 1', receipt);
   } catch (e) {
     // amb (WETH) to eth (ETH)
     res = await BridgeContract.callStatic.withdraw(
@@ -110,6 +124,8 @@ const withdrawCoins = async (
       !!receivedCoin.wrappedAnalog, // true
       { value: transferFee, ...gasOpts },
     );
+
+    console.log('im inside withdrawCoins, 2', res);
   }
 
   return res;

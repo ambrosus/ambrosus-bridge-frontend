@@ -8,6 +8,7 @@ import ChevronIcon from '../../assets/svg/chevron.svg';
 import { ambChainId, ethChainId } from '../../utils/providers';
 import formatBalance from '../../utils/helpers/formatBalance';
 import InlineLoader from '../../components/InlineLoader';
+import useCoinBalance from '../../hooks/useCoinBalance';
 
 const ReceiveField = ({
   networks = [{}],
@@ -57,6 +58,8 @@ const ReceiveField = ({
     setCoin(tokenList[0]);
   }, [selectedCoin]);
 
+  const balance = useCoinBalance(receivedCoin.symbol, receivedCoin.chainId);
+
   return (
     <>
       <TokenSelect
@@ -76,9 +79,9 @@ const ReceiveField = ({
 
         <div className="exchange-field__balance-container">
           Balance:
-          {receivedCoin.balance ? (
+          {balance ? (
             <span className="exchange-field__balance">
-              {formatBalance(receivedCoin.balance)} {receivedCoin.symbol}
+              {formatBalance(balance)} {receivedCoin.symbol}
             </span>
           ) : (
             <InlineLoader />
