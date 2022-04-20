@@ -1,9 +1,11 @@
 import { utils } from 'ethers';
 import { getNetworkByChainId } from '../networks';
+import { db } from '../../db';
 
 const changeChainId = async (provider, chainId) => {
   const selectedNetwork = getNetworkByChainId(chainId);
   const hexChainId = utils.hexValue(chainId);
+  const nativeCoin = await db.nativeTokens.get({ chainId });
 
   try {
     await provider.request({
@@ -20,6 +22,11 @@ const changeChainId = async (provider, chainId) => {
             {
               chainId: hexChainId,
               chainName: selectedNetwork.name,
+              nativeCurrency: {
+                name: nativeCoin.name,
+                symbol: nativeCoin.symbol,
+                decimals: nativeCoin.denomination,
+              },
               rpcUrls: [selectedNetwork.rpcUrl],
             },
           ],

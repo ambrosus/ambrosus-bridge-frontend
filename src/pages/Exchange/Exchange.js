@@ -29,7 +29,6 @@ const Exchange = () => {
   };
 
   const [selectedCoin, setCoin] = useState();
-  console.log('selected coin', selectedCoin);
   const [receivedCoin, setReceivedCoin] = useState();
   const [transactionAmount, setTransactionAmount] = useState('');
   const [transferFee, setTransferFee] = useState(null);
@@ -40,8 +39,8 @@ const Exchange = () => {
   useEffect(async () => {
     const supportedNetworks = getSupportedNetworks();
     setNetworks(supportedNetworks);
-    setCoin(nativeTokensById[chainId]);
     worker.postMessage({ type: 'start', account });
+    setCoin(nativeTokensById[chainId]);
   }, []);
 
   // if network changed update transaction fee
@@ -49,6 +48,7 @@ const Exchange = () => {
     const BridgeContract = createBridgeContract[chainId](library);
     const fee = await BridgeContract.callStatic.fee();
     setTransferFee(utils.formatEther(fee));
+    setCoin(nativeTokensById[chainId]);
   }, [chainId]);
 
   // reset value if coin changed

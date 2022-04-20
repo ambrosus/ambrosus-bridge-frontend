@@ -91,14 +91,28 @@ const withdrawCoins = async (
     selectedCoin.address,
   ).then((res) => res.wait());
 
-  // eth SAMB -> amb AMB
-  return BridgeContract.withdraw(
-    selectedCoin.address, // eth SAMB address
-    account,
-    bnTransactionAmount,
-    !!receivedCoin.wrappedAnalog, // true
-    { value: transferFee, ...gasOpts },
-  );
+  let res;
+  try {
+    res = await BridgeContract.withdraw(
+      selectedCoin.address,
+      account,
+      bnTransactionAmount,
+      !!receivedCoin.wrappedAnalog, // true
+      { value: transferFee, ...gasOpts },
+    );
+    await res.wait();
+  } catch (e) {
+    // amb (WETH) to eth (ETH)
+    res = await BridgeContract.callStatic.withdraw(
+      selectedCoin.address, // WETH in amb
+      account,
+      bnTransactionAmount,
+      !!receivedCoin.wrappedAnalog, // true
+      { value: transferFee, ...gasOpts },
+    );
+  }
+
+  return res;
 };
 
 export default withdrawCoins;

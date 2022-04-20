@@ -7,6 +7,7 @@ import formatBalance from '../../utils/helpers/formatBalance';
 import TokenSelect from './TokenSelect';
 import useModal from '../../hooks/useModal';
 import useTokenList from '../../hooks/useTokenList';
+import useCoinBalance from '../../hooks/useCoinBalance';
 
 const ExchangeField = ({
   networks = [{}],
@@ -20,6 +21,7 @@ const ExchangeField = ({
 }) => {
   const [isOpenCoinModal, toggleCoinModal] = useModal();
   const tokenList = useTokenList(selectedChainId);
+  const balance = useCoinBalance(selectedCoin.symbol, selectedCoin.chainId);
 
   return (
     <>
@@ -40,9 +42,9 @@ const ExchangeField = ({
 
         <div className="exchange-field__balance-container">
           Balance:
-          {selectedCoin.balance ? (
+          {balance ? (
             <span className="exchange-field__balance">
-              {formatBalance(selectedCoin.balance)} {selectedCoin.symbol}
+              {formatBalance(balance)} {selectedCoin.symbol}
             </span>
           ) : (
             <InlineLoader />

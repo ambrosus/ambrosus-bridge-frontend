@@ -2,6 +2,7 @@ import * as React from 'react';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import { useContext, useEffect } from 'react';
+import { InjectedConnector } from '@web3-react/injected-connector';
 import {
   ConfiguredInjectedConnector,
   ConfiguredWalletConnectConnector,
@@ -15,7 +16,7 @@ import { ambChainId } from '../utils/providers';
 import { getAllNetworks } from '../utils/networks';
 
 const ConnectWallet = () => {
-  const { error, activate, account, library } = useWeb3React();
+  const { error, activate, account, connector } = useWeb3React();
   const { setError } = useContext(ErrorContext);
   const history = useHistory();
 
@@ -36,7 +37,10 @@ const ConnectWallet = () => {
       setError(
         `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
       );
-      await changeChainId(library.provider, ambChainId);
+
+      if (connector instanceof InjectedConnector) {
+        await changeChainId(window.ethereum, ambChainId);
+      }
     }
     if (account) {
       setError(null);
