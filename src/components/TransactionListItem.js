@@ -28,21 +28,14 @@ const TransactionListItem = ({ tx }) => {
         (topic) => topic === getEventSignatureByName(contract, 'Withdraw'),
       ),
     );
-    const transferEvent = receipt.logs.find((log) =>
-      log.topics.some(
-        (topic) => topic === getEventSignatureByName(contract, 'Transfer'),
-      ),
-    );
 
-    const eventId = ethers.utils.defaultAbiCoder.decode(
-      ['address'],
-      withDrawEvent.data,
-    )[0];
-
-    const tokenAddress = ethers.utils.defaultAbiCoder.decode(
+    const parsedData = ethers.utils.defaultAbiCoder.decode(
       ['address', 'address', 'address'],
-      transferEvent.data,
-    )[2];
+      withDrawEvent.data,
+    );
+    const eventId = parsedData[2];
+
+    const tokenAddress = parsedData[0];
 
     const currentCoin = Object.values(tokens).find((token) =>
       Object.values(token.addresses).some((el) => el && el === tokenAddress),
