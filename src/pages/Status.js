@@ -54,9 +54,9 @@ const Status = () => {
 
         console.log('tx:', tx, 'receipt:', receipt);
 
-        // if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
-        //   history.push('/');
-        // }
+        if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
+          history.push('/');
+        }
 
         const contract = createBridgeContract[networkId](providers[networkId]);
 
