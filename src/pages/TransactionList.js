@@ -41,9 +41,13 @@ const TransactionList = () => {
       });
   };
 
+  const sortedTxs = transactionHistory.sort(
+    (a, b) => b.timestamp - a.timestamp,
+  );
+
   return (
     <div className="content transaction-list">
-      {transactionHistory.map((el) => (
+      {sortedTxs.map((el) => (
         <TransactionListItem tx={el} key={el.hash} />
       ))}
     </div>
