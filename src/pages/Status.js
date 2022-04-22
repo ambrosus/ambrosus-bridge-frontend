@@ -40,7 +40,6 @@ const Status = () => {
   const handleStatus = () => {
     [ambChainId, ethChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
-
       if (tx && tx.blockNumber) {
         setCurrentChainId(tx.chainId);
         let currentStage = stage;
@@ -66,7 +65,6 @@ const Status = () => {
               topic === getEventSignatureByName(contract, withDrawName),
           ),
         );
-        console.log(withDrawEvent);
         if (withDrawEvent) {
           currentStage = '2.1';
         }
@@ -132,15 +130,14 @@ const Status = () => {
     };
 
     const { current } = refStage;
-
     const handleWithdraw = () => {
-      setStage('2.1');
+      if (current === '1.1') {
+        setStage('2.1');
+      }
       providers[networkId].off(firstStageFilter, handleWithdraw);
     };
 
-    if (current === '1.1') {
-      providers[networkId].on(firstStageFilter, handleWithdraw);
-    }
+    providers[networkId].on(firstStageFilter, handleWithdraw);
 
     const currentNetworkFilter = {
       address,

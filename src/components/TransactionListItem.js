@@ -18,28 +18,31 @@ const TransactionListItem = ({ tx }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
   const [currentToken, setCurrentToken] = useState({});
+  const [tokenAmount, setTokenAmount] = useState(0);
 
   useEffect(async () => {
-    const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
-    const contract = createBridgeContract[tx.chainId](providers[tx.chainId]);
+    const withdrawData = await getEventData('Withdraw', [
+      'address',
+      'address',
+      'address',
+      'address',
+    ]);
+    const transferData = await getEventData('Transfer', [
+      'address',
+      'address',
+      'address',
+      'address',
+      'address',
+    ]);
 
-    const withDrawEvent = receipt.logs.find((log) =>
-      log.topics.some(
-        (topic) => topic === getEventSignatureByName(contract, 'Withdraw'),
-      ),
-    );
-
-    const parsedData = ethers.utils.defaultAbiCoder.decode(
-      ['address', 'address', 'address'],
-      withDrawEvent.data,
-    );
-    const eventId = parsedData[2];
-
-    const tokenAddress = parsedData[0];
+    const eventId = withdrawData[2];
+    const tokenAddress = withdrawData[0];
+    setTokenAmount(transferData[4]);
 
     const currentCoin = Object.values(tokens).find((token) =>
       Object.values(token.addresses).some((el) => el && el === tokenAddress),
     );
+
     if (currentCoin) {
       setCurrentToken(currentCoin);
     }
@@ -51,6 +54,18 @@ const TransactionListItem = ({ tx }) => {
       lastStage.length ? lastStage[0].transactionHash : '',
     );
   }, []);
+
+  const getEventData = async (eventName, types) => {
+    const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
+    const contract = createBridgeContract[tx.chainId](providers[tx.chainId]);
+
+    const eventData = receipt.logs.find((log) =>
+      log.topics.some(
+        (topic) => topic === getEventSignatureByName(contract, eventName),
+      ),
+    );
+    return ethers.utils.defaultAbiCoder.decode(types, eventData.data);
+  };
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -149,7 +164,7 @@ const TransactionListItem = ({ tx }) => {
             Amount:
           </span>
           <span className="transaction-item__black-text">
-            {ethers.utils.formatUnits(tx.value, currentToken.denomination)}{' '}
+            {ethers.utils.formatUnits(tokenAmount, currentToken.denomination)}{' '}
             {currentToken.symbol}
           </span>
         </div>
@@ -158,10 +173,9 @@ const TransactionListItem = ({ tx }) => {
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text">Destination:</span>
           <span className="transaction-item__black-text">
-            Account c082 -
-            {` ${tx.address.substring(0, 9)}...${tx.address.substring(
-              tx.address.length - 9,
-              tx.address.length,
+            {` ${tx.from.substring(0, 9)}...${tx.from.substring(
+              tx.from.length - 9,
+              tx.from.length,
             )}`}
           </span>
         </div>
