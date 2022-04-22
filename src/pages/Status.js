@@ -30,7 +30,7 @@ const Status = () => {
   const refStage = useRef(stage);
 
   useEffect(() => {
-    handleStatus();
+    setTimeout(handleStatus, 2000);
   }, []);
 
   useEffect(() => {
@@ -108,7 +108,9 @@ const Status = () => {
         setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
         eventsHandler(networkId, smartContractAddress, contract);
       } else if (tx && !tx.blockNumber) {
-        tx.wait().then(() => handleStatus());
+        tx.wait().then(() => {
+          handleStatus();
+        });
       }
     });
   };
