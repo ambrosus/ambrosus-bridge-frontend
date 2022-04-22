@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import linkIcon from '../assets/svg/link.svg';
 
 const IconLink = ({ text = 'Explorer', href }) => (
-  <a href={href} className="icon-link">
+  <a href={href} target="_blank" className="icon-link">
     <img src={linkIcon} alt="link" className="icon-link__img" />
     {text}
   </a>
