@@ -27,7 +27,7 @@ const TransactionListItem = ({ tx }) => {
     const withdrawData = await getEventData('Withdraw');
     const transferData = await getEventData('Transfer');
     const eventId = withdrawData.args.eventId;
-    const tokenAddress = withdrawData.args['tokentTo'];
+    const tokenAddress = withdrawData.args['tokenTo'];
 
     if (transferData) {
       const correctTransfer = transferData.args.queue.find(
