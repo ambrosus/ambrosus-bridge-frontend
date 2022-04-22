@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import { utils } from 'ethers';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import ErrorContext from '../../contexts/ErrorContext';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
 import { AmbrosusNetwork, getSupportedNetworks } from '../../utils/networks';
@@ -134,13 +134,13 @@ const Exchange = () => {
       <button type="submit" className="button button_black exchange__button">
         Transfer
       </button>
-      <Link
-        to="/mint"
-        style={{ marginTop: 16 }}
-        className="button button_gray exchange__button"
-      >
-        Mint Coins
-      </Link>
+      {/* <Link */}
+      {/*  to="/mint" */}
+      {/*  style={{ marginTop: 16 }} */}
+      {/*  className="button button_gray exchange__button" */}
+      {/* > */}
+      {/*  Mint Coins */}
+      {/* </Link> */}
     </form>
   );
 };
