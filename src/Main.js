@@ -8,7 +8,7 @@ import Exchange from './pages/Exchange';
 import Layout from './components/Layout';
 import ConnectWallet from './pages/ConnectWallet';
 import Confirmation from './pages/Confirmation';
-import Mint from './pages/Mint';
+// import Mint from './pages/Mint';
 import ErrorContext from './contexts/ErrorContext';
 import TransactionList from './pages/TransactionList';
 import CoinBalanceWorkerProvider from './contexts/CoinBalanceWorkerContext/provider';
@@ -62,7 +62,7 @@ const Routing = () => {
         component={TransactionList}
         condition={!!account}
       />
-      <Route exact path="/mint" component={Mint} />
+      {/* <Route exact path="/mint" component={Mint} /> */}
       <Redirect to="/" />
     </Switch>
   );
