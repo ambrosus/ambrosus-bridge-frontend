@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
@@ -13,31 +14,27 @@ import createBridgeContract from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
 import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
-
+/*eslint-disable*/
 const TransactionListItem = ({ tx }) => {
+  const { account } = useWeb3React();
+
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
   const [currentToken, setCurrentToken] = useState({});
   const [tokenAmount, setTokenAmount] = useState(0);
 
   useEffect(async () => {
-    const withdrawData = await getEventData('Withdraw', [
-      'address',
-      'address',
-      'address',
-      'address',
-    ]);
-    const transferData = await getEventData('Transfer', [
-      'address',
-      'address',
-      'address',
-      'address',
-      'address',
-    ]);
+    const withdrawData = await getEventData('Withdraw');
+    const transferData = await getEventData('Transfer');
+    const eventId = withdrawData.args.eventId;
+    const tokenAddress = withdrawData.args['tokentTo'];
 
-    const eventId = withdrawData[2];
-    const tokenAddress = withdrawData[0];
-    setTokenAmount(transferData[4]);
+    if (transferData) {
+      const correctTransfer = transferData.args.queue.find(
+        (el) => el.toAddress === account,
+      );
+      setTokenAmount(correctTransfer.amount);
+    }
 
     const currentCoin = Object.values(tokens).find((token) =>
       Object.values(token.addresses).some((el) => el && el === tokenAddress),
@@ -55,7 +52,7 @@ const TransactionListItem = ({ tx }) => {
     );
   }, []);
 
-  const getEventData = async (eventName, types) => {
+  const getEventData = async (eventName) => {
     const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
     const contract = createBridgeContract[tx.chainId](providers[tx.chainId]);
 
@@ -64,7 +61,10 @@ const TransactionListItem = ({ tx }) => {
         (topic) => topic === getEventSignatureByName(contract, eventName),
       ),
     );
-    return ethers.utils.defaultAbiCoder.decode(types, eventData.data);
+    if (eventData) {
+      return contract.interface.parseLog(eventData);
+    }
+    return null;
   };
 
   const formatDate = (timestamp) => {

@@ -28,6 +28,7 @@ const Status = () => {
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
 
   const refStage = useRef(stage);
+  const refEventId = useRef('');
 
   useEffect(() => {
     setTimeout(handleStatus, 2000);
@@ -72,6 +73,7 @@ const Status = () => {
           ['address', 'address', 'address'],
           withDrawEvent.data,
         )[2];
+        refEventId.current = eventId;
         console.log(eventId);
         const filter = await contract.filters.Transfer(eventId);
         const event = await contract.queryFilter(filter);
@@ -178,9 +180,17 @@ const Status = () => {
       topics: [getEventSignatureByName(contract, transferFinishName)],
     };
 
-    const handleTransferFinish = () => {
+    const handleTransferFinish = async () => {
       if (current === '3.2') {
-        setStage('4');
+        const lastTx = await getTxLastStageStatus(
+          networkId,
+          refEventId.current,
+        );
+        console.log(lastTx);
+        if (lastTx.length) {
+          setStage('4');
+          setOtherNetworkTxHash(lastTx[0].transactionHash);
+        }
         otherProvider.off(otherNetworkFinishFilter, handleTransferFinish);
       }
     };
