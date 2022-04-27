@@ -26,9 +26,9 @@ const startBalanceMonitoring = async (account) => {
   // eslint-disable-next-line no-restricted-syntax
   for (const chainId of [ambChainId, ethChainId]) {
     fetchBalancesOfNetwork(account, chainId);
-    providers[chainId].on('block', () =>
-      fetchBalancesOfNetwork(account, chainId),
-    );
+    // providers[chainId].on('block', () =>
+    //   fetchBalancesOfNetwork(account, chainId),
+    // );
   }
 };
 

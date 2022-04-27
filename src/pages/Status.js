@@ -1,6 +1,7 @@
 /*eslint-disable*/
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router';
+import { utils } from 'ethers';
 import { Link, useParams } from 'react-router-dom';
 import TransactionNetworks from '../components/TransactionNetworks';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
@@ -25,6 +26,7 @@ const Status = () => {
   const [stage, setStage] = useState('1.1');
   const [confirmations, setConfirmations] = useState(0);
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
+  const [minSafetyBlocks, setMinSafetyBlocks] = useState(2);
 
   const refStage = useRef(stage);
   const refEventId = useRef('');
@@ -65,14 +67,12 @@ const Status = () => {
       clearTimeout(handleStatus);
 
       const { current: provider } = refProvider;
-      const { current: otherProvider } = refOtherProvider;
-      const { withdraw, transfer, transferSubmit, transferFinish } = refFilters.current;
 
-      provider.off('block', handleBlock);
-      provider.off(withdraw, handleWithdraw);
-      provider.off(transfer, handleTransfer);
-      otherProvider.off(transferSubmit, handleTransferSubmit);
-      otherProvider.off(transferFinish, handleTransferFinish);
+      if (provider) {
+        const { current: otherProvider } = refOtherProvider;
+        provider.removeAllListeners()
+        otherProvider.removeAllListeners()
+      }
     }
   }, []);
 
@@ -96,6 +96,9 @@ const Status = () => {
 
       const { current: contract } = refContract;
 
+      const minSafetyBlock = await contract.minSafetyBlocks();
+      setMinSafetyBlocks(minSafetyBlock.toNumber());
+
       const withDrawEvent = receipt.logs.find((log) =>
         log.topics.some(
           (topic) =>
@@ -105,17 +108,20 @@ const Status = () => {
       if (withDrawEvent) {
         currentStage = '2.1';
       }
-
+      console.log(withDrawEvent);
       const eventId = contract.interface.parseLog(withDrawEvent).args.eventId;
       refEventId.current = eventId;
 
       const filter = await contract.filters.Transfer(eventId);
       const event = await contract.queryFilter(filter);
-
+      console.log(event);
       if (+currentStage >= 2.1 && event.length) {
+        currentStage = '2.2';
+      }
+      console.log(confirmations);
+      if (currentStage === '2.2' && confirmations === minSafetyBlock.toNumber()) {
         currentStage = '3.1';
       }
-
       const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
       const otherProvider = providers[otherNetId];
 
@@ -144,11 +150,17 @@ const Status = () => {
       await filtersForEvents();
       const { withdraw, transfer, transferSubmit, transferFinish } = refFilters.current;
 
-      provider.on('block', handleBlock);
-      provider.on(withdraw, handleWithdraw);
-      provider.on(transfer, handleTransfer);
-      otherProvider.on(transferSubmit, handleTransferSubmit);
-      otherProvider.on(transferFinish, handleTransferFinish);
+      if (currentStage === '1.1') {
+        provider.on(withdraw, handleWithdraw);
+      } else if (currentStage === '2.1') {
+        provider.on(transfer, handleTransfer);
+      } else if (currentStage === '2.2') {
+        provider.on('block', handleBlock);
+      } else if (currentStage === '3.1') {
+        otherProvider.on(transferSubmit, handleTransferSubmit);
+      } else if (currentStage === '3.2') {
+        otherProvider.on(transferFinish, handleTransferFinish);
+      }
     }
   }, [currentChainId])
 
@@ -157,12 +169,17 @@ const Status = () => {
       const tx = await providers[networkId].getTransaction(txHash);
 
       if (tx && tx.blockNumber) {
-        refProvider.current = providers[networkId];
-        refOtherProvider.current =
-          providers[currentChainId === ambChainId ? ethChainId : ambChainId];
+        setConfirmations(tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations);
+
+        if (!refProvider.current) {
+          refProvider.current = providers[networkId];
+        }
+        if (!refOtherProvider.current) {
+          refOtherProvider.current =
+            providers[networkId === ambChainId ? ethChainId : ambChainId];
+        }
 
         setCurrentChainId(networkId);
-        setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
       } else if (tx && !tx.blockNumber) {
         tx.wait().then(() => {
           handleStatus();
@@ -173,10 +190,12 @@ const Status = () => {
 
   const handleBlock = async () => {
     const tx = await refProvider.current.getTransaction(txHash);
-    setConfirmations(tx.confirmations > 10 ? 10 : tx.confirmations);
+    setConfirmations(tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations);
 
-    if (tx.confirmations >= 10) {
-      refProvider.current.off('block', handleBlock);
+    if (tx.confirmations >= minSafetyBlocks) {
+      refProvider.current.removeAllListeners();
+      refOtherProvider.current.on(refFilters.current.transferSubmit, handleTransferSubmit);
+      setStage('3.1');
     }
   };
 
@@ -189,16 +208,17 @@ const Status = () => {
 
   const handleTransfer = () => {
     if (refStage.current === '2.1') {
-      setStage('3.1');
-      refProvider.current.off(refFilters.current.transfer, handleTransfer);
+      refProvider.current.removeAllListeners()
+      refProvider.current.on('block', handleBlock);
     }
   };
 
   const handleTransferSubmit = (e) => {
-    console.log(e);
-    if (refStage.current === '3.1') {
+    if (refStage.current === '3.1' && utils.hexZeroPad(refEventId.current.toHexString(), 32) === e.topics[1]) {
       setStage('3.2');
-      refOtherProvider.current.off(refFilters.current.transferSubmit, handleTransferSubmit);
+      refProvider.current.removeAllListeners()
+      refOtherProvider.current.removeAllListeners()
+      refOtherProvider.current.on(refFilters.current.transferFinish, handleTransferFinish);
     }
   };
 
@@ -210,8 +230,9 @@ const Status = () => {
       );
       if (lastTx.length) {
         setStage('4');
+        console.log(lastTx);
         setOtherNetworkTxHash(lastTx[0].transactionHash);
-        refOtherProvider.current.off(refFilters.current.transferFinish, handleTransferFinish);
+        refOtherProvider.current.removeAllListeners()
       }
     }
   };
@@ -237,18 +258,7 @@ const Status = () => {
     return `${elClass} ${conditionalClass}`;
   };
 
-  let conditionalConfClass = '';
-
-  if (+stage > 2.1) {
-    if (confirmations === 10) {
-      conditionalConfClass = 'transaction-status__info-stage--checked';
-    } else if (confirmations < 10) {
-      conditionalConfClass = 'transaction-status__info-stage--loading';
-    }
-  }
-
   const goHome = () => history.push('/exchange');
-  const confirmationClass = `transaction-status__info-stage ${conditionalConfClass}`;
 
   return (
     <div className="content status-page">
@@ -290,10 +300,10 @@ const Status = () => {
               </div>
             </div>
             <p className={handleLoadingClass('2.1')}>Transaction processing.</p>
-            <p className={confirmationClass}>
+            <p className={handleLoadingClass('2.2')}>
               Confirmations
               <span className="transaction-status__info-stage-confirm">
-                {+stage > 2.1 ? confirmations : 0}/10
+                {+stage > 2.1 ? confirmations : 0}/{minSafetyBlocks}
               </span>
             </p>
           </div>
