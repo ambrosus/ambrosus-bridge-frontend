@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import { utils } from 'ethers';
-// import { Link } from 'react-router-dom';
 import ErrorContext from '../../contexts/ErrorContext';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
 import { AmbrosusNetwork, getSupportedNetworks } from '../../utils/networks';
@@ -36,11 +35,14 @@ const Exchange = () => {
   const worker = useContext(CoinBalanceWorkerContext);
 
   // setting init values
-  useEffect(async () => {
+  useEffect(() => {
     const supportedNetworks = getSupportedNetworks();
     setNetworks(supportedNetworks);
     worker.postMessage({ type: 'start', account });
     setCoin(nativeTokensById[chainId]);
+    return () => {
+      worker.postMessage({ type: 'stop', account });
+    };
   }, []);
 
   // if network changed update transaction fee
