@@ -10,7 +10,7 @@ const networkChainIds = {
 export const db = new Dexie('primary');
 db.version(1).stores({
   tokens: '[symbol+chainId], chainId, nativeAnalog',
-  nativeTokens: 'symbol, [symbol+chainId], wrappedAnalog, chainId',
+  nativeTokens: 'symbol, wrappedAnalog, chainId',
 });
 
 const tokenList = Object.values(ConfigMock.tokens).reduce((list, token) => {
