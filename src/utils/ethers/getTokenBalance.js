@@ -18,6 +18,7 @@ const getTokenBalance = async (
     },
   ];
   const contract = new ethers.Contract(tokenContractAddress, minABI, provider);
+
   return contract.balanceOf(ownerAddress);
 };
 
