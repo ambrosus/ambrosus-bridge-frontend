@@ -78,8 +78,6 @@ const Mint = () => {
 
     const WETH = await db.tokens.get({ symbol: 'WETH', chainId: ethChainId });
 
-    console.log(WETH);
-
     const contract = new ethers.Contract(
       WETH.address,
       tokenABI,
