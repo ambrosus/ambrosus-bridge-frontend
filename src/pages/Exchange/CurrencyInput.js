@@ -17,7 +17,7 @@ const CurrencyInput = ({
 
   const handleKeyPress = (e) => {
     // discard all symbols except listed in regex
-    if (!/(1|2|3|4|5|6|7|8|9|0|.)/.test(e.key)) {
+    if (!/(1|2|3|4|5|6|7|8|9|0|,|.)/.test(e.key)) {
       e.preventDefault();
     }
   };
@@ -39,7 +39,7 @@ const CurrencyInput = ({
       </label>
       <input
         type="number"
-        placeholder="0.0"
+        placeholder="0,0"
         value={value}
         className="currency-input__input"
         onChange={handleInput}
