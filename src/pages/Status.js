@@ -26,7 +26,7 @@ const Status = () => {
   const [stage, setStage] = useState('1.1');
   const [confirmations, setConfirmations] = useState(0);
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
-  const [minSafetyBlocks, setMinSafetyBlocks] = useState(2);
+  const [minSafetyBlocks, setMinSafetyBlocks] = useState(0);
 
   const refStage = useRef(stage);
   const refEventId = useRef('');
@@ -90,14 +90,7 @@ const Status = () => {
         history.push('/');
       }
 
-      refContract.current = await createBridgeContract[currentChainId](
-        providers[currentChainId],
-      );
-
       const { current: contract } = refContract;
-
-      const minSafetyBlock = await contract.minSafetyBlocks();
-      setMinSafetyBlocks(minSafetyBlock.toNumber());
 
       const withDrawEvent = receipt.logs.find((log) =>
         log.topics.some(
@@ -119,7 +112,7 @@ const Status = () => {
         currentStage = '2.2';
       }
       console.log(confirmations);
-      if (currentStage === '2.2' && confirmations === minSafetyBlock.toNumber()) {
+      if (currentStage === '2.2' && confirmations === minSafetyBlocks) {
         currentStage = '3.1';
       }
       const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
@@ -151,14 +144,19 @@ const Status = () => {
       const { withdraw, transfer, transferSubmit, transferFinish } = refFilters.current;
 
       if (currentStage === '1.1') {
+        console.log(1);
         provider.on(withdraw, handleWithdraw);
       } else if (currentStage === '2.1') {
+        console.log(1);
         provider.on(transfer, handleTransfer);
       } else if (currentStage === '2.2') {
+        console.log(1);
         provider.on('block', handleBlock);
       } else if (currentStage === '3.1') {
+        console.log(1);
         otherProvider.on(transferSubmit, handleTransferSubmit);
       } else if (currentStage === '3.2') {
+        console.log(1);
         otherProvider.on(transferFinish, handleTransferFinish);
       }
     }
@@ -169,7 +167,14 @@ const Status = () => {
       const tx = await providers[networkId].getTransaction(txHash);
 
       if (tx && tx.blockNumber) {
-        setConfirmations(tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations);
+        refContract.current = await createBridgeContract[networkId](
+          providers[networkId],
+        );
+        const minSafetyBlock = await refContract.current.minSafetyBlocks();
+        const safetyBlockNumber = minSafetyBlock.toNumber()
+        setMinSafetyBlocks(safetyBlockNumber);
+
+        setConfirmations(tx.confirmations > safetyBlockNumber ? safetyBlockNumber : tx.confirmations);
 
         if (!refProvider.current) {
           refProvider.current = providers[networkId];
@@ -191,6 +196,7 @@ const Status = () => {
   const handleBlock = async () => {
     const tx = await refProvider.current.getTransaction(txHash);
     setConfirmations(tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations);
+    console.log(2);
 
     if (tx.confirmations >= minSafetyBlocks) {
       refProvider.current.removeAllListeners();
@@ -200,6 +206,7 @@ const Status = () => {
   };
 
   const handleWithdraw = () => {
+    console.log(2);
     if (refStage.current === '1.1') {
       setStage('2.1');
       refProvider.current.off(refFilters.current.withdraw, handleWithdraw);
@@ -207,13 +214,15 @@ const Status = () => {
   };
 
   const handleTransfer = () => {
+    console.log(2);
     if (refStage.current === '2.1') {
-      refProvider.current.removeAllListeners()
+      refProvider.current.removeAllListeners();
       refProvider.current.on('block', handleBlock);
     }
   };
 
   const handleTransferSubmit = (e) => {
+    console.log(2);
     if (refStage.current === '3.1' && utils.hexZeroPad(refEventId.current.toHexString(), 32) === e.topics[1]) {
       setStage('3.2');
       refProvider.current.removeAllListeners()
@@ -223,6 +232,7 @@ const Status = () => {
   };
 
   const handleTransferFinish = async () => {
+    console.log(2);
     if (refStage.current === '3.2') {
       const lastTx = await getTxLastStageStatus(
         currentChainId,
