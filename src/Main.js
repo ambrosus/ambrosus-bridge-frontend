@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core';
 import { providers } from 'ethers';
@@ -12,7 +12,11 @@ import Confirmation from './pages/Confirmation';
 import ErrorContext from './contexts/ErrorContext';
 import TransactionList from './pages/TransactionList';
 import CoinBalanceWorkerProvider from './contexts/CoinBalanceWorkerContext/provider';
-// import TokenListContextProvider from './contexts/TokenListContext/provider';
+import {
+  ConfiguredInjectedConnector,
+  ConfiguredWalletConnectConnector,
+} from './utils/web3ReactConnectors';
+// import useAutoLogin from './hooks/useAutoLogin';
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
@@ -21,7 +25,6 @@ const Main = () => {
 
   return (
     <CoinBalanceWorkerProvider>
-      {/* <TokenListContextProvider> */}
       <Web3ReactProvider getLibrary={getLibrary}>
         <ErrorContext.Provider value={{ error, setError }}>
           <Layout title="Bridge" error={error}>
@@ -29,7 +32,6 @@ const Main = () => {
           </Layout>
         </ErrorContext.Provider>
       </Web3ReactProvider>
-      {/* </TokenListContextProvider> */}
     </CoinBalanceWorkerProvider>
   );
 };
@@ -38,9 +40,21 @@ export default Main;
 
 const Routing = () => {
   const web3 = useWeb3React();
+  const { account, activate } = web3;
 
-  const { account } = web3;
-  return (
+  const [isLoaded, setLoading] = useState(false);
+  useEffect(() => {
+    const previousLogin = sessionStorage.getItem('wallet');
+    if (previousLogin === 'metamask') {
+      activate(ConfiguredInjectedConnector).then(() => setLoading(true));
+    } else if (previousLogin === 'wallet-connect') {
+      activate(ConfiguredWalletConnectConnector).then(() => setLoading(true));
+    } else {
+      setLoading(true);
+    }
+  }, []);
+
+  return isLoaded ? (
     <Switch>
       <Route exact path="/" component={ConnectWallet} />
       <ConditionalRoute
@@ -65,7 +79,7 @@ const Routing = () => {
       {/* <Route exact path="/mint" component={Mint} /> */}
       <Redirect to="/" />
     </Switch>
-  );
+  ) : null;
 };
 
 const ConditionalRoute = ({ children, condition = false, ...props }) =>

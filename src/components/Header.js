@@ -44,6 +44,7 @@ const HeaderLayout = ({
   const { account, deactivate, connector } = useWeb3React();
   const history = useHistory();
   const logout = () => {
+    sessionStorage.setItem('wallet', '');
     history.push('/');
     deactivate();
   };

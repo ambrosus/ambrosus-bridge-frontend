@@ -21,13 +21,17 @@ const ConnectWallet = () => {
   const history = useHistory();
 
   const handleMetamaskLogin = () => {
-    activate(ConfiguredInjectedConnector).then(() => history.push('/exchange'));
+    activate(ConfiguredInjectedConnector).then(() => {
+      sessionStorage.setItem('wallet', 'metamask');
+      history.push('/exchange');
+    });
   };
 
   const handleWalletConnectLogin = () => {
-    activate(ConfiguredWalletConnectConnector).then(() =>
-      history.push('/exchange'),
-    );
+    activate(ConfiguredWalletConnectConnector).then(() => {
+      sessionStorage.setItem('wallet', 'wallet-connect');
+      history.push('/exchange');
+    });
   };
 
   useEffect(async () => {
