@@ -30,7 +30,7 @@
     justify-content: space-between;
     padding: 0.5rem 0;
     border-bottom: 1px solid #EFF2F5;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
   }
 
   &__label {
@@ -49,4 +49,15 @@
     border-radius: 50%;
     overflow: hidden;
   }
+}
+
+.confirmation-info__loading {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  font-size: 0.875rem;
+  color: $dark-gray;
+  margin-top: 2rem;
 }

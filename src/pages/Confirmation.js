@@ -21,6 +21,8 @@ const Confirmation = () => {
     push,
   } = useHistory();
 
+  const [isLocked, setIsLocked] = useState(false);
+
   const BridgeContract = createBridgeContract[chainId](library.getSigner());
 
   useEffect(async () => {
@@ -30,6 +32,8 @@ const Confirmation = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setIsLocked(true);
 
     withdrawCoins(
       transactionAmount,
@@ -45,6 +49,7 @@ const Confirmation = () => {
       })
       .catch((e) => {
         console.error(e);
+        setIsLocked(false);
         setError('There is some error. Please refresh and try again');
       });
   };
@@ -93,18 +98,28 @@ const Confirmation = () => {
           </span>
         </div>
       </div>
-      <div className="btns-wrapper">
-        <button
-          type="button"
-          onClick={goBack}
-          className="button button_gray btns-wrapper__btn"
-        >
-          Back
-        </button>
-        <button type="submit" className="button button_black btns-wrapper__btn">
-          Confirm
-        </button>
-      </div>
+      {isLocked ? (
+        <div className="confirmation-info__loading">
+          <InlineLoader />
+          Transaction started. Accept transaction in your wallet.
+        </div>
+      ) : (
+        <div className="btns-wrapper">
+          <button
+            type="button"
+            onClick={goBack}
+            className="button button_gray btns-wrapper__btn"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="button button_black btns-wrapper__btn"
+          >
+            Confirm
+          </button>
+        </div>
+      )}
     </form>
   );
 };
