@@ -30,7 +30,7 @@ const Exchange = () => {
   const [selectedCoin, setCoin] = useState();
   const [receivedCoin, setReceivedCoin] = useState();
   const [transactionAmount, setTransactionAmount] = useState('');
-  const [transferFee, setTransferFee] = useState(null);
+  const [transferFee, setTransferFee] = useState('');
 
   const worker = useContext(CoinBalanceWorkerContext);
 
@@ -49,7 +49,7 @@ const Exchange = () => {
   useEffect(async () => {
     const BridgeContract = createBridgeContract[chainId](library);
     const fee = await BridgeContract.callStatic.fee();
-    setTransferFee(utils.formatEther(fee));
+    setTransferFee(fee);
     setCoin(nativeTokensById[chainId]);
   }, [chainId]);
 
@@ -69,11 +69,16 @@ const Exchange = () => {
       transactionAmount,
       selectedCoin.denomination,
       account,
+      transferFee,
     );
 
     if (errorMessage) {
       setIsInvalid(!!errorMessage);
       setError(errorMessage);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     } else {
       history.push({
         pathname: '/confirm',
@@ -130,7 +135,8 @@ const Exchange = () => {
       <div className="exchange__estimated-fee-container">
         Transfer fee:
         <span className="exchange__estimated-fee">
-          {transferFee || <InlineLoader />} {isFromAmb ? 'AMB' : 'ETH'}
+          {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
+          {isFromAmb ? 'AMB' : 'ETH'}
         </span>
       </div>
       <button type="submit" className="button button_black exchange__button">
