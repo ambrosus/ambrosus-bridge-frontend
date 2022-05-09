@@ -7,6 +7,7 @@ import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
+import { ambChainId } from '../utils/providers';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
@@ -88,14 +89,12 @@ const Confirmation = () => {
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
             {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
-            ETH
+            {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Destination</span>
-          <span className="confirmation-info__value">
-            {formatAddress(account)}
-          </span>
+          <span className="confirmation-info__value">{account}</span>
         </div>
       </div>
       {isLocked ? (
@@ -123,7 +122,5 @@ const Confirmation = () => {
     </form>
   );
 };
-
-const formatAddress = (addr) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
 export default Confirmation;

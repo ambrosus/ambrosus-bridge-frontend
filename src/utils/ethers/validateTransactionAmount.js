@@ -27,7 +27,7 @@ const validateTransactionAmount = async (
     if (bnValue.gt(actualBnBalance)) {
       errorMessage = 'Not enough coins on balance';
     }
-    if (bnValue.lte('0.001')) {
+    if (bnValue.lt(utils.parseUnits('0.001', denomination))) {
       errorMessage = `Minimal transaction amount is 0.001`;
     }
   }

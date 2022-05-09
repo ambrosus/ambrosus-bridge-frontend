@@ -6,7 +6,7 @@ import { ambChainId } from '../utils/providers';
 
 const useGetMaxTxAmount = (selectedCoin, transactionAmount) => {
   const { account, chainId, library } = useWeb3React();
-  const balance = useCoinBalance(selectedCoin.symbol, chainId);
+  const balance = useCoinBalance(selectedCoin.symbol, selectedCoin.chainId);
 
   return async () => {
     let max;
