@@ -35,6 +35,11 @@
       &:not(:first-child) {
         flex-direction: column;
       }
+
+      &:last-child {
+        flex-direction: row;
+        margin-top: 5px;
+      }
     }
 
     &:not(:last-child) {

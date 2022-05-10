@@ -13,6 +13,7 @@ import createBridgeContract, {
 } from '../contracts';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
+import getTransferredTokens from '../utils/helpers/getTransferredTokens';
 const withDrawName = 'Withdraw';
 const transferName = 'Transfer';
 const transferSubmitName = 'TransferSubmit';
@@ -27,6 +28,10 @@ const Status = () => {
   const [confirmations, setConfirmations] = useState(0);
   const [otherNetworkTxHash, setOtherNetworkTxHash] = useState('');
   const [minSafetyBlocks, setMinSafetyBlocks] = useState(0);
+  const [transferredTokens, setTransferredTokens] = useState({
+    from: '',
+    to: '',
+  });
 
   const refStage = useRef(stage);
   const refEventId = useRef('');
@@ -101,9 +106,16 @@ const Status = () => {
       if (withDrawEvent) {
         currentStage = '2.1';
       }
-      console.log(withDrawEvent);
+      setTransferredTokens(
+        getTransferredTokens(
+          contract.interface.parseLog(withDrawEvent).args,
+          currentChainId,
+        ),
+      );
+
       const eventId = contract.interface.parseLog(withDrawEvent).args.eventId;
       refEventId.current = eventId;
+      console.log(contract.interface.parseLog(withDrawEvent).args);
 
       const filter = await contract.filters.Transfer(eventId);
       const event = await contract.queryFilter(filter);
@@ -280,6 +292,7 @@ const Status = () => {
         selectedChainId={currentChainId}
         fromHash={txHash}
         toHash={otherNetworkTxHash || null}
+        tokens={transferredTokens}
       />
       <hr />
       <div className="transaction-status">
