@@ -88,12 +88,16 @@ const ReceiveField = ({
           )}
         </div>
 
-        <div className="currency-input">
+        <div
+          className={`currency-input ${
+            transactionAmount.length > 12 ? 'currency-input_too-long' : ''
+          }`}
+        >
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label className="currency-input__label">Receive:</label>
           <input
-            type="number"
-            placeholder="0,0"
+            type="string"
+            placeholder="0.0"
             value={transactionAmount}
             className="currency-input__input"
             readOnly

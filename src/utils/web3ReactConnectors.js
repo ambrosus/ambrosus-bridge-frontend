@@ -23,6 +23,6 @@ export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
   pollingInterval: 6000,
   qrcode: true,
   qrcodeModalOptions: {
-    mobileLinks: ['metamask'],
+    mobileLinks: ['metamask', 'trustee'],
   },
 });

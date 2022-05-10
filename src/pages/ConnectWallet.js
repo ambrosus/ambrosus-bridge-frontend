@@ -21,10 +21,19 @@ const ConnectWallet = () => {
   const history = useHistory();
 
   const handleMetamaskLogin = () => {
-    activate(ConfiguredInjectedConnector).then(() => {
-      sessionStorage.setItem('wallet', 'metamask');
-      history.push('/exchange');
-    });
+    if (window.ethereum) {
+      activate(ConfiguredInjectedConnector).then(() => {
+        sessionStorage.setItem('wallet', 'metamask');
+        history.push('/exchange');
+      });
+    } else {
+      window
+        .open(
+          `https://metamask.app.link/dapp/${window.location.href}`,
+          '_blank',
+        )
+        .focus();
+    }
   };
 
   const handleWalletConnectLogin = () => {
@@ -46,6 +55,7 @@ const ConnectWallet = () => {
         await changeChainId(window.ethereum, ambChainId);
       }
     }
+
     if (account) {
       setError(null);
       history.push('/exchange');
