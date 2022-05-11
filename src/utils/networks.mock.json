@@ -1,42 +1,40 @@
 {
-  "amb": {
-    "name": "Ambrosus Devnet",
-    "logo": "https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps",
-    "code": "AMB",
-    "tokens": [
-      {
-        "name": "Synthetic Amber",
-        "symbol": "sAMB",
-        "address": "0x55252974F0277023C6ad296D33c4FDB4ABF971f3",
-        "logo": "http://dummyimage.com/100x100.png/dddddd/000000",
-        "denomination": 18,
-        "bridgeAddresses": [],
-        "addressesOnOtherNetworks": {
-          "eth": "0xD45698dA44D8Dda5c80911617FA57fd5e39099c4",
-          "bsc": ""
-        }
-      }
-    ],
-    "bridgeAddress": ""
+  "bridges": {
+    "eth": {
+      "amb": "0x41E2661363228b6A211A9B4E7f74301303B425a5",
+      "side": "0x6321a6658e906076D676E4dCFDe61682936Db507"
+    },
+    "bsc": {
+      "amb": "",
+      "side": ""
+    }
   },
-  "eth": {
-    "name": "Ethereum Ropsten",
-    "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
-    "code": "ETH",
-    "tokens": [
-      {
-        "name": "Synthetic Amber",
-        "symbol": "sAMB",
-        "address": "0xD45698dA44D8Dda5c80911617FA57fd5e39099c4",
-        "logo": "http://dummyimage.com/100x100.png/dddddd/000000",
-        "denomination": 18,
-        "bridgeAddresses": [],
-        "addressesOnOtherNetworks": {
-          "eth": "0x55252974F0277023C6ad296D33c4FDB4ABF971f3",
-          "bsc": ""
-        }
-      }
-    ],
-    "bridgeAddress": ""
+  "tokens": {
+    "SAMB": {
+      "name": "Synthetic Amber",
+      "symbol": "SAMB",
+      "denomination": 18,
+      "logo": "https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps",
+      "primaryNet": "amb",
+      "addresses": {
+        "amb": "0xB16205eebC2AD458FE79c3b2124CCe7D84CF5A26",
+        "eth": "0xc0B0f5d315010A0fDe7BfF2AF3bFCaC1e365495a",
+        "bsc": ""
+      },
+      "nativeAnalog": "AMB"
+    },
+    "WETH": {
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "denomination": 18,
+      "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
+      "primaryNet": "eth",
+      "addresses": {
+        "amb": "0xF5403ff735f94aC00894D0603f865ed3D951A610",
+        "eth": "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+        "bsc": ""
+      },
+      "nativeAnalog": "ETH"
+    }
   }
 }
