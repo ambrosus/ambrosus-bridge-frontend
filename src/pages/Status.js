@@ -211,7 +211,7 @@ const Status = () => {
     console.log(2);
 
     if (tx.confirmations >= minSafetyBlocks) {
-      refProvider.current.removeAllListeners();
+      await refProvider.current.removeAllListeners();
       refOtherProvider.current.on(refFilters.current.transferSubmit, handleTransferSubmit);
       setStage('3.1');
     }
@@ -234,7 +234,7 @@ const Status = () => {
   };
 
   const handleTransferSubmit = (e) => {
-    console.log(2);
+    console.log(utils.hexZeroPad(refEventId.current.toHexString(), 32), e);
     if (refStage.current === '3.1' && utils.hexZeroPad(refEventId.current.toHexString(), 32) === e.topics[1]) {
       setStage('3.2');
       refProvider.current.removeAllListeners()
