@@ -211,7 +211,7 @@ const Status = () => {
       transferSubmitFilter,
     );
 
-    return +stage >= 3.1 && transferSubmitEvent.length;
+    return transferSubmitEvent.length;
   };
 
   const handleBlock = async () => {
