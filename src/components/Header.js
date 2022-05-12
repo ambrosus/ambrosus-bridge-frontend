@@ -11,6 +11,8 @@ import { MobileMenu } from './MobileMenu';
 import WalletConnectLogo from '../assets/img/connect-wallet__wallet-connect.png';
 import MetaMaskLogo from '../assets/img/connect-wallet__metamask.jpg';
 import LogoutIcon from '../assets/svg/logout.svg';
+import { ReactComponent as MetamaskIcon } from '../assets/svg/metamask-menu-icon.svg';
+import addNetworkToMetamask from '../utils/addNetworkToMetamask';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,6 +46,7 @@ const HeaderLayout = ({
   const { account, deactivate, connector } = useWeb3React();
   const history = useHistory();
   const logout = () => {
+    sessionStorage.setItem('wallet', '');
     history.push('/');
     deactivate();
   };
@@ -55,13 +58,25 @@ const HeaderLayout = ({
           <img src={Logo} alt="logo" className="header__logo" />
         </Link>
 
-        {data.map((menuItem) => {
+        {data.map((menuItem, i) => {
           if (menuItem.type === 'submenu') {
-            return <Submenu name={menuItem.name} data={menuItem.data} />;
+            return (
+              <Submenu
+                name={menuItem.name}
+                data={menuItem.data}
+                isLastItem={data.length - 1 === i}
+                key={menuItem.name}
+                showAddMetamaskButton={menuItem.showAddMetamaskButton}
+              />
+            );
           }
           if (menuItem.type === 'link') {
             return (
-              <a href={menuItem.link} className="header__link">
+              <a
+                href={menuItem.link}
+                className="header__link"
+                key={menuItem.name}
+              >
                 {menuItem.name}
               </a>
             );
@@ -88,7 +103,6 @@ const HeaderLayout = ({
                 alt="wallet icon"
                 className="logout__icon"
               />
-              <span className="logout__text">LOG OUT</span>
             </button>
           </>
         ) : null}
@@ -113,8 +127,18 @@ HeaderLayout.propTypes = {
   toggleMenu: PropTypes.func,
 };
 
-const Submenu = ({ name = '', data = [{}] }) => (
-  <div className="submenu">
+const Submenu = ({
+  name = '',
+  data = [{}],
+  showAddMetamaskButton = false,
+  isLastItem = false,
+}) => (
+  <div
+    className={`submenu ${isLastItem ? 'submenu_last' : ''} ${
+      showAddMetamaskButton ? 'submenu_metamask' : ''
+    }`}
+  >
+    {isLastItem}
     <p className="submenu__name">
       {name}
       <svg viewBox="0 0 15 8" className="submenu__arrow" fill="none">
@@ -124,7 +148,23 @@ const Submenu = ({ name = '', data = [{}] }) => (
         />
       </svg>
     </p>
-    <div className="submenu__items" style={{ '--items-amount': data.length }}>
+    <div
+      className="submenu__items"
+      style={{
+        '--items-amount': showAddMetamaskButton ? data.length + 1 : data.length,
+      }}
+    >
+      {showAddMetamaskButton ? (
+        <button
+          type="button"
+          className="submenu__item submenu__item_metamask"
+          onClick={addNetworkToMetamask}
+        >
+          <MetamaskIcon />
+          Add Ambrosus Network to Metamask
+        </button>
+      ) : null}
+
       {data.map(({ name: itemName, link }) => (
         <a href={link} key={link} className="submenu__item">
           {itemName}
@@ -137,6 +177,8 @@ const Submenu = ({ name = '', data = [{}] }) => (
 Submenu.propTypes = {
   name: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.object),
+  showAddMetamaskButton: PropTypes.bool,
+  isLastItem: PropTypes.bool,
 };
 
 const walletLogo = (connector) => {
@@ -150,23 +192,15 @@ const formatAddress = (addr) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 const HEADER_DATA = [
   {
     type: 'submenu',
-    name: 'Use Ambrosus',
+    name: 'ABOUT',
     data: [
       {
-        name: 'About AMB',
+        name: 'Company',
         link: 'https://ambrosus.io/about',
       },
       {
-        name: 'Staking',
-        link: 'https://staking.ambrosus.io/',
-      },
-      {
-        name: 'Wallet',
-        link: 'https://ambrosus.io/wallet',
-      },
-      {
-        name: 'Explorer',
-        link: 'https://explorer.ambrosus.com/',
+        name: 'Team',
+        link: 'https://ambrosus.io/team',
       },
       {
         name: 'Roadmap',
@@ -175,27 +209,71 @@ const HEADER_DATA = [
     ],
   },
   {
-    type: 'link',
-    name: 'Projects',
-    link: 'https://ambrosus.io/projects',
+    type: 'submenu',
+    name: 'BUSINESS',
+    data: [
+      {
+        name: 'Enterprise',
+        link: 'https://ambrosus.io/business',
+      },
+      {
+        name: 'DeFi',
+        link: 'https://ambrosus.io/defi',
+      },
+    ],
   },
   {
     type: 'submenu',
-    name: 'Community',
+    name: 'COMMUNITY',
     data: [
       {
-        name: 'Community',
-        link: 'https://ambrosus.io/community',
+        name: 'GET INVOLVED',
+        link: 'https://ambrosus.io/community/',
       },
       {
-        name: 'AMB',
-        link: 'https://ambrosus.io/amb',
+        name: 'FORUM',
+        link: 'https://gov.ambrosus.io/',
       },
     ],
   },
   {
     type: 'link',
-    name: 'About',
-    link: 'https://ambrosus.io/about',
+    name: 'DEVELOPERS',
+    link: 'https://ambrosus.io/developers',
+  },
+  {
+    type: 'submenu',
+    name: 'Use AMB',
+    showAddMetamaskButton: true,
+    data: [
+      {
+        name: 'USE AMB',
+        link: 'https://ambrosus.io/amb/',
+      },
+      {
+        name: 'WALLET',
+        link: 'https://ambrosus.io/wallet/',
+      },
+      {
+        name: 'STAKING',
+        link: 'https://staking.ambrosus.io/',
+      },
+      {
+        name: 'Network Explorer',
+        link: 'https://explorer.ambrosus.io/',
+      },
+      {
+        name: 'AMB.TO (Asset Exploer)',
+        link: 'https://amb.to/',
+      },
+      {
+        name: 'AMB.Money (ROI Calculator)',
+        link: 'https://amb.money/',
+      },
+      {
+        name: 'Network Explorer Beta (Coming soon)',
+        link: '#',
+      },
+    ],
   },
 ];

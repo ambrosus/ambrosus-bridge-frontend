@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../../assets/svg/chevron.svg';
+import useGetMaxTxAmount from '../../hooks/useSetMax';
 
 const CurrencyInput = ({
   disabled = false,
@@ -8,22 +9,34 @@ const CurrencyInput = ({
   onChange = () => {},
   changeCoin = () => {},
   selectedCoin = {},
-  balance = {},
   isValueInvalid = false,
 }) => {
   const handleInput = ({ target: { value: newValue } }) => {
-    onChange(newValue.length > 6 ? newValue.slice(0, 6) : newValue);
+    const [intPart, floatPart] = newValue.replace(',', '.').split('.');
+    let formattedValue;
+    if (floatPart && floatPart.length > selectedCoin.denomination) {
+      formattedValue = `${intPart}.${floatPart.slice(
+        0,
+        selectedCoin.denomination,
+      )}`;
+    } else if (floatPart) {
+      formattedValue = `${intPart}.${floatPart}`;
+    } else {
+      formattedValue = intPart;
+    }
+    onChange(formattedValue);
   };
 
   const handleKeyPress = (e) => {
     // discard all symbols except listed in regex
-    if (!/(1|2|3|4|5|6|7|8|9|0|,)/.test(e.key)) {
+    if (!/(1|2|3|4|5|6|7|8|9|0|,|\.)/.test(e.key)) {
       e.preventDefault();
     }
   };
 
-  const setMax = () => {
-    onChange(balance.formattedString);
+  const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, value);
+  const setMax = async () => {
+    onChange(await getMaxTxAmount());
   };
 
   return (
@@ -39,7 +52,7 @@ const CurrencyInput = ({
       </label>
       <input
         type="number"
-        placeholder="0,0"
+        placeholder="0.0"
         value={value}
         className="currency-input__input"
         onChange={handleInput}
@@ -80,7 +93,6 @@ CurrencyInput.propTypes = {
   onChange: PropTypes.func,
   changeCoin: PropTypes.func,
   selectedCoin: PropTypes.object,
-  balance: PropTypes.object,
   isValueInvalid: PropTypes.bool,
 };
 

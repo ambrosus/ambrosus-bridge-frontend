@@ -58,6 +58,7 @@ const ExchangeField = ({
           disabled={false}
           changeCoin={toggleCoinModal}
           selectedCoin={selectedCoin}
+          balance={balance}
         />
       </div>
     </>

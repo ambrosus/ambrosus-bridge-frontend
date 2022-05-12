@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
@@ -14,27 +13,25 @@ import createBridgeContract from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
 import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
+import getTransferredTokens from '../utils/helpers/getTransferredTokens';
 /*eslint-disable*/
 const TransactionListItem = ({ tx }) => {
-  const { account } = useWeb3React();
-
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
   const [currentToken, setCurrentToken] = useState({});
   const [tokenAmount, setTokenAmount] = useState(0);
+  const [transferredTokens, setTransferredTokens] = useState({
+    from: '',
+    to: '',
+  });
 
   useEffect(async () => {
     const withdrawData = await getEventData('Withdraw');
-    const transferData = await getEventData('Transfer');
     const eventId = withdrawData.args.eventId;
     const tokenAddress = withdrawData.args['tokenTo'];
 
-    if (transferData) {
-      const correctTransfer = transferData.args.queue.find(
-        (el) => el.toAddress === account,
-      );
-      setTokenAmount(correctTransfer.amount);
-    }
+    setTransferredTokens(getTransferredTokens(withdrawData.args, tx.chainId));
+    setTokenAmount(withdrawData.args.amount);
 
     const currentCoin = Object.values(tokens).find((token) =>
       Object.values(token.addresses).some((el) => el && el === tokenAddress),
@@ -89,16 +86,18 @@ const TransactionListItem = ({ tx }) => {
   return (
     <div className="transaction-item">
       <div className="transaction-item__row">
-        {currentToken.logo && (
-          <img
-            src={currentToken.logo}
-            alt="coin"
-            className="transaction-item__img"
-          />
+        {transferredTokens.from && (
+          <>
+            <img
+              src={transferredTokens.from.toLowerCase().includes('amb') ? tokens.SAMB.logo : tokens.WETH.logo}
+              alt="coin"
+              className="transaction-item__img"
+            />
+            <span className="transaction-item__black-text">
+              {transferredTokens.from}
+            </span>
+          </>
         )}
-        <span className="transaction-item__black-text">
-          {currentToken.symbol}
-        </span>
         <img
           src={clockIcon}
           alt="when"
@@ -185,9 +184,17 @@ const TransactionListItem = ({ tx }) => {
           </span>
           <span className="transaction-item__black-text">
             {ethers.utils.formatUnits(tx.gasPrice, currentToken.denomination)}{' '}
-            {currentToken.symbol}
+            {!!currentToken.symbol && currentToken.symbol.slice(1)}
           </span>
         </div>
+      </div>
+      <div className="transaction-item__row">
+        <span className="transaction-item__grey-text">
+          Transferred tokens:
+        </span>
+        <span className="transaction-item__black-text">
+          {`${transferredTokens.from} - ${transferredTokens.to}`}
+        </span>
       </div>
     </div>
   );

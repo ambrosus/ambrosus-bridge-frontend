@@ -5,7 +5,7 @@ import { ethChainId } from '../utils/providers';
 import { AmbrosusNetwork, getSupportedNetworks } from '../utils/networks';
 import getTxLink from '../utils/helpers/getTxLink';
 
-const TransactionNetworks = ({ selectedChainId, fromHash, toHash }) => {
+const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
   const networks = getSupportedNetworks();
 
   const currentNetwork =
@@ -49,6 +49,12 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash }) => {
             </a>
           </span>
         )}
+        {tokens && (
+          <span className="transaction-coins__hash-wrapper">
+            <span className="transaction-coins__hash">token:</span>
+            {tokens.from}
+          </span>
+        )}
       </div>
       <img
         src={arrowIcon}
@@ -88,6 +94,12 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash }) => {
             )}
           </span>
         )}
+        {tokens && (
+          <span className="transaction-coins__hash-wrapper">
+            <span className="transaction-coins__hash">token:</span>
+            {tokens.to}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -97,6 +109,7 @@ TransactionNetworks.propTypes = {
   selectedChainId: PropTypes.number,
   fromHash: PropTypes.string,
   toHash: PropTypes.string,
+  tokens: PropTypes.object,
 };
 
 export default TransactionNetworks;

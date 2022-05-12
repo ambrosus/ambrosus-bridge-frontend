@@ -7,6 +7,7 @@ import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
+import { ambChainId } from '../utils/providers';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
@@ -21,6 +22,8 @@ const Confirmation = () => {
     push,
   } = useHistory();
 
+  const [isLocked, setIsLocked] = useState(false);
+
   const BridgeContract = createBridgeContract[chainId](library.getSigner());
 
   useEffect(async () => {
@@ -30,6 +33,8 @@ const Confirmation = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setIsLocked(true);
 
     withdrawCoins(
       transactionAmount,
@@ -45,6 +50,7 @@ const Confirmation = () => {
       })
       .catch((e) => {
         console.error(e);
+        setIsLocked(false);
         setError('There is some error. Please refresh and try again');
       });
   };
@@ -53,7 +59,7 @@ const Confirmation = () => {
     <form onSubmit={handleSubmit} className="content confirmation-page">
       <h2 className="confirmation-page__title">Confirm</h2>
       <p className="confirmation-page__amount">
-        {transactionAmount} {selectedCoin.symbol}
+        {transactionAmount.replace(/^0+/, '')} {selectedCoin.symbol}
       </p>
       <TransactionNetworks selectedChainId={selectedChainId} />
       <div className="confirmation-info">
@@ -83,32 +89,38 @@ const Confirmation = () => {
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
             {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
-            ETH
+            {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Destination</span>
-          <span className="confirmation-info__value">
-            {formatAddress(account)}
-          </span>
+          <span className="confirmation-info__value">{account}</span>
         </div>
       </div>
-      <div className="btns-wrapper">
-        <button
-          type="button"
-          onClick={goBack}
-          className="button button_gray btns-wrapper__btn"
-        >
-          Back
-        </button>
-        <button type="submit" className="button button_black btns-wrapper__btn">
-          Confirm
-        </button>
-      </div>
+      {isLocked ? (
+        <div className="confirmation-info__loading">
+          <InlineLoader />
+          Transaction started. Accept transaction in your wallet.
+        </div>
+      ) : (
+        <div className="btns-wrapper">
+          <button
+            type="button"
+            onClick={goBack}
+            className="button button_gray btns-wrapper__btn"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="button button_black btns-wrapper__btn"
+          >
+            Confirm
+          </button>
+        </div>
+      )}
     </form>
   );
 };
-
-const formatAddress = (addr) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
 export default Confirmation;

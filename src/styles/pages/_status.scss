@@ -2,6 +2,12 @@
   width: 52rem;
   font-family: "Proxima Nova", 'sans-serif';
   padding-bottom: 10rem;
+  color: #05060F;
+
+  .button_gray {
+    color: #58667E;
+    background: #F4F5F6;
+  }
 
   @media screen and (max-width: 450px) {
     padding-bottom: 200px;
@@ -18,6 +24,7 @@
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 0.8rem;
+    color: #1e1e1f;
   }
 
   &__subtitle {
