@@ -6,7 +6,7 @@
   position: relative;
   z-index: 20;
 
-  @media screen and (max-width: $mobile-breakpoint) {
+  @media screen and (max-width: $tablet-breakpoint) {
     height: 7.125rem;
   }
 }
@@ -25,7 +25,7 @@
 }
 
 .header__logo {
-  @media screen and (max-width: $mobile-breakpoint) {
+  @media screen and (max-width: $tablet-breakpoint) {
     width: 11rem;
   }
 }
@@ -38,7 +38,7 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
 
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: $tablet-breakpoint) {
     display: none;
   }
 }
@@ -51,7 +51,7 @@
   justify-content: center;
   align-items: center;
 
-  @media screen and (max-width: $mobile-breakpoint) {
+  @media screen and (max-width: $tablet-breakpoint) {
     display: none;
   }
 
@@ -114,6 +114,14 @@
   height: calc(2.875rem * var(--items-amount) + 1.5rem);
 }
 
+.submenu_last .submenu__items {
+  left: unset;
+  right: -1rem;
+}
+
+.submenu_metamask .submenu__items {
+  width: 27rem;
+}
 
 .submenu__item {
   padding: 1rem 1.25rem;
@@ -123,16 +131,34 @@
   font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+  user-select: none;
 }
 
+.submenu__item_metamask {
+  display: flex;
+  flex-flow: row nowrap;
+  text-align: left;
+  background: #262626;
+  padding: 1rem 1.25rem;
+  margin: 0 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+}
 
 .account {
-  padding: 0.5rem 1rem;
-  background: $lighter-black;
-  border: 1px solid white;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+
+  @media screen and (max-width: $tablet-breakpoint) {
+    display: none;
+  }
+}
+
+.account_mobile {
+  @media screen and (max-width: $tablet-breakpoint) {
+    display: flex;
+  }
 }
 
 .account__wallet-logo-container {
@@ -168,6 +194,16 @@
   flex-flow: row nowrap;
   align-items: center;
   cursor: pointer;
+
+  @media screen and (max-width: $tablet-breakpoint) {
+    display: none;
+  }
+}
+
+.logout_mobile {
+  @media screen and (max-width: $tablet-breakpoint) {
+    display: flex;
+  }
 }
 
 .logout__icon {
@@ -189,7 +225,7 @@
 .burger-icon {
   display: none;
 
-  @media screen and (max-width: $mobile-breakpoint) {
+  @media screen and (max-width: $tablet-breakpoint) {
     width: 2.5rem;
     height: 1rem;
 
