@@ -59,7 +59,7 @@ const Confirmation = () => {
     <form onSubmit={handleSubmit} className="content confirmation-page">
       <h2 className="confirmation-page__title">Confirm</h2>
       <p className="confirmation-page__amount">
-        {transactionAmount} {selectedCoin.symbol}
+        {transactionAmount.replace(/^0+/, '')} {selectedCoin.symbol}
       </p>
       <TransactionNetworks selectedChainId={selectedChainId} />
       <div className="confirmation-info">
