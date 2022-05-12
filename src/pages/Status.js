@@ -123,23 +123,13 @@ const Status = () => {
       if (+currentStage >= 2.1 && event.length) {
         currentStage = '2.2';
       }
-      console.log(confirmations);
+
       if (currentStage === '2.2' && confirmations === minSafetyBlocks) {
         currentStage = '3.1';
       }
-      const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
-      const otherProvider = providers[otherNetId];
 
-      const otherNetworkContract =
-        createBridgeContract[otherNetId](otherProvider);
-
-      const transferSubmitFilter =
-        await otherNetworkContract.filters.TransferSubmit(eventId);
-
-      const transferSubmitEvent = await otherNetworkContract.queryFilter(
-        transferSubmitFilter,
-      );
-      if (+currentStage >= 3.1 && transferSubmitEvent.length) {
+      const isTransferSubmitPassed = await checkTransferSubmit();
+      if (isTransferSubmitPassed) {
         currentStage = '3.2';
       }
 
@@ -154,6 +144,9 @@ const Status = () => {
       const { current: provider } = refProvider;
       await filtersForEvents();
       const { withdraw, transfer, transferSubmit, transferFinish } = refFilters.current;
+
+      const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
+      const otherProvider = providers[otherNetId];
 
       if (currentStage === '1.1') {
         console.log(1);
@@ -205,15 +198,38 @@ const Status = () => {
     });
   };
 
+  const checkTransferSubmit = async () => {
+    const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
+
+    const otherNetworkContract =
+      createBridgeContract[otherNetId](refOtherProvider.current);
+
+    const transferSubmitFilter =
+      await otherNetworkContract.filters.TransferSubmit(refEventId.current);
+
+    const transferSubmitEvent = await otherNetworkContract.queryFilter(
+      transferSubmitFilter,
+    );
+
+    return transferSubmitEvent.length;
+  };
+
   const handleBlock = async () => {
     const tx = await refProvider.current.getTransaction(txHash);
     setConfirmations(tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations);
     console.log(2);
 
     if (tx.confirmations >= minSafetyBlocks) {
-      refProvider.current.removeAllListeners();
-      refOtherProvider.current.on(refFilters.current.transferSubmit, handleTransferSubmit);
-      setStage('3.1');
+      await refProvider.current.removeAllListeners();
+      const isTransferSubmitPassed = await checkTransferSubmit();
+
+      if (isTransferSubmitPassed) {
+        setStage('3.2');
+        refOtherProvider.current.on(refFilters.current.transferFinish, handleTransferFinish);
+      } else {
+        refOtherProvider.current.on(refFilters.current.transferSubmit, handleTransferSubmit);
+        setStage('3.1');
+      }
     }
   };
 
@@ -234,7 +250,7 @@ const Status = () => {
   };
 
   const handleTransferSubmit = (e) => {
-    console.log(2);
+    console.log(utils.hexZeroPad(refEventId.current.toHexString(), 32), e);
     if (refStage.current === '3.1' && utils.hexZeroPad(refEventId.current.toHexString(), 32) === e.topics[1]) {
       setStage('3.2');
       refProvider.current.removeAllListeners()
