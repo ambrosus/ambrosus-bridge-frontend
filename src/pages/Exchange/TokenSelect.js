@@ -5,6 +5,7 @@ import MagnifyingGlassIcon from '../../assets/svg/magnifying-glass.svg';
 import CrossIcon from '../../assets/svg/cross.svg';
 import InlineLoader from '../../components/InlineLoader';
 import formatBalance from '../../utils/helpers/formatBalance';
+import useCoinBalance from '../../hooks/useCoinBalance';
 
 const TokenSelect = ({
   isOpen = false,
@@ -112,30 +113,32 @@ SearchInput.propTypes = {
   onChange: PropTypes.func,
 };
 
-const TokenButton = ({ token, setCoin, toggle }) => (
-  <button
-    type="button"
-    onClick={() => {
-      setCoin(token);
-      toggle();
-    }}
-    className="token-select__token"
-  >
-    <img src={token.logo} alt="#" className="token-select__token-icon" />
-    <span className="token-select__token-shorthand">{token.symbol}</span>
-    <span className="token-select__token-name">{token.name}</span>
-    <div className="exchange-field__balance-container">
-      Balance:
-      {token.balance ? (
-        <span className="exchange-field__balance">
-          {formatBalance(token.balance)} {token.symbol}
-        </span>
-      ) : (
-        <InlineLoader />
-      )}
-    </div>
-  </button>
-);
+const TokenButton = ({ token, setCoin, toggle }) => {
+  const balance = useCoinBalance(token.symbol, token.chainId);
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        setCoin(token);
+        toggle();
+      }}
+      className="token-select__token"
+    >
+      <img src={token.logo} alt="#" className="token-select__token-icon" />
+      <span className="token-select__token-shorthand">{token.symbol}</span>
+      <span className="token-select__token-name">{token.name}</span>
+      <div className="exchange-field__balance-container">
+        {balance ? (
+          <span className="exchange-field__balance">
+            {formatBalance(balance)} {token.symbol}
+          </span>
+        ) : (
+          <InlineLoader />
+        )}
+      </div>
+    </button>
+  );
+};
 
 TokenButton.propTypes = {
   token: PropTypes.object,
