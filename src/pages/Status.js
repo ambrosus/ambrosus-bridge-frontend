@@ -175,7 +175,10 @@ const Status = () => {
         refContract.current = await createBridgeContract[networkId](
           providers[networkId],
         );
-        const minSafetyBlock = await refContract.current.minSafetyBlocks();
+        const otherContract = await createBridgeContract[networkId === ambChainId ? ethChainId : ambChainId](
+          providers[networkId === ambChainId ? ethChainId : ambChainId]
+        );
+        const minSafetyBlock = await otherContract.minSafetyBlocks();
         const safetyBlockNumber = minSafetyBlock.toNumber()
         setMinSafetyBlocks(safetyBlockNumber);
 

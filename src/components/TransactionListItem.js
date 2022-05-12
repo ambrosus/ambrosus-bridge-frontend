@@ -184,7 +184,7 @@ const TransactionListItem = ({ tx }) => {
           </span>
           <span className="transaction-item__black-text">
             {ethers.utils.formatUnits(tx.gasPrice, currentToken.denomination)}{' '}
-            {currentToken.symbol.slice(1)}
+            {!!currentToken.symbol && currentToken.symbol.slice(1)}
           </span>
         </div>
       </div>
