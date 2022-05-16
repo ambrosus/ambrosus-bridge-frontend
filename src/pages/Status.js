@@ -109,13 +109,11 @@ const Status = () => {
       setTransferredTokens(
         getTransferredTokens(
           contract.interface.parseLog(withDrawEvent).args,
-          currentChainId,
         ),
       );
 
       const eventId = contract.interface.parseLog(withDrawEvent).args.eventId;
       refEventId.current = eventId;
-      console.log(contract.interface.parseLog(withDrawEvent).args);
 
       const filter = await contract.filters.Transfer(eventId);
       const event = await contract.queryFilter(filter);

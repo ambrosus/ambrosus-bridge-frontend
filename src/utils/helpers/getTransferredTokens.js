@@ -1,34 +1,33 @@
 import { BigNumber } from 'ethers';
-import { ambChainId } from '../providers';
 import { tokens } from '../../bridge-config.mock.json';
 
-const handleTransferredTokens = (withDrawArgs, chainId) => {
+const handleTransferredTokens = (withDrawArgs) => {
   const transTokens = { from: '', to: '' };
 
   if (BigNumber.from(0).eq(withDrawArgs.tokenFrom)) {
-    transTokens.from = chainId === ambChainId ? 'AMB' : 'ETH';
+    transTokens.from = findTokenByAddress(withDrawArgs.tokenTo).nativeAnalog;
   } else {
-    transTokens.from = findTokenByAddress(withDrawArgs.tokenFrom);
+    transTokens.from = findTokenByAddress(withDrawArgs.tokenFrom).symbol;
   }
   if (BigNumber.from(0).eq(withDrawArgs.tokenTo)) {
-    transTokens.to = chainId === ambChainId ? 'AMB' : 'ETH';
+    transTokens.to = findTokenByAddress(withDrawArgs.tokenFrom).nativeAnalog;
   } else {
-    transTokens.to = findTokenByAddress(withDrawArgs.tokenTo);
+    transTokens.to = findTokenByAddress(withDrawArgs.tokenTo).symbol;
   }
   return transTokens;
 };
 
 const findTokenByAddress = (address) => {
-  let tokenName;
+  let token;
 
   Object.keys(tokens).forEach((el) => {
     Object.values(tokens[el].addresses).forEach((addr) => {
       if (addr === address) {
-        tokenName = el;
+        token = tokens[el];
       }
     });
   });
-  return tokenName;
+  return token;
 };
 
 export default handleTransferredTokens;
