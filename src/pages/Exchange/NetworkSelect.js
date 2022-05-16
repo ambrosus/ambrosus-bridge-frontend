@@ -36,7 +36,7 @@ const NetworkSelect = ({
               alt="#"
               className="network-select__currency-icon"
             />
-            {name}
+            {window.innerWidth < 1279 ? name.split(' ')[0] : name}
           </button>
         ))}
       </div>

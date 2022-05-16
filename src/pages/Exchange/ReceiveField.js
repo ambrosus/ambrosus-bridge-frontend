@@ -9,6 +9,7 @@ import { ambChainId, ethChainId } from '../../utils/providers';
 import formatBalance from '../../utils/helpers/formatBalance';
 import InlineLoader from '../../components/InlineLoader';
 import useCoinBalance from '../../hooks/useCoinBalance';
+import { ReactComponent as WalletIcon } from '../../assets/svg/wallet.svg';
 
 const ReceiveField = ({
   networks = [{}],
@@ -78,10 +79,11 @@ const ReceiveField = ({
         />
 
         <div className="exchange-field__balance-container">
-          Balance:
+          <span className="exchange-field__balance-placeholder">Balance:</span>
+          <WalletIcon className="exchange-field__wallet-icon" />
           {balance ? (
             <span className="exchange-field__balance">
-              {formatBalance(balance)} {receivedCoin.symbol}
+              {formatBalance(balance)} {selectedCoin.symbol}
             </span>
           ) : (
             <InlineLoader />
