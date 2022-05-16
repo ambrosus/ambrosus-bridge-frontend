@@ -8,8 +8,8 @@ const formatBalance = (balance, denomination) => {
 
   const [intPart, floatPart] = balanceFloatString.split('.');
   let formattedBalance;
-  if (floatPart && floatPart.length > 6) {
-    formattedBalance = `${intPart}.${floatPart.slice(0, 6)}…`;
+  if (floatPart && floatPart.length > 3) {
+    formattedBalance = `${intPart}.${floatPart.slice(0, 3)}`;
   } else if (floatPart) {
     formattedBalance = `${intPart}.${floatPart}`;
   } else {

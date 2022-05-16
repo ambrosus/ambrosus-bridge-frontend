@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import TransactionNetworks from '../components/TransactionNetworks';
 import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
@@ -24,6 +24,9 @@ const Confirmation = () => {
 
   const [isLocked, setIsLocked] = useState(false);
 
+  const bnTransactionAmount = BigNumber.from(
+    utils.parseUnits(transactionAmount, selectedCoin.denomination),
+  );
   const BridgeContract = createBridgeContract[chainId](library.getSigner());
 
   useEffect(async () => {
@@ -59,7 +62,8 @@ const Confirmation = () => {
     <form onSubmit={handleSubmit} className="content confirmation-page">
       <h2 className="confirmation-page__title">Confirm</h2>
       <p className="confirmation-page__amount">
-        {transactionAmount.replace(/^0+/, '')} {selectedCoin.symbol}
+        {utils.formatUnits(bnTransactionAmount, selectedCoin.denomination)}{' '}
+        {selectedCoin.symbol}
       </p>
       <TransactionNetworks selectedChainId={selectedChainId} />
       <div className="confirmation-info">

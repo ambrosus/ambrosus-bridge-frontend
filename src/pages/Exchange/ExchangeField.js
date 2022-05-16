@@ -8,6 +8,7 @@ import TokenSelect from './TokenSelect';
 import useModal from '../../hooks/useModal';
 import useTokenList from '../../hooks/useTokenList';
 import useCoinBalance from '../../hooks/useCoinBalance';
+import { ReactComponent as WalletIcon } from '../../assets/svg/wallet.svg';
 
 const ExchangeField = ({
   networks = [{}],
@@ -41,7 +42,8 @@ const ExchangeField = ({
         />
 
         <div className="exchange-field__balance-container">
-          Balance:
+          <span className="exchange-field__balance-placeholder">Balance:</span>
+          <WalletIcon className="exchange-field__wallet-icon" />
           {balance ? (
             <span className="exchange-field__balance">
               {formatBalance(balance)} {selectedCoin.symbol}

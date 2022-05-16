@@ -194,6 +194,7 @@
   flex-flow: row nowrap;
   align-items: center;
   cursor: pointer;
+  row-gap: 1rem;
 
   @media screen and (max-width: $tablet-breakpoint) {
     display: none;
@@ -209,7 +210,6 @@
 .logout__icon {
   height: 1.5rem;
   width: 1.5rem;
-  margin-right: 1rem;
 }
 
 .logout__text {
