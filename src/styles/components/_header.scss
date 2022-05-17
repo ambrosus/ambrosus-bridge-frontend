@@ -194,7 +194,7 @@
   flex-flow: row nowrap;
   align-items: center;
   cursor: pointer;
-  row-gap: 1rem;
+  column-gap: 1rem;
 
   @media screen and (max-width: $tablet-breakpoint) {
     display: none;

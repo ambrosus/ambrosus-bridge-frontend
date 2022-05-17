@@ -14,11 +14,8 @@ const CurrencyInput = ({
   const handleInput = ({ target: { value: newValue } }) => {
     const [intPart, floatPart] = newValue.replace(',', '.').split('.');
     let formattedValue;
-    if (floatPart && floatPart.length > selectedCoin.denomination) {
-      formattedValue = `${intPart}.${floatPart.slice(
-        0,
-        selectedCoin.denomination,
-      )}`;
+    if (floatPart && floatPart.length > 8) {
+      formattedValue = `${intPart}.${floatPart.slice(0, 8)}`;
     } else if (floatPart) {
       formattedValue = `${intPart}.${floatPart}`;
     } else {
