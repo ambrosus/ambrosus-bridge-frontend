@@ -30,7 +30,7 @@ const TransactionListItem = ({ tx }) => {
     const eventId = withdrawData.args.eventId;
     const tokenAddress = withdrawData.args['tokenTo'];
 
-    setTransferredTokens(getTransferredTokens(withdrawData.args, tx.chainId));
+    setTransferredTokens(getTransferredTokens(withdrawData.args));
     setTokenAmount(withdrawData.args.amount);
 
     const currentCoin = Object.values(tokens).find((token) =>
@@ -164,7 +164,7 @@ const TransactionListItem = ({ tx }) => {
           </span>
           <span className="transaction-item__black-text">
             {ethers.utils.formatUnits(tokenAmount, currentToken.denomination)}{' '}
-            {currentToken.symbol}
+            {transferredTokens.from}
           </span>
         </div>
       </div>
@@ -184,7 +184,7 @@ const TransactionListItem = ({ tx }) => {
           </span>
           <span className="transaction-item__black-text">
             {ethers.utils.formatUnits(tx.gasPrice, currentToken.denomination)}{' '}
-            {!!currentToken.symbol && currentToken.symbol.slice(1)}
+            {tx.chainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
       </div>
