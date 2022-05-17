@@ -32,6 +32,7 @@ const Status = () => {
     from: '',
     to: '',
   });
+  const [stagesTime, setStagesTime] = useState(null);
 
   const refStage = useRef(stage);
   const refEventId = useRef('');
@@ -176,8 +177,16 @@ const Status = () => {
         const otherContract = await createBridgeContract[networkId === ambChainId ? ethChainId : ambChainId](
           providers[networkId === ambChainId ? ethChainId : ambChainId]
         );
+        const secondStageTime = await otherContract.timeframeSeconds();
+        const lastStageTime = await otherContract.lockTime();
+
+        setStagesTime({
+          second: secondStageTime.toNumber(),
+          third: lastStageTime.toNumber(),
+        });
+
         const minSafetyBlock = await otherContract.minSafetyBlocks();
-        const safetyBlockNumber = minSafetyBlock.toNumber()
+        const safetyBlockNumber = minSafetyBlock.toNumber();
         setMinSafetyBlocks(safetyBlockNumber);
 
         setConfirmations(tx.confirmations > safetyBlockNumber ? safetyBlockNumber : tx.confirmations);
@@ -335,9 +344,11 @@ const Status = () => {
           <div className="transaction-status__item-info">
             <div className="transaction-status__item-title">
               <p className="transaction-status__stage">Stage 2</p>
-              <div className="transaction-status__timing">
-                <ClockIcon />4 hour
-              </div>
+              {stagesTime && (
+                <div className="transaction-status__timing">
+                  <ClockIcon />{stagesTime.second / 60} min
+                </div>
+              )}
             </div>
             <p className={handleLoadingClass('2.1')}>Transaction processing.</p>
             <p className={handleLoadingClass('2.2')}>
@@ -355,9 +366,11 @@ const Status = () => {
           <div className="transaction-status__item-info">
             <div className="transaction-status__item-title">
               <p className="transaction-status__stage">Stage 3</p>
-              <div className="transaction-status__timing">
-                <ClockIcon />4 hour
-              </div>
+              {stagesTime && (
+                <div className="transaction-status__timing">
+                  <ClockIcon />{stagesTime.third / 60} min
+                </div>
+              )}
             </div>
             <p className={handleLoadingClass('3.1')}>Pending transaction.</p>
             <p className={handleLoadingClass('3.2')}>Transaction finish.</p>
