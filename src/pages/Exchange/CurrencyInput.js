@@ -55,6 +55,7 @@ const CurrencyInput = ({
         onChange={handleInput}
         onKeyPress={handleKeyPress}
         readOnly={disabled}
+        pattern="\d*"
       />
       <button
         type="button"
