@@ -24,8 +24,11 @@ const CurrencyInput = ({
     onChange(newValue);
   };
 
-  const handleKeyPress = () => {
+  const handleKeyPress = (e) => {
     // discard all symbols except listed in regex
+    if (!/(1|2|3|4|5|6|7|8|9|0|,|\.)/.test(e.key)) {
+      e.preventDefault();
+    }
   };
 
   const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, value);
