@@ -12,16 +12,14 @@ const CurrencyInput = ({
   isValueInvalid = false,
 }) => {
   const handleInput = ({ target: { value: newValue } }) => {
-    // const [intPart, floatPart] = newValue.replace(',', '.').split('.');
-    // let formattedValue;
-    // if (floatPart && floatPart.length > 8) {
-    //   formattedValue = `${intPart}.${floatPart.slice(0, 8)}`;
-    // } else if (floatPart) {
-    //   formattedValue = `${intPart}.${floatPart}`;
-    // } else {
-    //   formattedValue = intPart;
-    // }
-    onChange(newValue);
+    const [intPart, floatPart] = newValue.replace(',', '.').split('.');
+    let formattedValue;
+    if (floatPart && floatPart.length > 8) {
+      formattedValue = `${intPart}.${floatPart.slice(0, 8)}`;
+    } else {
+      formattedValue = newValue.replace(',', '.');
+    }
+    onChange(formattedValue);
   };
 
   const handleKeyPress = (e) => {
