@@ -46,7 +46,7 @@ const CurrencyInput = ({
         {disabled ? 'Receive:' : 'Send:'}
       </label>
       <input
-        type="number"
+        type="text"
         placeholder="0.0"
         value={value}
         className="currency-input__input"
