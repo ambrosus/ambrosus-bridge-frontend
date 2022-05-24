@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Dexie from 'dexie';
 
 // non-obvious import
 // web worker imported with webpack's worker-loader in "inline mode"
@@ -8,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import CoinBalanceWorker from 'worker-loader!../../workers/coinBalanceWorker';
 import CoinBalanceWorkerContext from './context';
-import { db } from '../../db';
 
 const CoinBalanceWorkerProvider = (props) => {
   const [worker, setWorker] = useState();
@@ -24,7 +24,7 @@ const CoinBalanceWorkerProvider = (props) => {
     if (typeof BroadcastChannel === 'undefined') {
       newWorker.addEventListener('message', (event) => {
         if (event.data.type === 'storagemutated') {
-          db.on('storagemutated').fire(event.data.updatedParts);
+          Dexie.on('storagemutated').fire(event.data.updatedParts);
         }
       });
     }

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import Dexie from 'dexie';
 import { db } from '../db';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
 import CustomJsonRpcBatchProvider from '../utils/ethers/CustomJsonRpcBatchProvider';
@@ -114,8 +115,9 @@ const encodeGetErc20BalanceData = async (address, account, provider) => {
 // proposed in here
 // https://github.com/dexie/Dexie.js/issues/1573
 
+// console.log(db, 'worker');
 if (typeof BroadcastChannel === 'undefined') {
-  db.on('storagemutated', (updatedParts) => {
+  Dexie.on('storagemutated', (updatedParts) => {
     postMessage({ type: 'storagemutated', updatedParts });
   });
 }
