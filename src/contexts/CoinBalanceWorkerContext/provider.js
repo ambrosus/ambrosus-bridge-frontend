@@ -8,13 +8,26 @@ import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import CoinBalanceWorker from 'worker-loader!../../workers/coinBalanceWorker';
 import CoinBalanceWorkerContext from './context';
+import { db } from '../../db';
 
 const CoinBalanceWorkerProvider = (props) => {
   const [worker, setWorker] = useState();
   useEffect(() => {
     const newWorker = new CoinBalanceWorker();
-
     setWorker(newWorker);
+
+    // fallback for Dexie observable
+    // due to issues with useLiveQuery in Safari < 15.4
+    // proposed in here
+    // https://github.com/dexie/Dexie.js/issues/1573
+
+    if (typeof BroadcastChannel === 'undefined') {
+      newWorker.addEventListener('message', (event) => {
+        if (event.data.type === 'storagemutated') {
+          db.on('storagemutated').fire(event.data.updatedParts);
+        }
+      });
+    }
   }, []);
 
   return <CoinBalanceWorkerContext.Provider value={worker} {...props} />;

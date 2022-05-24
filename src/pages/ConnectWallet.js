@@ -51,7 +51,7 @@ const ConnectWallet = () => {
         `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
       );
 
-      if (connector instanceof InjectedConnector) {
+      if (connector instanceof InjectedConnector && !document.hidden) {
         await changeChainId(window.ethereum, ambChainId);
       }
     }

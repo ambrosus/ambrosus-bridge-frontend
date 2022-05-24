@@ -72,6 +72,7 @@ export const MobileMenu = ({
               toggleSubmenu={() => toggleSubmenu(i)}
               isOpen={openSubmenuIndex === i}
               showAddMetamaskButton={menuItem.showAddMetamaskButton}
+              key={menuItem.name}
             />
           );
         }
@@ -82,6 +83,7 @@ export const MobileMenu = ({
               className="mobile-menu__link"
               data-number={`—\u00A00${i + 1}`}
               onClick={toggleMenu}
+              key={menuItem.name}
             >
               {menuItem.name}
             </a>
@@ -142,7 +144,12 @@ const MobileSubmenu = ({
         </button>
       ) : null}
       {data.map(({ name: itemName, link }) => (
-        <a href={link} className="mobile-submenu__item" onClick={toggleMenu}>
+        <a
+          href={link}
+          key={itemName}
+          className="mobile-submenu__item"
+          onClick={toggleMenu}
+        >
           {itemName}
         </a>
       ))}

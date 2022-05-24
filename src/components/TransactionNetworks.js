@@ -4,6 +4,7 @@ import arrowIcon from '../assets/svg/green-arrow-right.svg';
 import { ethChainId } from '../utils/providers';
 import { AmbrosusNetwork, getSupportedNetworks } from '../utils/networks';
 import getTxLink from '../utils/helpers/getTxLink';
+import TokenIcon from './TokenIcon';
 
 const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
   const networks = getSupportedNetworks();
@@ -25,13 +26,10 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           fromHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        {!!selectedChainId && (
-          <img
-            src={currentNetwork.logo}
-            alt="coin name"
-            className="transaction-coins__img"
-          />
-        )}
+        <TokenIcon
+          code={currentNetwork.code}
+          className="transaction-coins__img"
+        />
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">Send:</p>
           {!!selectedChainId && (
@@ -66,13 +64,11 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           toHash === null || toHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        {!!selectedChainId && (
-          <img
-            src={otherNetwork.logo}
-            alt="coin name"
-            className="transaction-coins__img"
-          />
-        )}
+        <TokenIcon
+          code={otherNetwork.code}
+          className="transaction-coins__img"
+        />
+
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">To:</p>
           {!!selectedChainId && (
