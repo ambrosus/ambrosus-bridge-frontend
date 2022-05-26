@@ -66,7 +66,7 @@ const withdrawCoins = async (
   );
 
   const { bridgeFee, transferFee, signature } = fetch(
-    'http://relay-eth.ambrosus-dev.io/fees',
+    'https://relay-eth.ambrosus-dev.io/fees',
     {
       method: 'POST',
       body: JSON.stringify({

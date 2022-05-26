@@ -1,7 +1,7 @@
 import { BigNumber, utils } from 'ethers';
 
 const getFee = (isFromAmb, transactionAmount, selectedCoin) =>
-  fetch('http://relay-eth.ambrosus-dev.io/fees', {
+  fetch('https://relay-eth.ambrosus-dev.io/fees', {
     method: 'POST',
     body: JSON.stringify({
       isAmb: isFromAmb,
