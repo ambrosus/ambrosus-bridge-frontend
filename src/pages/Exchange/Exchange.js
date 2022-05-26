@@ -9,11 +9,11 @@ import changeChainId from '../../utils/ethers/changeChainId';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import InlineLoader from '../../components/InlineLoader';
 import ExchangeField from './ExchangeField';
-import createBridgeContract from '../../contracts';
 import { ambChainId, ethChainId } from '../../utils/providers';
 import validateTransactionAmount from '../../utils/ethers/validateTransactionAmount';
 import ReceiveField from './ReceiveField';
 import { nativeTokensById } from '../../utils/nativeTokens';
+import getFee from '../../utils/getFee';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
@@ -27,10 +27,9 @@ const Exchange = () => {
     await changeChainId(library.provider, newChainId);
   };
 
-  const [selectedCoin, setCoin] = useState();
-  const [receivedCoin, setReceivedCoin] = useState();
+  const [selectedCoin, setCoin] = useState({});
+  const [receivedCoin, setReceivedCoin] = useState({});
   const [transactionAmount, setTransactionAmount] = useState('');
-  const [transferFee, setTransferFee] = useState('');
 
   const worker = useContext(CoinBalanceWorkerContext);
 
@@ -46,10 +45,7 @@ const Exchange = () => {
   }, []);
 
   // if network changed update transaction fee
-  useEffect(async () => {
-    const BridgeContract = createBridgeContract[chainId](library);
-    const fee = await BridgeContract.callStatic.fee();
-    setTransferFee(fee);
+  useEffect(() => {
     setCoin(nativeTokensById[chainId]);
   }, [chainId]);
 
@@ -57,6 +53,18 @@ const Exchange = () => {
   useEffect(() => {
     setTransactionAmount('');
   }, [selectedCoin]);
+
+  const [fee, setFee] = useState('');
+  const updateFee = () =>
+    getFee(isFromAmb, transactionAmount, selectedCoin).then(({ totalFee }) =>
+      setFee(totalFee),
+    );
+
+  useEffect(() => {
+    if (selectedCoin) {
+      updateFee();
+    }
+  }, [selectedCoin, chainId]);
 
   const [isValueInvalid, setIsInvalid] = useState(false);
   const history = useHistory();
@@ -69,7 +77,7 @@ const Exchange = () => {
       transactionAmount,
       selectedCoin.denomination,
       account,
-      transferFee,
+      fee,
     );
 
     if (errorMessage) {
@@ -87,6 +95,7 @@ const Exchange = () => {
           selectedCoin,
           receivedCoin,
           transactionAmount,
+          fee,
         },
       });
     }
@@ -112,6 +121,7 @@ const Exchange = () => {
             isValueInvalid,
             isFromAmb,
             setCoin,
+            updateFee,
           }}
         />
         <button type="button" onClick={toggleDirection}>
@@ -135,20 +145,13 @@ const Exchange = () => {
       <div className="exchange__estimated-fee-container">
         Transfer fee:
         <span className="exchange__estimated-fee">
-          {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
+          {fee ? utils.formatEther(fee) : <InlineLoader />}{' '}
           {isFromAmb ? 'AMB' : 'ETH'}
         </span>
       </div>
       <button type="submit" className="button button_black exchange__button">
         Transfer
       </button>
-      {/* <Link */}
-      {/*  to="/mint" */}
-      {/*  style={{ marginTop: 16 }} */}
-      {/*  className="button button_gray exchange__button" */}
-      {/* > */}
-      {/*  Mint Coins */}
-      {/* </Link> */}
     </form>
   );
 };

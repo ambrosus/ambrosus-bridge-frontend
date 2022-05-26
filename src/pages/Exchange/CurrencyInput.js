@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../../assets/svg/chevron.svg';
 import useGetMaxTxAmount from '../../hooks/useSetMax';
+import TokenIcon from '../../components/TokenIcon';
 
 const CurrencyInput = ({
   disabled = false,
@@ -10,6 +11,7 @@ const CurrencyInput = ({
   changeCoin = () => {},
   selectedCoin = {},
   isValueInvalid = false,
+  onBlur = () => {},
 }) => {
   const handleInput = ({ target: { value: newValue } }) => {
     const [intPart, floatPart] = newValue.replace(',', '.').split('.');
@@ -53,6 +55,7 @@ const CurrencyInput = ({
         onChange={handleInput}
         onKeyPress={handleKeyPress}
         readOnly={disabled}
+        onBlur={onBlur}
       />
       <button
         type="button"
@@ -66,9 +69,8 @@ const CurrencyInput = ({
         className="currency-input__coin-button"
         onClick={changeCoin}
       >
-        <img
-          src={selectedCoin.logo}
-          alt="#"
+        <TokenIcon
+          code={selectedCoin.symbol}
           className="currency-input__currency-icon"
         />
         {selectedCoin.symbol}
@@ -89,6 +91,7 @@ CurrencyInput.propTypes = {
   changeCoin: PropTypes.func,
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
+  onBlur: PropTypes.func,
 };
 
 export default CurrencyInput;

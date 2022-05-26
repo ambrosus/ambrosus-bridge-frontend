@@ -57,7 +57,6 @@ const withdrawCoins = async (
   transactionAmount,
   selectedCoin,
   receivedCoin,
-  transferFee,
   account,
   chainId,
   signer,
@@ -65,6 +64,19 @@ const withdrawCoins = async (
   const bnTransactionAmount = BigNumber.from(
     utils.parseUnits(transactionAmount, selectedCoin.denomination),
   );
+
+  const { bridgeFee, transferFee, signature } = fetch(
+    'http://relay-eth.ambrosus-dev.io/fees',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        isAmb: chainId === ambChainId,
+        amount: utils.hexValue(bnTransactionAmount),
+        ...(selectedCoin ? { tokenAddress: selectedCoin.address } : {}),
+      }),
+    },
+  ).then((res) => res.json());
+
   const gasOpts =
     chainId === ambChainId ? { gasLimit: 8000000, gasPrice: 1 } : {};
 
@@ -72,10 +84,16 @@ const withdrawCoins = async (
 
   // if native coin
   if (selectedCoin.wrappedAnalog) {
-    return BridgeContract.wrapWithdraw(account, {
-      value: bnTransactionAmount.add(transferFee),
-      ...gasOpts,
-    });
+    return BridgeContract.wrapWithdraw(
+      account,
+      signature,
+      transferFee,
+      bridgeFee,
+      {
+        value: bnTransactionAmount.add(transferFee).add(bridgeFee),
+        ...gasOpts,
+      },
+    );
   }
 
   // if wrapped coin
@@ -102,8 +120,11 @@ const withdrawCoins = async (
     selectedCoin.address,
     account,
     bnTransactionAmount,
-    !!receivedCoin.wrappedAnalog, // true
-    { value: transferFee, ...gasOpts },
+    !!receivedCoin.wrappedAnalog,
+    signature,
+    transferFee,
+    bridgeFee,
+    { value: BigNumber.from(transferFee).add(bridgeFee), ...gasOpts },
   );
 };
 

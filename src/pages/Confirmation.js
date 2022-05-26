@@ -1,22 +1,27 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
 import TransactionNetworks from '../components/TransactionNetworks';
-import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
 import { ambChainId } from '../utils/providers';
+import TokenIcon from '../components/TokenIcon';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
   const { account, library, chainId } = useWeb3React();
-  const [transferFee, setTransferFee] = useState();
 
   const {
     location: {
-      state: { selectedChainId, selectedCoin, receivedCoin, transactionAmount },
+      state: {
+        selectedChainId,
+        selectedCoin,
+        receivedCoin,
+        transactionAmount,
+        fee,
+      },
     },
     goBack,
     push,
@@ -27,12 +32,6 @@ const Confirmation = () => {
   const bnTransactionAmount = BigNumber.from(
     utils.parseUnits(transactionAmount, selectedCoin.denomination),
   );
-  const BridgeContract = createBridgeContract[chainId](library.getSigner());
-
-  useEffect(async () => {
-    const fee = await BridgeContract.callStatic.fee();
-    setTransferFee(fee);
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -43,7 +42,6 @@ const Confirmation = () => {
       transactionAmount,
       selectedCoin,
       receivedCoin,
-      transferFee,
       account,
       chainId,
       library.getSigner(),
@@ -52,9 +50,12 @@ const Confirmation = () => {
         push(`/status/${res.hash}`);
       })
       .catch((e) => {
+        // eslint-disable-next-line no-console
         console.error(e);
         setIsLocked(false);
-        setError('There is some error. Please refresh and try again');
+        if (e.code !== 4001) {
+          setError('There is some error. Please refresh and try again');
+        }
       });
   };
 
@@ -70,18 +71,16 @@ const Confirmation = () => {
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>
           <span className="confirmation-info__value">
-            <img
-              src={selectedCoin.logo}
-              alt={selectedCoin.name}
+            <TokenIcon
+              code={selectedCoin.symbol}
               className="confirmation-info__img"
             />
             {selectedCoin.name}
             {selectedCoin.name !== receivedCoin.name ? (
               <>
                 <span>→</span>
-                <img
-                  src={receivedCoin.logo}
-                  alt={receivedCoin.name}
+                <TokenIcon
+                  code={receivedCoin.symbol}
                   className="confirmation-info__img"
                 />
                 {receivedCoin.name}
@@ -92,7 +91,7 @@ const Confirmation = () => {
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
-            {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
+            {fee ? utils.formatEther(fee) : <InlineLoader />}{' '}
             {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
