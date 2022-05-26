@@ -65,7 +65,7 @@ const withdrawCoins = async (
     utils.parseUnits(transactionAmount, selectedCoin.denomination),
   );
 
-  const { bridgeFee, transferFee, signature } = fetch(
+  const { bridgeFee, transferFee, signature } = await fetch(
     'https://relay-eth.ambrosus-dev.io/fees',
     {
       method: 'POST',
@@ -81,6 +81,8 @@ const withdrawCoins = async (
     chainId === ambChainId ? { gasLimit: 8000000, gasPrice: 1 } : {};
 
   const BridgeContract = createBridgeContract[chainId](signer);
+
+  console.log(bnTransactionAmount, transferFee, bridgeFee);
 
   // if native coin
   if (selectedCoin.wrappedAnalog) {
