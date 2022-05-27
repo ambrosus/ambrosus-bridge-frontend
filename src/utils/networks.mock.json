@@ -5,7 +5,7 @@
     "code": "AMB"
   },
   "eth": {
-    "name": "Ethereum Ropsten",
+    "name": "Sepolia Ethereum",
     "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
     "code": "ETH"
   }

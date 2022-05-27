@@ -115,7 +115,6 @@ const encodeGetErc20BalanceData = async (address, account, provider) => {
 // proposed in here
 // https://github.com/dexie/Dexie.js/issues/1573
 
-// console.log(db, 'worker');
 if (typeof BroadcastChannel === 'undefined') {
   Dexie.on('storagemutated', (updatedParts) => {
     postMessage({ type: 'storagemutated', updatedParts });
