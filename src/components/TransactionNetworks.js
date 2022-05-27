@@ -26,10 +26,12 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           fromHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        <TokenIcon
-          code={currentNetwork.code}
-          className="transaction-coins__img"
-        />
+        {!!selectedChainId && (
+          <TokenIcon
+            code={currentNetwork.code}
+            className="transaction-coins__img"
+          />
+        )}
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">Send:</p>
           {!!selectedChainId && (
@@ -64,10 +66,12 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           toHash === null || toHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        <TokenIcon
-          code={otherNetwork.code}
-          className="transaction-coins__img"
-        />
+        {!!selectedChainId && (
+          <TokenIcon
+            code={otherNetwork.code}
+            className="transaction-coins__img"
+          />
+        )}
 
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">To:</p>

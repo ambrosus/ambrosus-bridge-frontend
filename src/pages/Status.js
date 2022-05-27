@@ -148,19 +148,14 @@ const Status = () => {
       const otherProvider = providers[otherNetId];
 
       if (currentStage === '1.1') {
-        console.log(1);
         provider.on(withdraw, handleWithdraw);
       } else if (currentStage === '2.1') {
-        console.log(1);
         provider.on(transfer, handleTransfer);
       } else if (currentStage === '2.2') {
-        console.log(1);
         provider.on('block', handleBlock);
       } else if (currentStage === '3.1') {
-        console.log(1);
         otherProvider.on(transferSubmit, handleTransferSubmit);
       } else if (currentStage === '3.2') {
-        console.log(1);
         otherProvider.on(transferFinish, handleTransferFinish);
       }
     }
@@ -227,7 +222,6 @@ const Status = () => {
   const handleBlock = async () => {
     const tx = await refProvider.current.getTransaction(txHash);
     setConfirmations(tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations);
-    console.log(2);
 
     if (tx.confirmations >= minSafetyBlocks) {
       await refProvider.current.removeAllListeners();
@@ -244,7 +238,6 @@ const Status = () => {
   };
 
   const handleWithdraw = () => {
-    console.log(2);
     if (refStage.current === '1.1') {
       setStage('2.1');
       refProvider.current.off(refFilters.current.withdraw, handleWithdraw);
@@ -252,7 +245,6 @@ const Status = () => {
   };
 
   const handleTransfer = () => {
-    console.log(2);
     if (refStage.current === '2.1') {
       refProvider.current.removeAllListeners();
       refProvider.current.on('block', handleBlock);
@@ -260,7 +252,6 @@ const Status = () => {
   };
 
   const handleTransferSubmit = (e) => {
-    console.log(utils.hexZeroPad(refEventId.current.toHexString(), 32), e);
     if (refStage.current === '3.1' && utils.hexZeroPad(refEventId.current.toHexString(), 32) === e.topics[1]) {
       setStage('3.2');
       refProvider.current.removeAllListeners()
@@ -270,7 +261,6 @@ const Status = () => {
   };
 
   const handleTransferFinish = async () => {
-    console.log(2);
     if (refStage.current === '3.2') {
       const lastTx = await getTxLastStageStatus(
         currentChainId,
@@ -278,7 +268,6 @@ const Status = () => {
       );
       if (lastTx.length) {
         setStage('4');
-        console.log(lastTx);
         setOtherNetworkTxHash(lastTx[0].transactionHash);
         refOtherProvider.current.removeAllListeners()
       }
