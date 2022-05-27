@@ -1,5 +1,10 @@
 import NetworkMock from './networks.mock.json';
-const { REACT_APP_ETH_CHAIN_ID, REACT_APP_AMB_CHAIN_ID } = process.env;
+const {
+  REACT_APP_ETH_CHAIN_ID,
+  REACT_APP_AMB_CHAIN_ID,
+  REACT_APP_AMB_RPC_URL,
+  REACT_APP_ETH_RPC_URL,
+} = process.env;
 
 export const getAllNetworks = () => {
   let networks;
@@ -15,6 +20,9 @@ export const getAllNetworks = () => {
 
   amb.chainId = +REACT_APP_AMB_CHAIN_ID;
   eth.chainId = +REACT_APP_ETH_CHAIN_ID;
+
+  amb.rpcUrl = REACT_APP_AMB_RPC_URL;
+  eth.rpcUrl = REACT_APP_ETH_RPC_URL;
 
   return [amb, eth];
 };
