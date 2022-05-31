@@ -13,7 +13,7 @@ const TokenSelect = ({
   setCoin = () => {},
   tokenList = [{}],
 }) => {
-  // const [sortedTokenList, setSortedTokenList] = useState([]);
+  const [sortedTokenList, setSortedTokenList] = useState([]);
 
   // lock scrolling of entire page if modal is open
   useEffect(() => {
@@ -23,24 +23,24 @@ const TokenSelect = ({
 
   const [searchString, setSearchString] = useState('');
 
-  // const filterListBySearch = (token = { name: '', symbol: '' }) => {
-  //   const [ss, name, symbol] = [searchString, token.name, token.symbol].map(
-  //     (str) => str.toLowerCase(),
-  //   );
-  //   return name.startsWith(ss) || symbol.startsWith(ss);
-  // };
-  //
-  // const sortListByBalance = (token) => (token.withBalance ? -1 : 1);
-  //
-  // useEffect(() => {
-  //   let sorted;
-  //   if (searchString) {
-  //     sorted = tokenList.filter(filterListBySearch);
-  //   } else {
-  //     sorted = [...tokenList].sort(sortListByBalance);
-  //   }
-  //   setSortedTokenList(sorted);
-  // }, [tokenList, searchString]);
+  const filterListBySearch = (token = { name: '', symbol: '' }) => {
+    const [ss, name, symbol] = [searchString, token.name, token.symbol].map(
+      (str) => str.toLowerCase(),
+    );
+    return name.startsWith(ss) || symbol.startsWith(ss);
+  };
+
+  const sortListByBalance = (token) => (token.withBalance ? -1 : 1);
+
+  useEffect(() => {
+    let sorted;
+    if (searchString) {
+      sorted = tokenList.filter(filterListBySearch);
+    } else {
+      sorted = [...tokenList].sort(sortListByBalance);
+    }
+    setSortedTokenList(sorted);
+  }, [tokenList, searchString]);
 
   return !isOpen
     ? null
@@ -58,7 +58,7 @@ const TokenSelect = ({
             />
             <SearchInput onChange={setSearchString} value={searchString} />
             <div className="token-select__token-list">
-              {tokenList.map((token) => (
+              {sortedTokenList.map((token) => (
                 <TokenButton
                   key={token.symbol}
                   {...{
