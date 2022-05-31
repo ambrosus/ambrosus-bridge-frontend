@@ -82,8 +82,6 @@ const withdrawCoins = async (
 
   const BridgeContract = createBridgeContract[chainId](signer);
 
-  console.log(bnTransactionAmount, transferFee, bridgeFee);
-
   // if native coin
   if (selectedCoin.wrappedAnalog) {
     return BridgeContract.wrapWithdraw(
@@ -111,10 +109,23 @@ const withdrawCoins = async (
     bridgeContractAddress[chainId],
   );
 
-  if (allowance.lt(bnTransactionAmount)) {
+  if (
+    allowance.lt(bnTransactionAmount) &&
+    bnTransactionAmount.lt('100000000000000000000000')
+  ) {
     await TokenContract.approve(
       bridgeContractAddress[chainId],
       BigNumber.from('100000000000000000000000'),
+    ).then((tx) => tx.wait());
+  }
+
+  if (
+    allowance.lt(bnTransactionAmount) &&
+    bnTransactionAmount.gt('100000000000000000000000')
+  ) {
+    await TokenContract.approve(
+      bridgeContractAddress[chainId],
+      bnTransactionAmount,
     ).then((tx) => tx.wait());
   }
 
