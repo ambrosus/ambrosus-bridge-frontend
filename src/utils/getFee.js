@@ -18,7 +18,12 @@ const getFee = (isFromAmb, transactionAmount, selectedCoin) =>
     .then(({ bridgeFee, transferFee, signature }) => {
       const bnBridgeFee = BigNumber.from(bridgeFee);
       const bnTransferFee = BigNumber.from(transferFee);
-      return { totalFee: bnBridgeFee.add(bnTransferFee).toString(), signature };
+      return {
+        totalFee: bnBridgeFee.add(bnTransferFee).toString(),
+        bridgeFee: bnBridgeFee,
+        transferFee: bnTransferFee,
+        signature,
+      };
     });
 
 export default getFee;
