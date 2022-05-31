@@ -188,9 +188,9 @@ const TransactionListItem = ({ tx }) => {
           </span>
           <span className="transaction-item__black-text">
             {ethers.utils.formatUnits(
-              tx.args['transferFeeAmount'],
+              tx.args['transferFeeAmount'].add(tx.args['bridgeFeeAmount']),
               currentToken.denomination,
-            )}{' '}
+            )}
             {tx.chainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
