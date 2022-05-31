@@ -89,7 +89,11 @@ const TransactionListItem = ({ tx }) => {
         {transferredTokens.from && (
           <>
             <img
-              src={transferredTokens.from.toLowerCase().includes('amb') ? tokens.SAMB.logo : tokens.WETH.logo}
+              src={
+                transferredTokens.from.toLowerCase().includes('amb')
+                  ? tokens.SAMB.logo
+                  : tokens.WETH.logo
+              }
               alt="coin"
               className="transaction-item__img"
             />
@@ -183,15 +187,16 @@ const TransactionListItem = ({ tx }) => {
             Transaction fee:
           </span>
           <span className="transaction-item__black-text">
-            {ethers.utils.formatUnits(tx.gasPrice, currentToken.denomination)}{' '}
+            {ethers.utils.formatUnits(
+              tx.args['transferFeeAmount'],
+              currentToken.denomination,
+            )}{' '}
             {tx.chainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
       </div>
       <div className="transaction-item__row">
-        <span className="transaction-item__grey-text">
-          Transferred tokens:
-        </span>
+        <span className="transaction-item__grey-text">Transferred tokens:</span>
         <span className="transaction-item__black-text">
           {`${transferredTokens.from} - ${transferredTokens.to}`}
         </span>
