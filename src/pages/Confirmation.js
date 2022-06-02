@@ -24,12 +24,12 @@ const Confirmation = () => {
 
   const [fee, setFee] = useState('');
   useEffect(async () => {
-    const { totalFee } = await getFee(
-      chainId === selectedChainId,
+    const { transferFee, bridgeFee } = await getFee(
+      ambChainId === selectedChainId,
       transactionAmount,
       selectedCoin,
     );
-    setFee(totalFee);
+    setFee({ transferFee, bridgeFee });
   }, []);
   const [isLocked, setIsLocked] = useState(false);
 
@@ -95,7 +95,14 @@ const Confirmation = () => {
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
-            {fee ? utils.formatEther(fee) : <InlineLoader />}{' '}
+            {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
+            {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
+          </span>
+        </div>
+        <div className="confirmation-info__item">
+          <span className="confirmation-info__label">Bridge fee</span>
+          <span className="confirmation-info__value">
+            {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
             {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>

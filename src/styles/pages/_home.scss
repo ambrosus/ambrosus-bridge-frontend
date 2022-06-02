@@ -178,9 +178,14 @@
   color: #58667E;
 
   display: flex;
+  flex-flow: column nowrap;
+  margin-bottom: 1rem;
+}
+
+.exchange__estimated-fee-row {
+  display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
 }
 
 .exchange__button {

@@ -56,11 +56,13 @@ const Exchange = () => {
 
   const [fee, setFee] = useState('');
   const updateFee = () =>
-    getFee(isFromAmb, transactionAmount, selectedCoin).then(({ totalFee }) =>
-      setFee(totalFee),
+    getFee(isFromAmb, transactionAmount, selectedCoin).then(
+      ({ transferFee, bridgeFee, totalFee }) =>
+        setFee({ transferFee, bridgeFee, totalFee }),
     );
 
   useEffect(() => {
+    console.log('a');
     if (selectedCoin) {
       updateFee();
     }
@@ -143,11 +145,20 @@ const Exchange = () => {
         />
       </div>
       <div className="exchange__estimated-fee-container">
-        Transfer fee:
-        <span className="exchange__estimated-fee">
-          {fee ? utils.formatEther(fee) : <InlineLoader />}{' '}
-          {isFromAmb ? 'AMB' : 'ETH'}
-        </span>
+        <div className="exchange__estimated-fee-row exchange__estimated-fee-row_transfer">
+          Transfer fee:
+          <span className="exchange__estimated-fee">
+            {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
+            {isFromAmb ? 'AMB' : 'ETH'}
+          </span>
+        </div>
+        <div className="exchange__estimated-fee-row">
+          Bridge fee:
+          <span className="exchange__estimated-fee">
+            {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
+            {isFromAmb ? 'AMB' : 'ETH'}
+          </span>
+        </div>
       </div>
       <button type="submit" className="button button_black exchange__button">
         Transfer
