@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
@@ -8,6 +8,7 @@ import ErrorContext from '../contexts/ErrorContext';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
 import { ambChainId } from '../utils/providers';
 import TokenIcon from '../components/TokenIcon';
+import getFee from '../utils/getFee';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
@@ -15,18 +16,21 @@ const Confirmation = () => {
 
   const {
     location: {
-      state: {
-        selectedChainId,
-        selectedCoin,
-        receivedCoin,
-        transactionAmount,
-        fee,
-      },
+      state: { selectedChainId, selectedCoin, receivedCoin, transactionAmount },
     },
     goBack,
     push,
   } = useHistory();
 
+  const [fee, setFee] = useState('');
+  useEffect(async () => {
+    const { totalFee } = await getFee(
+      chainId === selectedChainId,
+      transactionAmount,
+      selectedCoin,
+    );
+    setFee(totalFee);
+  }, []);
   const [isLocked, setIsLocked] = useState(false);
 
   const bnTransactionAmount = BigNumber.from(
