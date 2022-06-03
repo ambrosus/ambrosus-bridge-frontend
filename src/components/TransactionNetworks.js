@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import arrowIcon from '../assets/svg/green-arrow-right.svg';
 import { ethChainId } from '../utils/providers';
-import { AmbrosusNetwork, getSupportedNetworks } from '../utils/networks';
+import { AmbrosusNetwork, supportedNetworks } from '../utils/networks';
 import getTxLink from '../utils/helpers/getTxLink';
 import TokenIcon from './TokenIcon';
 
 const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
-  const networks = getSupportedNetworks();
+  const networks = supportedNetworks;
 
   const currentNetwork =
     selectedChainId === ethChainId

@@ -10,6 +10,7 @@ const useGetMaxTxAmount = (selectedCoin) => {
   const balance = useCoinBalance(selectedCoin.symbol, selectedCoin.chainId);
 
   return async () => {
+    // TODO: refactor this
     let max;
     if (selectedCoin.nativeAnalog) {
       max = utils.formatUnits(balance, selectedCoin.denomination);
@@ -35,7 +36,7 @@ const useGetMaxTxAmount = (selectedCoin) => {
         transferFee,
         bridgeFee,
         {
-          value: bnTransactionAmount.add(totalFee),
+          value: bnTransactionAmount.sub(totalFee),
           ...gasOpts,
         },
       );

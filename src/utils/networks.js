@@ -27,12 +27,10 @@ export const getAllNetworks = () => {
   return [amb, eth];
 };
 
-export const getSupportedNetworks = () => {
-  const [, eth] = getAllNetworks();
-  return [eth];
-};
+const [amb, eth] = getAllNetworks();
 
-export const [AmbrosusNetwork] = getAllNetworks();
+export const supportedNetworks = [eth];
+export const AmbrosusNetwork = amb;
 
 export const getNetworkByChainId = (chainId) => {
   const networks = getAllNetworks();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../../assets/svg/chevron.svg';
 import useGetMaxTxAmount from '../../hooks/useSetMax';
@@ -13,6 +13,8 @@ const CurrencyInput = ({
   isValueInvalid = false,
   onBlur = () => {},
 }) => {
+  const [timer, setTimer] = useState();
+
   const handleInput = ({ target: { value: newValue } }) => {
     const [intPart, floatPart] = newValue.replace(',', '.').split('.');
     let formattedValue;
@@ -22,6 +24,9 @@ const CurrencyInput = ({
       formattedValue = newValue.replace(',', '.');
     }
     onChange(formattedValue);
+
+    if (timer) clearTimeout(timer);
+    setTimer(setTimeout(onBlur, 1000));
   };
 
   const handleKeyPress = (e) => {
@@ -55,7 +60,6 @@ const CurrencyInput = ({
         onChange={handleInput}
         onKeyPress={handleKeyPress}
         readOnly={disabled}
-        onBlur={onBlur}
       />
       <button
         type="button"

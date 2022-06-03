@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { utils } from 'ethers';
 import ErrorContext from '../../contexts/ErrorContext';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
-import { AmbrosusNetwork, getSupportedNetworks } from '../../utils/networks';
+import { AmbrosusNetwork, supportedNetworks } from '../../utils/networks';
 import changeChainId from '../../utils/ethers/changeChainId';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import InlineLoader from '../../components/InlineLoader';
@@ -17,28 +17,25 @@ import getFee from '../../utils/getFee';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
-  const [networks, setNetworks] = useState(undefined);
-
   const { library, account, chainId } = useWeb3React();
 
+  const networks = supportedNetworks;
   const isFromAmb = chainId === ambChainId;
+
   const toggleDirection = async () => {
     const newChainId = isFromAmb ? ethChainId : ambChainId;
     await changeChainId(library.provider, newChainId);
   };
 
-  const [selectedCoin, setCoin] = useState({});
+  const [selectedCoin, setCoin] = useState(nativeTokensById[chainId]);
   const [receivedCoin, setReceivedCoin] = useState({});
   const [transactionAmount, setTransactionAmount] = useState('');
 
   const worker = useContext(CoinBalanceWorkerContext);
 
-  // setting init values
+  // starting balance-fetching worker and clearing it on unmount
   useEffect(() => {
-    const supportedNetworks = getSupportedNetworks();
-    setNetworks(supportedNetworks);
     worker.postMessage({ type: 'start', account });
-    setCoin(nativeTokensById[chainId]);
     return () => {
       worker.postMessage({ type: 'stop', account });
     };
@@ -55,18 +52,25 @@ const Exchange = () => {
   }, [selectedCoin]);
 
   const [fee, setFee] = useState('');
-  const updateFee = () =>
-    getFee(isFromAmb, transactionAmount, selectedCoin).then(
-      ({ transferFee, bridgeFee, totalFee }) =>
-        setFee({ transferFee, bridgeFee, totalFee }),
+  const updateFee = async () => {
+    setFee(undefined);
+    const { transferFee, bridgeFee, totalFee } = await getFee(
+      isFromAmb,
+      transactionAmount,
+      selectedCoin,
     );
-
-  useEffect(() => {
-    console.log('a');
-    if (selectedCoin) {
-      updateFee();
-    }
-  }, [selectedCoin, chainId]);
+    setFee({ transferFee, bridgeFee, totalFee });
+  };
+  useEffect(updateFee, [chainId]);
+  useEffect(async () => {
+    setFee(undefined);
+    const { transferFee, bridgeFee, totalFee } = await getFee(
+      isFromAmb,
+      '0.001',
+      selectedCoin,
+    );
+    setFee({ transferFee, bridgeFee, totalFee });
+  }, [selectedCoin]);
 
   const [isValueInvalid, setIsInvalid] = useState(false);
   const history = useHistory();
