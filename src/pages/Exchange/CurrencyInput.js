@@ -39,7 +39,7 @@ const CurrencyInput = ({
   const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, value);
   const setMax = async () => {
     const maxTxAmount = await getMaxTxAmount();
-    onChange();
+    onChange(maxTxAmount);
     onBlur(maxTxAmount);
   };
 
