@@ -16,17 +16,16 @@ const CurrencyInput = ({
   const [timer, setTimer] = useState();
 
   const handleInput = ({ target: { value: newValue } }) => {
-    const [intPart, floatPart] = newValue.replace(',', '.').split('.');
-    let formattedValue;
-    if (floatPart && floatPart.length > 8) {
-      formattedValue = `${intPart}.${floatPart.slice(0, 8)}`;
-    } else {
-      formattedValue = newValue.replace(',', '.');
-    }
-    onChange(formattedValue);
+    const formattedValue = newValue.replace(',', '.');
+    if (
+      /^[1-9]\d*(\.\d{0,8})?$/.test(formattedValue) ||
+      formattedValue === ''
+    ) {
+      onChange(formattedValue);
 
-    if (timer) clearTimeout(timer);
-    setTimer(setTimeout(onBlur, 1000, formattedValue));
+      if (timer) clearTimeout(timer);
+      setTimer(setTimeout(onBlur, 1000, formattedValue));
+    }
   };
 
   const handleKeyPress = (e) => {
