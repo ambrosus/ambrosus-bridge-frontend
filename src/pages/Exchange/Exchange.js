@@ -52,25 +52,17 @@ const Exchange = () => {
   }, [selectedCoin]);
 
   const [fee, setFee] = useState('');
-  const updateFee = async () => {
+  const updateFee = async (amount) => {
     setFee(undefined);
     const { transferFee, bridgeFee, totalFee } = await getFee(
       isFromAmb,
-      transactionAmount,
+      amount,
       selectedCoin,
     );
     setFee({ transferFee, bridgeFee, totalFee });
   };
-  useEffect(updateFee, [chainId]);
-  useEffect(async () => {
-    setFee(undefined);
-    const { transferFee, bridgeFee, totalFee } = await getFee(
-      isFromAmb,
-      '0.001',
-      selectedCoin,
-    );
-    setFee({ transferFee, bridgeFee, totalFee });
-  }, [selectedCoin]);
+  useEffect(() => updateFee(transactionAmount), [chainId]);
+  useEffect(() => updateFee('0.001'), [selectedCoin]);
 
   const [isValueInvalid, setIsInvalid] = useState(false);
   const history = useHistory();

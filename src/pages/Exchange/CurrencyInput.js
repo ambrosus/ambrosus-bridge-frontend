@@ -26,7 +26,7 @@ const CurrencyInput = ({
     onChange(formattedValue);
 
     if (timer) clearTimeout(timer);
-    setTimer(setTimeout(onBlur, 1000));
+    setTimer(setTimeout(onBlur, 1000, formattedValue));
   };
 
   const handleKeyPress = (e) => {
