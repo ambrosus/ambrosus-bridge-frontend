@@ -17,10 +17,7 @@ const CurrencyInput = ({
 
   const handleInput = ({ target: { value: newValue } }) => {
     const formattedValue = newValue.replace(',', '.');
-    if (
-      /^[1-9]\d*(\.\d{0,8})?$/.test(formattedValue) ||
-      formattedValue === ''
-    ) {
+    if (/^\d*(\.\d{0,8})?$/.test(formattedValue) || formattedValue === '') {
       onChange(formattedValue);
 
       if (timer) clearTimeout(timer);
