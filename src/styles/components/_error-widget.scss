@@ -1,9 +1,17 @@
 .error-widget {
-  padding: 1rem 0;
+  //padding: 1rem 0;
   background: #ff6767;
+  overflow: hidden;
+  height: 0;
+  transition: height .25s ease-in-out;
+}
+
+.error-widget_visible {
+  height: 3rem;
 }
 
 .error-widget__content {
+  margin: 1rem 0;
   font-style: normal;
   font-weight: 400;
   font-size: 1rem;

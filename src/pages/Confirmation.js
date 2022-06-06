@@ -59,6 +59,11 @@ const Confirmation = () => {
         setIsLocked(false);
         if (e.code !== 4001) {
           setError('There is some error. Please refresh and try again');
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+          setTimeout(setError, 5000, '');
         }
       });
   };
