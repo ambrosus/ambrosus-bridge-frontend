@@ -405,11 +405,7 @@ const Status = () => {
         >
           Go to home
         </button>
-        <Link
-          to="/history"
-          type="button"
-          className="button button_black btns-wrapper__btn"
-        >
+        <Link to="/history" className="button button_black btns-wrapper__btn">
           Transaction history
         </Link>
       </div>
