@@ -125,6 +125,7 @@ const Exchange = () => {
             isFromAmb,
             setCoin,
             updateFee,
+            setError,
           }}
         />
         <button type="button" onClick={toggleDirection}>

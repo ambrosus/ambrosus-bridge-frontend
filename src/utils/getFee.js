@@ -1,6 +1,11 @@
 import { BigNumber, utils } from 'ethers';
 
-const getFee = (isFromAmb, transactionAmount, selectedCoin) =>
+const getFee = (
+  isFromAmb,
+  transactionAmount,
+  selectedCoin,
+  isAmountWithFees = false,
+) =>
   fetch('https://relay-eth.ambrosus-dev.io/fees', {
     method: 'POST',
     body: JSON.stringify({
@@ -12,10 +17,12 @@ const getFee = (isFromAmb, transactionAmount, selectedCoin) =>
         ),
       ),
       ...(selectedCoin ? { tokenAddress: selectedCoin.address } : {}),
+      isAmountWithFees,
     }),
   })
     .then((res) => res.json())
-    .then(({ bridgeFee, transferFee, signature }) => {
+    .then(({ bridgeFee, transferFee, signature, message }) => {
+      if (message) throw new Error(message);
       const bnBridgeFee = BigNumber.from(bridgeFee);
       const bnTransferFee = BigNumber.from(transferFee);
       return {

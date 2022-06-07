@@ -21,11 +21,19 @@ const useGetMaxTxAmount = (selectedCoin) => {
 
       const BridgeContract = createBridgeContract[chainId](library.getSigner());
 
-      const { totalFee, bridgeFee, transferFee, signature } = await getFee(
-        chainId === ambChainId,
-        utils.formatUnits(bnTransactionAmount, selectedCoin.denomination),
-        selectedCoin,
-      );
+      let fee;
+      try {
+        fee = await getFee(
+          chainId === ambChainId,
+          utils.formatUnits(bnTransactionAmount, selectedCoin.denomination),
+          selectedCoin,
+          true,
+        );
+      } catch (e) {
+        throw new Error(e);
+      }
+
+      const { totalFee, bridgeFee, transferFee, signature } = fee;
 
       const gasOpts =
         chainId === ambChainId ? { gasLimit: 8000000, gasPrice: 1 } : {};
@@ -36,7 +44,7 @@ const useGetMaxTxAmount = (selectedCoin) => {
         transferFee,
         bridgeFee,
         {
-          value: bnTransactionAmount.sub(totalFee),
+          value: bnTransactionAmount,
           ...gasOpts,
         },
       );

@@ -12,6 +12,7 @@ const CurrencyInput = ({
   selectedCoin = {},
   isValueInvalid = false,
   onBlur = () => {},
+  setError = () => {},
 }) => {
   const [timer, setTimer] = useState();
 
@@ -34,9 +35,14 @@ const CurrencyInput = ({
 
   const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, value);
   const setMax = async () => {
-    const maxTxAmount = await getMaxTxAmount();
-    onChange(maxTxAmount);
-    onBlur(maxTxAmount);
+    try {
+      const maxTxAmount = await getMaxTxAmount();
+      onChange(maxTxAmount);
+      onBlur(maxTxAmount);
+    } catch (e) {
+      setError('Your balance is smaller than total fee');
+      setTimeout(setError, 5000, '');
+    }
   };
 
   return (
@@ -94,6 +100,7 @@ CurrencyInput.propTypes = {
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
   onBlur: PropTypes.func,
+  setError: PropTypes.func,
 };
 
 export default CurrencyInput;

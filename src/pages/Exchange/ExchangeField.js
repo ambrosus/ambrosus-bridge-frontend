@@ -20,6 +20,7 @@ const ExchangeField = ({
   isValueInvalid = false,
   setCoin = () => {},
   updateFee = () => {},
+  setError = () => {},
 }) => {
   const [isOpenCoinModal, toggleCoinModal] = useModal();
   const tokenList = useTokenList(selectedChainId);
@@ -63,6 +64,7 @@ const ExchangeField = ({
           selectedCoin={selectedCoin}
           balance={balance}
           onBlur={updateFee}
+          setError={setError}
         />
       </div>
     </>
@@ -79,6 +81,7 @@ ExchangeField.propTypes = {
   isValueInvalid: PropTypes.bool,
   setCoin: PropTypes.func,
   updateFee: PropTypes.func,
+  setError: PropTypes.func,
 };
 
 export default ExchangeField;
