@@ -37,9 +37,14 @@ const Exchange = () => {
   useEffect(() => {
     worker.postMessage({ type: 'start', account });
     return () => {
-      worker.postMessage({ type: 'stop', account });
+      worker.postMessage({ type: 'stop' });
     };
   }, []);
+
+  // handling account change
+  useEffect(() => {
+    worker.postMessage({ type: 'restart', account });
+  }, [account]);
 
   // if network changed update transaction fee
   useEffect(() => {

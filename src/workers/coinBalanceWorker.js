@@ -19,13 +19,21 @@ const batchProviders = {
   [ambChainId]: ambProvider,
 };
 
+let currentAccount;
+
 // eslint-disable-next-line no-restricted-globals
 self.addEventListener('message', ({ data: message }) => {
   if (message.type === 'start') {
     startBalanceMonitoring(message.account);
+    currentAccount = message.account;
   }
   if (message.type === 'stop') {
-    stopBalanceMonitoring(message.account);
+    stopBalanceMonitoring(currentAccount);
+  }
+  if (message.type === 'restart') {
+    stopBalanceMonitoring(currentAccount);
+    startBalanceMonitoring(message.account);
+    currentAccount = message.account;
   }
 });
 

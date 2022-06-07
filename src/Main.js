@@ -8,7 +8,6 @@ import Exchange from './pages/Exchange';
 import Layout from './components/Layout';
 import ConnectWallet from './pages/ConnectWallet';
 import Confirmation from './pages/Confirmation';
-// import Mint from './pages/Mint';
 import ErrorContext from './contexts/ErrorContext';
 import TransactionList from './pages/TransactionList';
 import CoinBalanceWorkerProvider from './contexts/CoinBalanceWorkerContext/provider';
@@ -17,6 +16,7 @@ import {
   ConfiguredWalletConnectConnector,
 } from './utils/web3ReactConnectors';
 // import useAutoLogin from './hooks/useAutoLogin';
+// TODO: refactor this ^^^
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
@@ -24,15 +24,15 @@ const Main = () => {
   const [error, setError] = useState('');
 
   return (
-    <CoinBalanceWorkerProvider>
-      <Web3ReactProvider getLibrary={getLibrary}>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <CoinBalanceWorkerProvider>
         <ErrorContext.Provider value={{ error, setError }}>
           <Layout title="Bridge" error={error}>
             <Routing setError={setError} />
           </Layout>
         </ErrorContext.Provider>
-      </Web3ReactProvider>
-    </CoinBalanceWorkerProvider>
+      </CoinBalanceWorkerProvider>
+    </Web3ReactProvider>
   );
 };
 
