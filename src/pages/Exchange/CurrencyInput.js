@@ -40,7 +40,12 @@ const CurrencyInput = ({
       onChange(maxTxAmount);
       onBlur(maxTxAmount);
     } catch (e) {
+      // TODO: make setError hook
       setError('Your balance is smaller than total fee');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
       setTimeout(setError, 5000, '');
     }
   };
