@@ -1,8 +1,8 @@
+import { allNetworks } from '../networks';
+
+const { eth, amb } = allNetworks;
+
 const getTxLink = (isEth, hash) =>
-  `${
-    isEth
-      ? 'https://ropsten.etherscan.io/tx/'
-      : 'https://explorer.ambrosus.io/tx/'
-  }${hash}`;
+  `${isEth ? eth.explorerUrl : amb.explorerUrl}tx/${hash}`;
 
 export default getTxLink;

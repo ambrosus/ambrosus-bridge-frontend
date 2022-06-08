@@ -8,13 +8,16 @@ import spinnerIcon from '../assets/svg/spinner.svg';
 import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
-import { getAllNetworks } from '../utils/networks';
+import { getNetworkByChainId } from '../utils/networks';
 import createBridgeContract from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
 import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
 import getTransferredTokens from '../utils/helpers/getTransferredTokens';
+
+// TODO: eslint enable
 /*eslint-disable*/
+
 const TransactionListItem = ({ tx }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
@@ -80,8 +83,7 @@ const TransactionListItem = ({ tx }) => {
       .padStart(2, '0')}`;
   };
 
-  const getNetworkName = (networkId) =>
-    getAllNetworks().find((el) => el.chainId === networkId).name;
+  const getNetworkName = (chainId) => getNetworkByChainId(chainId).name;
 
   return (
     <div className="transaction-item">

@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { useContext, useEffect } from 'react';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
-import { useContext, useEffect } from 'react';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import {
   ConfiguredInjectedConnector,
@@ -13,7 +13,7 @@ import WalletConnectIcon from '../assets/img/connect-wallet__wallet-connect.png'
 import ErrorContext from '../contexts/ErrorContext';
 import changeChainId from '../utils/ethers/changeChainId';
 import { ambChainId } from '../utils/providers';
-import { getAllNetworks } from '../utils/networks';
+import { allNetworks } from '../utils/networks';
 
 const ConnectWallet = () => {
   const { error, activate, account, connector } = useWeb3React();
@@ -45,8 +45,10 @@ const ConnectWallet = () => {
 
   useEffect(async () => {
     if (error instanceof UnsupportedChainIdError) {
-      const networks = getAllNetworks();
-      const networksNames = networks.map((network) => network.name).join(', ');
+      const networksNames = Object.values(allNetworks)
+        .map((network) => network.name)
+        .join(', ');
+
       setError(
         `Please, select supported network in your wallet. Supported networks: ${networksNames}`,
       );
