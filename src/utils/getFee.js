@@ -21,7 +21,7 @@ const getFee = (
     }),
   })
     .then((res) => res.json())
-    .then(({ bridgeFee, transferFee, signature, message }) => {
+    .then(({ bridgeFee, transferFee, signature, amount, message }) => {
       if (message) throw new Error(message);
       const bnBridgeFee = BigNumber.from(bridgeFee);
       const bnTransferFee = BigNumber.from(transferFee);
@@ -29,6 +29,7 @@ const getFee = (
         totalFee: bnBridgeFee.add(bnTransferFee).toString(),
         bridgeFee: bnBridgeFee,
         transferFee: bnTransferFee,
+        amount: BigNumber.from(amount),
         signature,
       };
     });

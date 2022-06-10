@@ -1,12 +1,11 @@
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
 import useCoinBalance from './useCoinBalance';
-import createBridgeContract from '../contracts';
 import { ambChainId } from '../utils/providers';
 import getFee from '../utils/getFee';
 
 const useGetMaxTxAmount = (selectedCoin) => {
-  const { account, chainId, library } = useWeb3React();
+  const { chainId } = useWeb3React();
   const balance = useCoinBalance(selectedCoin.symbol, selectedCoin.chainId);
 
   return async () => {
@@ -16,45 +15,22 @@ const useGetMaxTxAmount = (selectedCoin) => {
       max = utils.formatUnits(balance, selectedCoin.denomination);
     }
     if (selectedCoin.wrappedAnalog) {
-      const bnTransactionAmount = BigNumber.from(balance);
       const bnBalance = BigNumber.from(balance);
 
-      const BridgeContract = createBridgeContract[chainId](library.getSigner());
+      const { amount } = await getFee(
+        chainId === ambChainId,
+        utils.formatUnits(bnBalance, selectedCoin.denomination),
+        selectedCoin,
+        true,
+      ).catch((error) => {
+        throw error;
+      });
 
-      let fee;
-      try {
-        fee = await getFee(
-          chainId === ambChainId,
-          utils.formatUnits(bnTransactionAmount, selectedCoin.denomination),
-          selectedCoin,
-          true,
-        );
-      } catch (e) {
-        throw new Error(e);
-      }
+      if (amount.lt('0')) return '0';
 
-      const { totalFee, bridgeFee, transferFee, signature } = fee;
-
-      const gasOpts =
-        chainId === ambChainId ? { gasLimit: 8000000, gasPrice: 1 } : {};
-
-      const estGasPrice = await BridgeContract.estimateGas.wrapWithdraw(
-        account,
-        signature,
-        transferFee,
-        bridgeFee,
-        {
-          value: bnTransactionAmount,
-          ...gasOpts,
-        },
-      );
-
-      const bnMax = bnBalance.sub(totalFee).sub(estGasPrice);
-
-      if (bnMax.lt('0')) return '0';
-
+      // TODO: move formatting to stnadalone function
       const [intPart, floatPart] = utils
-        .formatUnits(bnMax.toString(), selectedCoin.denomination)
+        .formatUnits(amount.toString(), selectedCoin.denomination)
         .split('.');
       if (floatPart && floatPart.length > 8) {
         max = `${intPart}.${floatPart.slice(0, 8)}`;
