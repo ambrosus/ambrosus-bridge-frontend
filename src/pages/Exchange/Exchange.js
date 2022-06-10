@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
-import { utils } from 'ethers';
 import ErrorContext from '../../contexts/ErrorContext';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
 import { AmbrosusNetwork, supportedNetworks } from '../../utils/networks';
@@ -14,6 +13,7 @@ import validateTransactionAmount from '../../utils/ethers/validateTransactionAmo
 import ReceiveField from './ReceiveField';
 import { nativeTokensById } from '../../utils/nativeTokens';
 import getFee from '../../utils/getFee';
+import formatBalance from '../../utils/helpers/formatBalance';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
@@ -150,14 +150,14 @@ const Exchange = () => {
         <div className="exchange__estimated-fee-row exchange__estimated-fee-row_transfer">
           Transfer fee:
           <span className="exchange__estimated-fee">
-            {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
+            {fee ? formatBalance(fee.transferFee.toString()) : <InlineLoader />}{' '}
             {isFromAmb ? 'AMB' : 'ETH'}
           </span>
         </div>
         <div className="exchange__estimated-fee-row">
           Bridge fee:
           <span className="exchange__estimated-fee">
-            {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
+            {fee ? formatBalance(fee.bridgeFee.toString()) : <InlineLoader />}{' '}
             {isFromAmb ? 'AMB' : 'ETH'}
           </span>
         </div>
