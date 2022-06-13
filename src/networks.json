@@ -15,8 +15,8 @@
       "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
       "code": "ETH",
       "explorerUrl": "https://sepolia.etherscan.io/",
-      "rpcUrl": "http://167.99.136.151:80",
-      "rpcUrlWS": "wss://167.99.136.151:80/ws"
+      "rpcUrl": "https://sepolia.ambrosus-test.io/",
+      "rpcUrlWS": "https://sepolia.ambrosus-test.io/"
     }
   },
   "testnet": {
