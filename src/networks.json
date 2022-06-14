@@ -16,7 +16,7 @@
       "code": "ETH",
       "explorerUrl": "https://sepolia.etherscan.io/",
       "rpcUrl": "https://sepolia.ambrosus-test.io/",
-      "rpcUrlWS": "https://sepolia.ambrosus-test.io/"
+      "rpcUrlWS": "wss://sepolia.ambrosus-test.io/ws"
     }
   },
   "testnet": {
