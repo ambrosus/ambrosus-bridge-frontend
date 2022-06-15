@@ -14,7 +14,7 @@ const ethProvider =
         REACT_APP_INFURA_KEY,
       )
     : new ethers.providers.StaticJsonRpcProvider(
-        allNetworks.eth.rpcUrl + REACT_APP_INFURA_KEY,
+        allNetworks.eth.rpcUrl,
         ethChainId,
       );
 
