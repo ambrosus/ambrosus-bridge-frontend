@@ -9,9 +9,9 @@ export const ethChainId = allNetworks.eth.chainId;
 
 const ethProvider =
   REACT_APP_ENV === 'production'
-    ? new ethers.providers.WebSocketProvider(
-        allNetworks.eth.rpcUrlWS + REACT_APP_INFURA_KEY,
+    ? new ethers.providers.InfuraWebSocketProvider(
         ethChainId,
+        REACT_APP_INFURA_KEY,
       )
     : new ethers.providers.StaticJsonRpcProvider(
         allNetworks.eth.rpcUrl + REACT_APP_INFURA_KEY,
