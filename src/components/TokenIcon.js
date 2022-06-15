@@ -10,6 +10,8 @@ const iconDict = {
   SAMB: AmbIcon,
 };
 
+// TODO: rename code to symbol
+
 const TokenIcon = ({ code, ...props }) => {
   const IconComponent = iconDict[code];
   return IconComponent ? <IconComponent {...props} /> : null;

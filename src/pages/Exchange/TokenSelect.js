@@ -6,6 +6,7 @@ import CrossIcon from '../../assets/svg/cross.svg';
 import InlineLoader from '../../components/InlineLoader';
 import formatBalance from '../../utils/helpers/formatBalance';
 import useCoinBalance from '../../hooks/useCoinBalance';
+import TokenIcon from '../../components/TokenIcon';
 
 const TokenSelect = ({
   isOpen = false,
@@ -124,7 +125,11 @@ const TokenButton = ({ token, setCoin, toggle }) => {
       }}
       className="token-select__token"
     >
-      <img src={token.logo} alt="#" className="token-select__token-icon" />
+      <TokenIcon
+        code={token.symbol}
+        alt="#"
+        className="token-select__token-icon"
+      />
       <span className="token-select__token-shorthand">{token.symbol}</span>
       <span className="token-select__token-name">{token.name}</span>
       <div className="exchange-field__balance-container">
