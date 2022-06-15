@@ -16,7 +16,6 @@ export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
         : allNetworks.eth.rpcUrl,
     [allNetworks.amb.chainId]: allNetworks.amb.rpcUrl,
   },
-  chainId: 1,
   bridge: 'https://bridge.walletconnect.org',
   pollingInterval: 6000,
   qrcode: true,
