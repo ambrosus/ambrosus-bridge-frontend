@@ -23,7 +23,11 @@ export const Layout = ({ children, title, error }) => {
           <h1 className="layout__heading">{title}</h1>
 
           {/* desktop buttons block start */}
-          <a href="/" className="button button_gray layout__button">
+          <a
+            href="https://blog.ambrosus.io/ambrosus-guide-connecting-and-transacting-via-the-amb-bridge-89f27a60b8d2"
+            target="_blank"
+            className="button button_gray layout__button"
+          >
             Ambrosus Bridge Guide
           </a>
 
