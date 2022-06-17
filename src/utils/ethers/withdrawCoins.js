@@ -116,7 +116,11 @@ const withdrawCoins = async (
     await TokenContract.approve(
       bridgeContractAddress[chainId],
       BigNumber.from('100000000000000000000000'),
-    ).then((tx) => tx.wait());
+    )
+      .then((tx) => tx.wait())
+      .catch((e) => {
+        throw e;
+      });
   }
 
   if (
