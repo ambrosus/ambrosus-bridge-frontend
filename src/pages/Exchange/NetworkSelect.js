@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../../assets/svg/chevron.svg';
+import TokenIcon from '../../components/TokenIcon';
 
 const NetworkSelect = ({
   networks = [{}],
@@ -23,20 +24,15 @@ const NetworkSelect = ({
         className="network-select__absolute-wrapper"
         style={{ '--items-amount': networks.length }}
       >
-        {sortedNetworks.map(({ name = '', chainId }) => (
+        {sortedNetworks.map(({ name = '', chainId, code }) => (
           <button
             type="button"
             className="network-select__option"
             key={`select-option-${chainId}`}
             onClick={() => setChainId(chainId)}
           >
-            {/* mock image */}
-            <img
-              src="https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/tokens/WETH/logo.png"
-              alt="#"
-              className="network-select__currency-icon"
-            />
-            {name}
+            <TokenIcon code={code} className="network-select__currency-icon" />
+            {window.innerWidth < 1279 ? name.split(' ')[0] : name}
           </button>
         ))}
       </div>

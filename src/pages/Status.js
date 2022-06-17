@@ -32,6 +32,7 @@ const Status = () => {
     from: '',
     to: '',
   });
+  const [stagesTime, setStagesTime] = useState(null);
 
   const refStage = useRef(stage);
   const refEventId = useRef('');
@@ -42,8 +43,10 @@ const Status = () => {
 
   const filtersForEvents = async () => {
     const { current: contract } = refContract;
-    const address = currentChainId === ethChainId ? ethContractAddress : ambContractAddress;
-    const otherContractAddress = currentChainId !== ethChainId ? ethContractAddress : ambContractAddress;
+    const address =
+      currentChainId === ethChainId ? ethContractAddress : ambContractAddress;
+    const otherContractAddress =
+      currentChainId !== ethChainId ? ethContractAddress : ambContractAddress;
 
     refFilters.current = {
       withdraw: {
@@ -75,10 +78,10 @@ const Status = () => {
 
       if (provider) {
         const { current: otherProvider } = refOtherProvider;
-        provider.removeAllListeners()
-        otherProvider.removeAllListeners()
+        provider.removeAllListeners();
+        otherProvider.removeAllListeners();
       }
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -89,7 +92,9 @@ const Status = () => {
     if (currentChainId) {
       let currentStage = stage;
 
-      const receipt = await providers[currentChainId].getTransactionReceipt(txHash);
+      const receipt = await providers[currentChainId].getTransactionReceipt(
+        txHash,
+      );
 
       if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
         history.push('/');
@@ -99,23 +104,18 @@ const Status = () => {
 
       const withDrawEvent = receipt.logs.find((log) =>
         log.topics.some(
-          (topic) =>
-            topic === getEventSignatureByName(contract, withDrawName),
+          (topic) => topic === getEventSignatureByName(contract, withDrawName),
         ),
       );
       if (withDrawEvent) {
         currentStage = '2.1';
       }
       setTransferredTokens(
-        getTransferredTokens(
-          contract.interface.parseLog(withDrawEvent).args,
-          currentChainId,
-        ),
+        getTransferredTokens(contract.interface.parseLog(withDrawEvent).args),
       );
 
       const eventId = contract.interface.parseLog(withDrawEvent).args.eventId;
       refEventId.current = eventId;
-      console.log(contract.interface.parseLog(withDrawEvent).args);
 
       const filter = await contract.filters.Transfer(eventId);
       const event = await contract.queryFilter(filter);
@@ -143,29 +143,26 @@ const Status = () => {
 
       const { current: provider } = refProvider;
       await filtersForEvents();
-      const { withdraw, transfer, transferSubmit, transferFinish } = refFilters.current;
+      const { withdraw, transfer, transferSubmit, transferFinish } =
+        refFilters.current;
 
-      const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
+      const otherNetId =
+        currentChainId === ambChainId ? ethChainId : ambChainId;
       const otherProvider = providers[otherNetId];
 
       if (currentStage === '1.1') {
-        console.log(1);
         provider.on(withdraw, handleWithdraw);
       } else if (currentStage === '2.1') {
-        console.log(1);
         provider.on(transfer, handleTransfer);
       } else if (currentStage === '2.2') {
-        console.log(1);
         provider.on('block', handleBlock);
       } else if (currentStage === '3.1') {
-        console.log(1);
         otherProvider.on(transferSubmit, handleTransferSubmit);
       } else if (currentStage === '3.2') {
-        console.log(1);
         otherProvider.on(transferFinish, handleTransferFinish);
       }
     }
-  }, [currentChainId])
+  }, [currentChainId]);
 
   const handleStatus = () => {
     [ambChainId, ethChainId].forEach(async (networkId) => {
@@ -175,14 +172,26 @@ const Status = () => {
         refContract.current = await createBridgeContract[networkId](
           providers[networkId],
         );
-        const otherContract = await createBridgeContract[networkId === ambChainId ? ethChainId : ambChainId](
-          providers[networkId === ambChainId ? ethChainId : ambChainId]
-        );
+        const otherContract = await createBridgeContract[
+          networkId === ambChainId ? ethChainId : ambChainId
+        ](providers[networkId === ambChainId ? ethChainId : ambChainId]);
+        const secondStageTime = await otherContract.timeframeSeconds();
+        const lastStageTime = await otherContract.lockTime();
+
+        setStagesTime({
+          second: secondStageTime.toNumber(),
+          third: lastStageTime.toNumber(),
+        });
+
         const minSafetyBlock = await otherContract.minSafetyBlocks();
-        const safetyBlockNumber = minSafetyBlock.toNumber()
+        const safetyBlockNumber = minSafetyBlock.toNumber();
         setMinSafetyBlocks(safetyBlockNumber);
 
-        setConfirmations(tx.confirmations > safetyBlockNumber ? safetyBlockNumber : tx.confirmations);
+        setConfirmations(
+          tx.confirmations > safetyBlockNumber
+            ? safetyBlockNumber
+            : tx.confirmations,
+        );
 
         if (!refProvider.current) {
           refProvider.current = providers[networkId];
@@ -204,8 +213,9 @@ const Status = () => {
   const checkTransferSubmit = async () => {
     const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
 
-    const otherNetworkContract =
-      createBridgeContract[otherNetId](refOtherProvider.current);
+    const otherNetworkContract = createBridgeContract[otherNetId](
+      refOtherProvider.current,
+    );
 
     const transferSubmitFilter =
       await otherNetworkContract.filters.TransferSubmit(refEventId.current);
@@ -219,8 +229,9 @@ const Status = () => {
 
   const handleBlock = async () => {
     const tx = await refProvider.current.getTransaction(txHash);
-    setConfirmations(tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations);
-    console.log(2);
+    setConfirmations(
+      tx.confirmations > minSafetyBlocks ? minSafetyBlocks : tx.confirmations,
+    );
 
     if (tx.confirmations >= minSafetyBlocks) {
       await refProvider.current.removeAllListeners();
@@ -228,16 +239,21 @@ const Status = () => {
 
       if (isTransferSubmitPassed) {
         setStage('3.2');
-        refOtherProvider.current.on(refFilters.current.transferFinish, handleTransferFinish);
+        refOtherProvider.current.on(
+          refFilters.current.transferFinish,
+          handleTransferFinish,
+        );
       } else {
-        refOtherProvider.current.on(refFilters.current.transferSubmit, handleTransferSubmit);
+        refOtherProvider.current.on(
+          refFilters.current.transferSubmit,
+          handleTransferSubmit,
+        );
         setStage('3.1');
       }
     }
   };
 
   const handleWithdraw = () => {
-    console.log(2);
     if (refStage.current === '1.1') {
       setStage('2.1');
       refProvider.current.off(refFilters.current.withdraw, handleWithdraw);
@@ -245,7 +261,6 @@ const Status = () => {
   };
 
   const handleTransfer = () => {
-    console.log(2);
     if (refStage.current === '2.1') {
       refProvider.current.removeAllListeners();
       refProvider.current.on('block', handleBlock);
@@ -253,17 +268,21 @@ const Status = () => {
   };
 
   const handleTransferSubmit = (e) => {
-    console.log(utils.hexZeroPad(refEventId.current.toHexString(), 32), e);
-    if (refStage.current === '3.1' && utils.hexZeroPad(refEventId.current.toHexString(), 32) === e.topics[1]) {
+    if (
+      refStage.current === '3.1' &&
+      utils.hexZeroPad(refEventId.current.toHexString(), 32) === e.topics[1]
+    ) {
       setStage('3.2');
-      refProvider.current.removeAllListeners()
-      refOtherProvider.current.removeAllListeners()
-      refOtherProvider.current.on(refFilters.current.transferFinish, handleTransferFinish);
+      refProvider.current.removeAllListeners();
+      refOtherProvider.current.removeAllListeners();
+      refOtherProvider.current.on(
+        refFilters.current.transferFinish,
+        handleTransferFinish,
+      );
     }
   };
 
   const handleTransferFinish = async () => {
-    console.log(2);
     if (refStage.current === '3.2') {
       const lastTx = await getTxLastStageStatus(
         currentChainId,
@@ -271,9 +290,8 @@ const Status = () => {
       );
       if (lastTx.length) {
         setStage('4');
-        console.log(lastTx);
         setOtherNetworkTxHash(lastTx[0].transactionHash);
-        refOtherProvider.current.removeAllListeners()
+        refOtherProvider.current.removeAllListeners();
       }
     }
   };
@@ -337,9 +355,12 @@ const Status = () => {
           <div className="transaction-status__item-info">
             <div className="transaction-status__item-title">
               <p className="transaction-status__stage">Stage 2</p>
-              <div className="transaction-status__timing">
-                <ClockIcon />4 hour
-              </div>
+              {stagesTime && (
+                <div className="transaction-status__timing">
+                  <ClockIcon />
+                  {stagesTime.second / 60} min
+                </div>
+              )}
             </div>
             <p className={handleLoadingClass('2.1')}>Transaction processing.</p>
             <p className={handleLoadingClass('2.2')}>
@@ -357,9 +378,12 @@ const Status = () => {
           <div className="transaction-status__item-info">
             <div className="transaction-status__item-title">
               <p className="transaction-status__stage">Stage 3</p>
-              <div className="transaction-status__timing">
-                <ClockIcon />4 hour
-              </div>
+              {stagesTime && (
+                <div className="transaction-status__timing">
+                  <ClockIcon />
+                  {stagesTime.third / 60} min
+                </div>
+              )}
             </div>
             <p className={handleLoadingClass('3.1')}>Pending transaction.</p>
             <p className={handleLoadingClass('3.2')}>Transaction finish.</p>
@@ -381,11 +405,7 @@ const Status = () => {
         >
           Go to home
         </button>
-        <Link
-          to="/history"
-          type="button"
-          className="button button_black btns-wrapper__btn"
-        >
+        <Link to="/history" className="button button_black btns-wrapper__btn">
           Transaction history
         </Link>
       </div>

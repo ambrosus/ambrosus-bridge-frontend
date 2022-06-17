@@ -86,8 +86,7 @@
 }
 
 .token-select__token-list {
-  max-height: calc(100% - 8rem);
-  overflow-y: scroll;
+  height: calc(100% - 8rem);
 }
 
 .token-select__token {

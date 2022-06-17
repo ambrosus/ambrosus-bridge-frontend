@@ -1,42 +1,47 @@
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
 import useCoinBalance from './useCoinBalance';
-import createBridgeContract from '../contracts';
 import { ambChainId } from '../utils/providers';
+import getFee from '../utils/getFee';
 
-const useGetMaxTxAmount = (selectedCoin, transactionAmount) => {
-  const { account, chainId, library } = useWeb3React();
+const useGetMaxTxAmount = (selectedCoin) => {
+  const { chainId } = useWeb3React();
   const balance = useCoinBalance(selectedCoin.symbol, selectedCoin.chainId);
 
   return async () => {
+    // TODO: refactor this
     let max;
     if (selectedCoin.nativeAnalog) {
-      max = balance;
+      max = utils.formatUnits(balance, selectedCoin.denomination);
     }
     if (selectedCoin.wrappedAnalog) {
-      const bnTransactionAmount = BigNumber.from(
-        utils.parseUnits(transactionAmount || '1.0', selectedCoin.denomination),
-      );
       const bnBalance = BigNumber.from(balance);
 
-      const BridgeContract = createBridgeContract[chainId](library.getSigner());
-      const fee = await BridgeContract.callStatic.fee();
+      const { amount } = await getFee(
+        chainId === ambChainId,
+        utils.formatUnits(bnBalance, selectedCoin.denomination),
+        selectedCoin,
+        true,
+      ).catch((error) => {
+        throw error;
+      });
 
-      const gasOpts =
-        chainId === ambChainId ? { gasLimit: 8000000, gasPrice: 1 } : {};
+      if (amount.lt('0')) return '0';
 
-      const estGasPrice = await BridgeContract.estimateGas.wrapWithdraw(
-        account,
-        {
-          value: bnTransactionAmount.add(fee),
-          ...gasOpts,
-        },
-      );
-
-      max = bnBalance.sub(fee).sub(estGasPrice).toString();
+      // TODO: move formatting to stnadalone function
+      const [intPart, floatPart] = utils
+        .formatUnits(amount.toString(), selectedCoin.denomination)
+        .split('.');
+      if (floatPart && floatPart.length > 8) {
+        max = `${intPart}.${floatPart.slice(0, 8)}`;
+      } else if (floatPart) {
+        max = `${intPart}.${floatPart}`;
+      } else {
+        max = intPart;
+      }
     }
 
-    return utils.formatUnits(max, selectedCoin.denomination);
+    return max;
   };
 };
 

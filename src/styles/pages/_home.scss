@@ -1,6 +1,6 @@
 .connect-wallet__content {
   width: 30rem;
-  
+
   @media screen and (max-width: 450px) {
     width: 100%;
   }
@@ -129,6 +129,11 @@
   color: #58667E;
 
   min-width: 3.25rem;
+
+  @media screen and(max-width: $tablet-breakpoint) {
+    min-width: 2.75rem;
+  }
+
 }
 
 .exchange-field__balance-container {
@@ -139,6 +144,23 @@
   line-height: 171%;
   color: #58667E;
   margin-left: auto;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.exchange-field__wallet-icon {
+  display: none;
+  @media screen and (max-width: $tablet-breakpoint) {
+    display: initial;
+  }
+}
+
+.exchange-field__balance-placeholder {
+  @media screen and (max-width: $tablet-breakpoint) {
+    display: none;
+  }
 }
 
 .exchange-field__balance {
@@ -156,9 +178,14 @@
   color: #58667E;
 
   display: flex;
+  flex-flow: column nowrap;
+  margin-bottom: 1rem;
+}
+
+.exchange__estimated-fee-row {
+  display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
 }
 
 .exchange__button {

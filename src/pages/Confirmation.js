@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import TransactionNetworks from '../components/TransactionNetworks';
-import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
 import ErrorContext from '../contexts/ErrorContext';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
 import { ambChainId } from '../utils/providers';
+import TokenIcon from '../components/TokenIcon';
+import getFee from '../utils/getFee';
 
 const Confirmation = () => {
   const { setError } = useContext(ErrorContext);
   const { account, library, chainId } = useWeb3React();
-  const [transferFee, setTransferFee] = useState();
 
   const {
     location: {
@@ -22,14 +22,20 @@ const Confirmation = () => {
     push,
   } = useHistory();
 
+  const [fee, setFee] = useState('');
+  useEffect(async () => {
+    const { transferFee, bridgeFee } = await getFee(
+      ambChainId === selectedChainId,
+      transactionAmount,
+      selectedCoin,
+    );
+    setFee({ transferFee, bridgeFee });
+  }, []);
   const [isLocked, setIsLocked] = useState(false);
 
-  const BridgeContract = createBridgeContract[chainId](library.getSigner());
-
-  useEffect(async () => {
-    const fee = await BridgeContract.callStatic.fee();
-    setTransferFee(fee);
-  }, []);
+  const bnTransactionAmount = BigNumber.from(
+    utils.parseUnits(transactionAmount, selectedCoin.denomination),
+  );
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,7 +46,6 @@ const Confirmation = () => {
       transactionAmount,
       selectedCoin,
       receivedCoin,
-      transferFee,
       account,
       chainId,
       library.getSigner(),
@@ -49,9 +54,17 @@ const Confirmation = () => {
         push(`/status/${res.hash}`);
       })
       .catch((e) => {
+        // eslint-disable-next-line no-console
         console.error(e);
         setIsLocked(false);
-        setError('There is some error. Please refresh and try again');
+        if (e.code !== 4001) {
+          setError('There is some error. Please refresh and try again');
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+          setTimeout(setError, 5000, '');
+        }
       });
   };
 
@@ -59,25 +72,24 @@ const Confirmation = () => {
     <form onSubmit={handleSubmit} className="content confirmation-page">
       <h2 className="confirmation-page__title">Confirm</h2>
       <p className="confirmation-page__amount">
-        {transactionAmount.replace(/^0+/, '')} {selectedCoin.symbol}
+        {utils.formatUnits(bnTransactionAmount, selectedCoin.denomination)}{' '}
+        {selectedCoin.symbol}
       </p>
       <TransactionNetworks selectedChainId={selectedChainId} />
       <div className="confirmation-info">
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>
           <span className="confirmation-info__value">
-            <img
-              src={selectedCoin.logo}
-              alt={selectedCoin.name}
+            <TokenIcon
+              code={selectedCoin.symbol}
               className="confirmation-info__img"
             />
             {selectedCoin.name}
             {selectedCoin.name !== receivedCoin.name ? (
               <>
                 <span>→</span>
-                <img
-                  src={receivedCoin.logo}
-                  alt={receivedCoin.name}
+                <TokenIcon
+                  code={receivedCoin.symbol}
                   className="confirmation-info__img"
                 />
                 {receivedCoin.name}
@@ -88,7 +100,14 @@ const Confirmation = () => {
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
-            {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
+            {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
+            {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
+          </span>
+        </div>
+        <div className="confirmation-info__item">
+          <span className="confirmation-info__label">Bridge fee</span>
+          <span className="confirmation-info__value">
+            {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
             {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>

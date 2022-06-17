@@ -8,13 +8,16 @@ import spinnerIcon from '../assets/svg/spinner.svg';
 import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
-import { getAllNetworks } from '../utils/networks';
+import { getNetworkByChainId } from '../utils/networks';
 import createBridgeContract from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
 import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
 import getTransferredTokens from '../utils/helpers/getTransferredTokens';
+
+// TODO: eslint enable
 /*eslint-disable*/
+
 const TransactionListItem = ({ tx }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
@@ -30,7 +33,7 @@ const TransactionListItem = ({ tx }) => {
     const eventId = withdrawData.args.eventId;
     const tokenAddress = withdrawData.args['tokenTo'];
 
-    setTransferredTokens(getTransferredTokens(withdrawData.args, tx.chainId));
+    setTransferredTokens(getTransferredTokens(withdrawData.args));
     setTokenAmount(withdrawData.args.amount);
 
     const currentCoin = Object.values(tokens).find((token) =>
@@ -80,8 +83,7 @@ const TransactionListItem = ({ tx }) => {
       .padStart(2, '0')}`;
   };
 
-  const getNetworkName = (networkId) =>
-    getAllNetworks().find((el) => el.chainId === networkId).name;
+  const getNetworkName = (chainId) => getNetworkByChainId(chainId).name;
 
   return (
     <div className="transaction-item">
@@ -89,7 +91,11 @@ const TransactionListItem = ({ tx }) => {
         {transferredTokens.from && (
           <>
             <img
-              src={transferredTokens.from.toLowerCase().includes('amb') ? tokens.SAMB.logo : tokens.WETH.logo}
+              src={
+                transferredTokens.from.toLowerCase().includes('amb')
+                  ? tokens.SAMB.logo
+                  : tokens.WETH.logo
+              }
               alt="coin"
               className="transaction-item__img"
             />
@@ -164,7 +170,7 @@ const TransactionListItem = ({ tx }) => {
           </span>
           <span className="transaction-item__black-text">
             {ethers.utils.formatUnits(tokenAmount, currentToken.denomination)}{' '}
-            {currentToken.symbol}
+            {transferredTokens.from}
           </span>
         </div>
       </div>
@@ -183,15 +189,16 @@ const TransactionListItem = ({ tx }) => {
             Transaction fee:
           </span>
           <span className="transaction-item__black-text">
-            {ethers.utils.formatUnits(tx.gasPrice, currentToken.denomination)}{' '}
-            {!!currentToken.symbol && currentToken.symbol.slice(1)}
+            {ethers.utils.formatUnits(
+              tx.args['transferFeeAmount'].add(tx.args['bridgeFeeAmount']),
+              currentToken.denomination,
+            )}
+            {tx.chainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
       </div>
       <div className="transaction-item__row">
-        <span className="transaction-item__grey-text">
-          Transferred tokens:
-        </span>
+        <span className="transaction-item__grey-text">Transferred tokens:</span>
         <span className="transaction-item__black-text">
           {`${transferredTokens.from} - ${transferredTokens.to}`}
         </span>

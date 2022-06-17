@@ -1,38 +1,54 @@
 import { ethers } from 'ethers';
+import Dexie from 'dexie';
 import { db } from '../db';
-import providers, { ambChainId, ethChainId } from '../utils/providers';
+import providers from '../utils/providers';
 import CustomJsonRpcBatchProvider from '../utils/ethers/CustomJsonRpcBatchProvider';
+import { allNetworks } from '../utils/networks';
 
-const ethProvider = new CustomJsonRpcBatchProvider(
-  process.env.REACT_APP_ETH_RPC_URL + process.env.REACT_APP_INFURA_KEY,
-  +process.env.REACT_APP_ETH_CHAIN_ID,
-);
+// TODO: decompose this to several files
+
+const ethProvider =
+  process.env.REACT_APP_ENV === 'production'
+    ? new CustomJsonRpcBatchProvider(
+        allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
+        allNetworks.eth.chainId,
+      )
+    : new CustomJsonRpcBatchProvider(
+        allNetworks.eth.rpcUrl,
+        allNetworks.eth.chainId,
+      );
 
 const ambProvider = new CustomJsonRpcBatchProvider(
-  process.env.REACT_APP_AMB_RPC_URL,
-  +process.env.REACT_APP_AMB_CHAIN_ID,
+  allNetworks.amb.rpcUrl,
+  allNetworks.amb.chainId,
 );
 
 const batchProviders = {
-  [ethChainId]: ethProvider,
-  [ambChainId]: ambProvider,
+  [allNetworks.eth.chainId]: ethProvider,
+  [allNetworks.amb.chainId]: ambProvider,
 };
+
+let currentAccount;
 
 // eslint-disable-next-line no-restricted-globals
 self.addEventListener('message', ({ data: message }) => {
   if (message.type === 'start') {
-    console.log('worker started');
     startBalanceMonitoring(message.account);
+    currentAccount = message.account;
   }
   if (message.type === 'stop') {
-    console.log('worker stopped');
-    stopBalanceMonitoring(message.account);
+    stopBalanceMonitoring(currentAccount);
+  }
+  if (message.type === 'restart') {
+    stopBalanceMonitoring(currentAccount);
+    startBalanceMonitoring(message.account);
+    currentAccount = message.account;
   }
 });
 
 const startBalanceMonitoring = async (account) => {
   // eslint-disable-next-line no-restricted-syntax
-  for (const chainId of [ethChainId, ambChainId]) {
+  for (const chainId of [allNetworks.eth.chainId, allNetworks.amb.chainId]) {
     fetchBalancesOfNetwork(account, chainId);
     providers[chainId].on('block', () =>
       fetchBalancesOfNetwork(account, chainId),
@@ -42,7 +58,7 @@ const startBalanceMonitoring = async (account) => {
 
 const stopBalanceMonitoring = async () => {
   // eslint-disable-next-line no-restricted-syntax
-  for (const chainId of [ambChainId, ethChainId]) {
+  for (const chainId of [allNetworks.amb.chainId, allNetworks.eth.chainId]) {
     providers[chainId].off('block');
   }
 };
@@ -76,40 +92,6 @@ const fetchBalancesOfNetwork = async (account, chainId) => {
     };
   });
 
-  // tokens.map(async (token) =>
-  //   encodeGetErc20BalanceData(token.address, account, batchProviders[chainId])
-  //     .then((txData) =>
-  //       batchProviders[chainId].pushToBatch('eth_call', [txData, 'latest']),
-  //     )
-  //     .then((promise) =>
-  //       pendingBalancesList.push({
-  //         address: token.address,
-  //         promise,
-  //       }),
-  //     ),
-  // );
-
-  // const pendingCalls =
-
-  // eslint-disable-next-line no-restricted-syntax
-  // for (const token of tokens) {
-  // getTokenBalance(batchProviders[chainId], token.address, account).then(
-  //   (balance) => {
-  //     db.tokens.put({ ...token, balance: balance.toString() });
-  //   },
-  // );
-  // }
-
-  // const nativeToken = await db.nativeTokens.get({ chainId });
-  // batchProviders[chainId].getBalance(account).then((balance) => {
-  //   db.nativeTokens.put({
-  //     ...nativeToken,
-  //     balance: balance.toString(),
-  //   });
-  // });
-
-  // console.log(pendingCalls);
-
   await batchProviders[chainId].resolveBatch();
 
   // eslint-disable-next-line no-restricted-syntax
@@ -125,8 +107,12 @@ const fetchBalancesOfNetwork = async (account, chainId) => {
       }
     });
   }
+
+  // eslint-disable-next-line no-restricted-globals
+  self.postMessage({ type: 'update' });
 };
 
+// TODO: refactor with ethers "attach" method
 const encodeGetErc20BalanceData = async (address, account, provider) => {
   const minABI = [
     {
@@ -141,3 +127,14 @@ const encodeGetErc20BalanceData = async (address, account, provider) => {
 
   return contract.populateTransaction.balanceOf(account);
 };
+
+// fallback for Dexie observable
+// due to issues with useLiveQuery in Safari < 15.4
+// proposed in here
+// https://github.com/dexie/Dexie.js/issues/1573
+
+if (typeof BroadcastChannel === 'undefined') {
+  Dexie.on('storagemutated', (updatedParts) => {
+    postMessage({ type: 'storagemutated', updatedParts });
+  });
+}

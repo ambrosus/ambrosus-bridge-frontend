@@ -8,6 +8,7 @@ import TokenSelect from './TokenSelect';
 import useModal from '../../hooks/useModal';
 import useTokenList from '../../hooks/useTokenList';
 import useCoinBalance from '../../hooks/useCoinBalance';
+import { ReactComponent as WalletIcon } from '../../assets/svg/wallet.svg';
 
 const ExchangeField = ({
   networks = [{}],
@@ -18,6 +19,8 @@ const ExchangeField = ({
   setTransactionAmount = () => {},
   isValueInvalid = false,
   setCoin = () => {},
+  updateFee = () => {},
+  setError = () => {},
 }) => {
   const [isOpenCoinModal, toggleCoinModal] = useModal();
   const tokenList = useTokenList(selectedChainId);
@@ -41,7 +44,8 @@ const ExchangeField = ({
         />
 
         <div className="exchange-field__balance-container">
-          Balance:
+          <span className="exchange-field__balance-placeholder">Balance:</span>
+          <WalletIcon className="exchange-field__wallet-icon" />
           {balance ? (
             <span className="exchange-field__balance">
               {formatBalance(balance)} {selectedCoin.symbol}
@@ -59,6 +63,8 @@ const ExchangeField = ({
           changeCoin={toggleCoinModal}
           selectedCoin={selectedCoin}
           balance={balance}
+          onBlur={updateFee}
+          setError={setError}
         />
       </div>
     </>
@@ -74,6 +80,8 @@ ExchangeField.propTypes = {
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
   setCoin: PropTypes.func,
+  updateFee: PropTypes.func,
+  setError: PropTypes.func,
 };
 
 export default ExchangeField;

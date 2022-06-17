@@ -1,0 +1,120 @@
+<svg
+   version="1.1"
+   width="200"
+   height="200"
+   viewBox="0 0 640 640"
+ >
+<desc
+   id="desc87">Created with Fabric.js 4.6.0</desc>
+<defs
+   id="defs89">
+</defs>
+<g
+   transform="matrix(0.54276475,0,0,0.54276475,320,320)"
+   id="DB6egCqSHVtHRj8trd3Tm">
+<g
+   vector-effect="non-scaling-stroke"
+   id="g116">
+		<g
+   transform="translate(-0.1,25.05)"
+   id="MqAZHVTYrommFo97Ho5_N"
+   clip-path="url(#CLIPPATH_50)">
+<clipPath
+   id="CLIPPATH_50">
+	<path
+   transform="translate(-974.95,-439.4)"
+   id="SVGID_2_"
+   d="m 720.6,306.4 h 508.7 v 266 H 720.6 Z"
+   stroke-linecap="round" />
+</clipPath>
+<path
+   style="opacity:0.6;fill:#010101;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+   vector-effect="non-scaling-stroke"
+   transform="translate(-974.95,-439.4)"
+   d="M 975,306.4 720.6,422.1 975,572.4 1229.3,422.1 Z"
+   stroke-linecap="round"
+   id="path93" />
+</g>
+		<g
+   transform="translate(-127.25,-128.15)"
+   id="a3GNlPh0zsTS0DfO5o9U8"
+   clip-path="url(#CLIPPATH_51)">
+<clipPath
+   id="CLIPPATH_51">
+	<path
+   transform="translate(-847.8,-286.2)"
+   id="SVGID_4_"
+   d="M 720.6,0 H 975 V 572.4 H 720.6 Z"
+   stroke-linecap="round" />
+</clipPath>
+<path
+   style="opacity:0.45;fill:#010101;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+   vector-effect="non-scaling-stroke"
+   transform="translate(-847.8,-286.2)"
+   d="M 720.6,422.1 975,572.4 V 0 Z"
+   stroke-linecap="round"
+   id="path98" />
+</g>
+		<g
+   transform="translate(127.1,-128.15)"
+   id="Tqlg6KB7Ca-8Ja1qJ3mwV"
+   clip-path="url(#CLIPPATH_52)">
+<clipPath
+   id="CLIPPATH_52">
+	<path
+   transform="translate(-1102.15,-286.2)"
+   id="SVGID_6_"
+   d="m 975,0 h 254.4 V 572.4 H 975 Z"
+   stroke-linecap="round" />
+</clipPath>
+<path
+   style="opacity:0.8;fill:#010101;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+   vector-effect="non-scaling-stroke"
+   transform="translate(-1102.15,-286.2)"
+   d="M 975,0 V 572.4 L 1229.3,422.1 Z"
+   stroke-linecap="round"
+   id="path103" />
+</g>
+		<g
+   transform="translate(-127.25,235.15)"
+   id="f-G-BEIoii-6EnW3zKcG1"
+   clip-path="url(#CLIPPATH_53)">
+<clipPath
+   id="CLIPPATH_53">
+	<path
+   transform="translate(-847.8,-649.5)"
+   id="SVGID_8_"
+   d="M 720.6,470.3 H 975 V 828.7 H 720.6 Z"
+   stroke-linecap="round" />
+</clipPath>
+<path
+   style="opacity:0.45;fill:#010101;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+   vector-effect="non-scaling-stroke"
+   transform="translate(-847.8,-649.5)"
+   d="M 720.6,470.3 975,828.7 V 620.6 Z"
+   stroke-linecap="round"
+   id="path108" />
+</g>
+		<g
+   transform="translate(127.2,235.15)"
+   id="3OEtj8J0cHNnRtet_3Lm7"
+   clip-path="url(#CLIPPATH_54)">
+<clipPath
+   id="CLIPPATH_54">
+	<path
+   transform="translate(-1102.25,-649.5)"
+   id="SVGID_10_"
+   d="m 975,470.3 h 254.5 V 828.7 H 975 Z"
+   stroke-linecap="round" />
+</clipPath>
+<path
+   style="opacity:0.8;fill:#010101;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+   vector-effect="non-scaling-stroke"
+   transform="translate(-1102.25,-649.5)"
+   d="M 975,620.6 V 828.7 L 1229.5,470.3 Z"
+   stroke-linecap="round"
+   id="path113" />
+</g>
+</g>
+</g>
+</svg>

@@ -2,6 +2,10 @@
   position: relative;
   height: 2rem;
   width: 12.5rem;
+
+  @media screen and (max-width: 1023px){
+    width: 9rem;
+  }
 }
 
 .network-select_disabled {
@@ -54,6 +58,8 @@
   height: 1.5rem;
   width: 1.5rem;
   margin-right: 0.5rem;
+  border-radius: 50%;
+  background: white;
 }
 
 .network-select__chevron {

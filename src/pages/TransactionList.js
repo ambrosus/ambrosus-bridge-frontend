@@ -33,7 +33,7 @@ const TransactionList = () => {
             ) {
               setTransactionHistory((state) => [
                 ...state,
-                { ...trans, timestamp },
+                { ...trans, timestamp, args: el.args },
               ]);
             }
           });

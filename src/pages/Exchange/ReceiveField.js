@@ -9,6 +9,8 @@ import { ambChainId, ethChainId } from '../../utils/providers';
 import formatBalance from '../../utils/helpers/formatBalance';
 import InlineLoader from '../../components/InlineLoader';
 import useCoinBalance from '../../hooks/useCoinBalance';
+import { ReactComponent as WalletIcon } from '../../assets/svg/wallet.svg';
+import TokenIcon from '../../components/TokenIcon';
 
 const ReceiveField = ({
   networks = [{}],
@@ -19,7 +21,6 @@ const ReceiveField = ({
   transactionAmount = '',
   setCoin = () => {},
 }) => {
-  // const balance = useCoinBalance(selectedCoin.addresses[networks[0].chainId]);
   const [isOpenCoinModal, toggleCoinModal] = useModal();
   const [receiveTokenList, setReceiveTokenList] = useState();
   const receiveChainId =
@@ -33,6 +34,7 @@ const ReceiveField = ({
     ) {
       const nativeCoin = await db.nativeTokens.get({
         symbol: selectedCoin.nativeAnalog,
+        chainId: receiveChainId,
       });
       const wrappedCoin = await db.tokens.get({
         symbol: selectedCoin.symbol,
@@ -42,6 +44,7 @@ const ReceiveField = ({
     } else if (selectedCoin.wrappedAnalog) {
       const wrappedCoin = await db.tokens.get({
         symbol: selectedCoin.wrappedAnalog,
+        chainId: receiveChainId,
       });
       tokenList.push(wrappedCoin);
     } else if (
@@ -78,7 +81,8 @@ const ReceiveField = ({
         />
 
         <div className="exchange-field__balance-container">
-          Balance:
+          <span className="exchange-field__balance-placeholder">Balance:</span>
+          <WalletIcon className="exchange-field__wallet-icon" />
           {balance ? (
             <span className="exchange-field__balance">
               {formatBalance(balance)} {receivedCoin.symbol}
@@ -107,9 +111,8 @@ const ReceiveField = ({
             className="currency-input__coin-button"
             onClick={toggleCoinModal}
           >
-            <img
-              src={receivedCoin.logo}
-              alt="#"
+            <TokenIcon
+              code={selectedCoin.symbol}
               className="currency-input__currency-icon"
             />
             {receivedCoin.symbol}
