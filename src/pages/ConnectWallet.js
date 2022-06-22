@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import { InjectedConnector } from '@web3-react/injected-connector';
@@ -10,14 +10,14 @@ import {
 import ChevronIcon from '../assets/svg/chevron.svg';
 import MetaMaskIcon from '../assets/img/connect-wallet__metamask.jpg';
 import WalletConnectIcon from '../assets/img/connect-wallet__wallet-connect.png';
-import ErrorContext from '../contexts/ErrorContext';
 import changeChainId from '../utils/ethers/changeChainId';
 import { ambChainId } from '../utils/providers';
 import { allNetworks } from '../utils/networks';
+import useError from '../hooks/useError';
 
 const ConnectWallet = () => {
   const { error, activate, account, connector } = useWeb3React();
-  const { setError } = useContext(ErrorContext);
+  const { setError } = useError();
   const history = useHistory();
 
   const handleMetamaskLogin = () => {

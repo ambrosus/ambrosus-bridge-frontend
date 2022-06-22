@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { ErrorWidget } from './ErrorWidget';
+import useError from '../hooks/useError';
 import ClockIcon from '../assets/svg/layout__clock-icon.svg';
 import BookIcon from '../assets/svg/layout__book-icon.svg';
 import PyramidIllustration from '../assets/svg/layout__pyramid.svg';
@@ -12,8 +13,9 @@ import SphereIllustration from '../assets/svg/layout__sphere.svg';
 
 import '../styles/Main.scss';
 
-export const Layout = ({ children, title, error }) => {
+export const Layout = ({ children, title }) => {
   const { account } = useWeb3React();
+  const { error } = useError();
   return (
     <div className="root">
       <ErrorWidget error={error} />
@@ -84,7 +86,6 @@ export const Layout = ({ children, title, error }) => {
 Layout.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
-  error: PropTypes.string,
 };
 
 export default Layout;

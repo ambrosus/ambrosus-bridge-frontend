@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
 import TransactionNetworks from '../components/TransactionNetworks';
 import InlineLoader from '../components/InlineLoader';
-import ErrorContext from '../contexts/ErrorContext';
+import ErrorContext from '../contexts/ErrorContext/context';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
 import { ambChainId } from '../utils/providers';
 import TokenIcon from '../components/TokenIcon';

@@ -8,33 +8,32 @@ import Exchange from './pages/Exchange';
 import Layout from './components/Layout';
 import ConnectWallet from './pages/ConnectWallet';
 import Confirmation from './pages/Confirmation';
-import ErrorContext from './contexts/ErrorContext';
 import TransactionList from './pages/TransactionList';
 import CoinBalanceWorkerProvider from './contexts/CoinBalanceWorkerContext/provider';
 import {
   ConfiguredInjectedConnector,
   ConfiguredWalletConnectConnector,
 } from './utils/web3ReactConnectors';
+import ConfigProvider from './contexts/ConfigContext/provider';
+import ErrorProvider from './contexts/ErrorContext/provider';
 // import useAutoLogin from './hooks/useAutoLogin';
 // TODO: refactor this ^^^
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
-const Main = () => {
-  const [error, setError] = useState('');
-
-  return (
+const Main = () => (
+  <ConfigProvider>
     <Web3ReactProvider getLibrary={getLibrary}>
       <CoinBalanceWorkerProvider>
-        <ErrorContext.Provider value={{ error, setError }}>
-          <Layout title="Bridge" error={error}>
-            <Routing setError={setError} />
+        <ErrorProvider>
+          <Layout title="Bridge">
+            <Routing />
           </Layout>
-        </ErrorContext.Provider>
+        </ErrorProvider>
       </CoinBalanceWorkerProvider>
     </Web3ReactProvider>
-  );
-};
+  </ConfigProvider>
+);
 
 export default Main;
 

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
-import ErrorContext from '../../contexts/ErrorContext';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
 import { AmbrosusNetwork, supportedNetworks } from '../../utils/networks';
 import changeChainId from '../../utils/ethers/changeChainId';
@@ -14,9 +13,10 @@ import ReceiveField from './ReceiveField';
 import { nativeTokensById } from '../../utils/nativeTokens';
 import getFee from '../../utils/getFee';
 import formatBalance from '../../utils/helpers/formatBalance';
+import useError from '../../hooks/useError';
 
 const Exchange = () => {
-  const { setError } = useContext(ErrorContext);
+  const { setError } = useError();
   const { library, account, chainId } = useWeb3React();
 
   const networks = supportedNetworks;
@@ -36,6 +36,7 @@ const Exchange = () => {
   // starting balance-fetching worker and clearing it on unmount
   useEffect(() => {
     worker.postMessage({ type: 'start', account });
+
     return () => {
       worker.postMessage({ type: 'stop' });
     };
