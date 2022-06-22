@@ -7,7 +7,7 @@ import TransactionNetworks from '../components/TransactionNetworks';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
 import warningImg from '../assets/svg/warning.svg';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
-import createBridgeContract, {
+import createBridgeContractById, {
   ambContractAddress,
   ethContractAddress,
 } from '../contracts';
@@ -169,10 +169,10 @@ const Status = () => {
       const tx = await providers[networkId].getTransaction(txHash);
 
       if (tx && tx.blockNumber) {
-        refContract.current = await createBridgeContract[networkId](
+        refContract.current = await createBridgeContractById[networkId](
           providers[networkId],
         );
-        const otherContract = await createBridgeContract[
+        const otherContract = await createBridgeContractById[
           networkId === ambChainId ? ethChainId : ambChainId
         ](providers[networkId === ambChainId ? ethChainId : ambChainId]);
         const secondStageTime = await otherContract.timeframeSeconds();
@@ -213,7 +213,7 @@ const Status = () => {
   const checkTransferSubmit = async () => {
     const otherNetId = currentChainId === ambChainId ? ethChainId : ambChainId;
 
-    const otherNetworkContract = createBridgeContract[otherNetId](
+    const otherNetworkContract = createBridgeContractById[otherNetId](
       refOtherProvider.current,
     );
 

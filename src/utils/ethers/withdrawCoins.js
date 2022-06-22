@@ -1,6 +1,8 @@
 import { BigNumber, ethers, utils } from 'ethers';
 import { ambChainId } from '../providers';
-import createBridgeContract, { bridgeContractAddress } from '../../contracts';
+import createBridgeContractById, {
+  bridgeContractAddress,
+} from '../../contracts';
 
 const approveAbi = [
   {
@@ -80,7 +82,7 @@ const withdrawCoins = async (
   const gasOpts =
     chainId === ambChainId ? { gasLimit: 8000000, gasPrice: 1 } : {};
 
-  const BridgeContract = createBridgeContract[chainId](signer);
+  const BridgeContract = createBridgeContractById[chainId](signer);
 
   // if native coin
   if (selectedCoin.wrappedAnalog) {

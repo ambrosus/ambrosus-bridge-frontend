@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
-import createBridgeContract, {
+import createBridgeContractById, {
   ambContractAddress,
   ethContractAddress,
 } from '../contracts';

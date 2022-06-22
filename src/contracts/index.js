@@ -8,13 +8,16 @@ import { ambChainId, ethChainId } from '../utils/providers';
 export const ambContractAddress = ConfigMock.bridges.eth.amb;
 export const ethContractAddress = ConfigMock.bridges.eth.side;
 
+const createBridgeContract = (contract, provider) =>
+  new ethers.Contract(contract, ABI, provider);
+
 const createAmbBridgeContract = (provider) =>
-  new ethers.Contract(ambContractAddress, ABI, provider);
+  createBridgeContract(ambContractAddress, provider);
 
 const createEthBridgeContract = (provider) =>
-  new ethers.Contract(ethContractAddress, ABI, provider);
+  createBridgeContract(ethContractAddress, provider);
 
-const createBridgeContract = {
+const createBridgeContractById = {
   [ambChainId]: createAmbBridgeContract,
   [ethChainId]: createEthBridgeContract,
 };
@@ -24,4 +27,4 @@ export const bridgeContractAddress = {
   [ethChainId]: ethContractAddress,
 };
 
-export default createBridgeContract;
+export default createBridgeContractById;

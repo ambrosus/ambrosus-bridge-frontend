@@ -9,7 +9,7 @@ import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
 import { getNetworkByChainId } from '../utils/networks';
-import createBridgeContract from '../contracts';
+import createBridgeContractById from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
 import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
@@ -54,7 +54,9 @@ const TransactionListItem = ({ tx }) => {
 
   const getEventData = async (eventName) => {
     const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
-    const contract = createBridgeContract[tx.chainId](providers[tx.chainId]);
+    const contract = createBridgeContractById[tx.chainId](
+      providers[tx.chainId],
+    );
 
     const eventData = receipt.logs.find((log) =>
       log.topics.some(
