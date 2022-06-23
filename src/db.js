@@ -16,6 +16,7 @@ const fulfillDB = async () => {
       denomination: 18,
       chainId: allNetworks.amb.chainId,
       wrappedAnalog: 'SAMB',
+      balance: '',
     },
     {
       name: 'Ethereum',
@@ -23,6 +24,7 @@ const fulfillDB = async () => {
       denomination: 18,
       chainId: allNetworks.eth.chainId,
       wrappedAnalog: 'WETH',
+      balance: '',
     },
   ]);
 };
