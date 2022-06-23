@@ -6,7 +6,13 @@ import { AmbrosusNetwork, supportedNetworks } from '../utils/networks';
 import getTxLink from '../utils/helpers/getTxLink';
 import TokenIcon from './TokenIcon';
 
-const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
+const TransactionNetworks = ({
+  selectedChainId,
+  fromHash,
+  toHash,
+  tokens,
+  preventRedirect,
+}) => {
   const networks = supportedNetworks;
 
   const currentNetwork =
@@ -42,6 +48,7 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           <span className="transaction-coins__hash-wrapper">
             <span className="transaction-coins__hash">txHash:</span>
             <a
+              style={preventRedirect ? { pointerEvents: 'none' } : {}}
               target="_blank"
               href={getTxLink(selectedChainId === ethChainId, fromHash)}
             >
@@ -110,6 +117,7 @@ TransactionNetworks.propTypes = {
   fromHash: PropTypes.string,
   toHash: PropTypes.string,
   tokens: PropTypes.object,
+  preventRedirect: PropTypes.bool,
 };
 
 export default TransactionNetworks;
