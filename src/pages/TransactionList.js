@@ -18,7 +18,7 @@ const TransactionList = () => {
 
   const getHistory = (networkId) => {
     const provider = providers[networkId];
-    const contract = createBridgeContract[networkId](provider);
+    const contract = createBridgeContractById[networkId](provider);
 
     contract
       .queryFilter(contract.filters.Withdraw(account))
