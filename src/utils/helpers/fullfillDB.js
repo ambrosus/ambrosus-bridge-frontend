@@ -10,6 +10,7 @@ const fulfillDB = (tokenList) => {
       denomination: 18,
       chainId: allNetworks.amb.chainId,
       wrappedAnalog: 'SAMB',
+      balance: '',
     },
     {
       name: 'Ethereum',
@@ -17,6 +18,7 @@ const fulfillDB = (tokenList) => {
       denomination: 18,
       chainId: allNetworks.eth.chainId,
       wrappedAnalog: 'WETH',
+      balance: '',
     },
     {
       name: 'Binance Coin',
@@ -24,6 +26,7 @@ const fulfillDB = (tokenList) => {
       denomination: 18,
       chainId: allNetworks.bsc.chainId,
       wrappedAnalog: 'WBNB',
+      balance: '',
     },
   ]);
 };

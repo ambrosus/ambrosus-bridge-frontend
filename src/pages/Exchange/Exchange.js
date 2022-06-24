@@ -20,10 +20,22 @@ const Exchange = () => {
   const { library, account, chainId } = useWeb3React();
 
   const networks = supportedNetworks;
+
   const isFromAmb = chainId === ambChainId;
+  const [foreignChainId, setForeignChainId] = useState(
+    isFromAmb ? ethChainId : chainId,
+  );
+  const destinationChainId = isFromAmb ? foreignChainId : ambChainId;
+
+  const changeNetwork = async (newChainId) => {
+    if (!isFromAmb) {
+      await changeChainId(library.provider, newChainId);
+    }
+    setForeignChainId(newChainId);
+  };
 
   const toggleDirection = async () => {
-    const newChainId = isFromAmb ? ethChainId : ambChainId;
+    const newChainId = isFromAmb ? foreignChainId : ambChainId;
     await changeChainId(library.provider, newChainId);
   };
 
@@ -50,7 +62,7 @@ const Exchange = () => {
   // if network changed update transaction fee
   useEffect(() => {
     setCoin(nativeTokensById[chainId]);
-  }, [chainId]);
+  }, [chainId, foreignChainId]);
 
   // reset value if coin changed
   useEffect(() => {
@@ -64,10 +76,11 @@ const Exchange = () => {
       isFromAmb,
       amount,
       selectedCoin,
+      foreignChainId,
     );
     setFee({ transferFee, bridgeFee, totalFee });
   };
-  useEffect(() => updateFee(transactionAmount), [chainId]);
+  useEffect(() => updateFee(transactionAmount), [chainId, foreignChainId]);
   useEffect(() => updateFee('0.001'), [selectedCoin]);
 
   const [isValueInvalid, setIsInvalid] = useState(false);
@@ -96,6 +109,7 @@ const Exchange = () => {
         pathname: '/confirm',
         state: {
           selectedChainId: chainId,
+          foreignChainId,
           selectedCoin,
           receivedCoin,
           transactionAmount,
@@ -118,7 +132,9 @@ const Exchange = () => {
         <ExchangeField
           {...{
             networks: isFromAmb ? [AmbrosusNetwork] : networks,
-            selectedChainId: chainId,
+            setChainId: changeNetwork,
+            chainId,
+            foreignChainId,
             selectedCoin,
             transactionAmount,
             setTransactionAmount,
@@ -139,7 +155,9 @@ const Exchange = () => {
         <ReceiveField
           {...{
             networks: isFromAmb ? networks : [AmbrosusNetwork],
-            selectedChainId: chainId,
+            setChainId: changeNetwork,
+            chainId,
+            destinationChainId,
             setCoin: setReceivedCoin,
             selectedCoin,
             receivedCoin,
