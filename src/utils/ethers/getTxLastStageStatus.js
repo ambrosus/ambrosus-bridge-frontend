@@ -1,8 +1,7 @@
-import providers, { ambChainId, ethChainId } from '../providers';
+import providers from '../providers';
 import createBridgeContractById from '../../contracts';
 
-const getTxLastStageStatus = async (chainId, eventId) => {
-  const otherNetId = chainId === ambChainId ? ethChainId : ambChainId;
+const getTxLastStageStatus = async (otherNetId, eventId) => {
   const otherProvider = providers[otherNetId];
 
   const otherNetworkContract =

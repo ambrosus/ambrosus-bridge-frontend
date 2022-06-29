@@ -14,11 +14,15 @@ import getEventSignatureByName from '../utils/getEventSignatureByName';
 import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
 import getTransferredTokens from '../utils/helpers/getTransferredTokens';
+import useBridges from '../hooks/useBridges';
+import { getDestinationNet } from '../utils/helpers/getDestinationNet';
 
 // TODO: eslint enable
 /*eslint-disable*/
 
 const TransactionListItem = ({ tx }) => {
+  const bridges = useBridges();
+
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
   const [currentToken, setCurrentToken] = useState({});
@@ -44,7 +48,7 @@ const TransactionListItem = ({ tx }) => {
       setCurrentToken(currentCoin);
     }
 
-    const lastStage = await getTxLastStageStatus(tx.chainId, eventId);
+    const lastStage = await getTxLastStageStatus(getDestinationNet(tx.to, bridges), eventId);
     setIsSuccess(lastStage.length);
 
     setDestinationNetTxHash(
@@ -85,7 +89,7 @@ const TransactionListItem = ({ tx }) => {
       .padStart(2, '0')}`;
   };
 
-  const getNetworkName = (chainId) => getNetworkByChainId(chainId).name;
+  const getNetworkName = (chainId) => getNetworkByChainId(+chainId).name;
 
   return (
     <div className="transaction-item">
@@ -148,7 +152,7 @@ const TransactionListItem = ({ tx }) => {
           <span className="transaction-item__grey-text">To:</span>
           <span className="transaction-item__black-text">
             {getNetworkName(
-              tx.chainId === ambChainId ? ethChainId : ambChainId,
+              getDestinationNet(tx.to, bridges),
             )}
           </span>
           {destinationNetTxHash !== null &&

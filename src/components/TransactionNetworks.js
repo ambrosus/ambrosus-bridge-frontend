@@ -1,23 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import arrowIcon from '../assets/svg/green-arrow-right.svg';
 import { ethChainId } from '../utils/providers';
 import { AmbrosusNetwork, supportedNetworks } from '../utils/networks';
 import getTxLink from '../utils/helpers/getTxLink';
 import TokenIcon from './TokenIcon';
+import useBridges from '../hooks/useBridges';
 
-const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
+const TransactionNetworks = ({
+  departureContractAddress,
+  fromHash,
+  toHash,
+  tokens,
+}) => {
   const networks = supportedNetworks;
+  const bridges = useBridges();
 
-  const currentNetwork =
-    selectedChainId === ethChainId
-      ? networks.find((el) => el.chainId === ethChainId)
-      : AmbrosusNetwork;
+  const [currentNetwork, setCurrentNetwork] = useState(null);
+  const [otherNetwork, setOtherNetwork] = useState(null);
 
-  const otherNetwork =
-    selectedChainId !== ethChainId
-      ? networks.find((el) => el.chainId === ethChainId)
-      : AmbrosusNetwork;
+  useEffect(() => {
+    Object.keys(bridges).forEach((id) => {
+      Object.keys(bridges[id]).forEach((type) => {
+        if (departureContractAddress === bridges[id][type]) {
+          if (type === 'native') {
+            console.log(1);
+            setCurrentNetwork(AmbrosusNetwork);
+            setOtherNetwork(networks.find((el) => el.chainId === +id));
+            console.log(networks, id);
+          } else {
+            console.log(2);
+            setCurrentNetwork(networks.find((el) => el.chainId === +id));
+            setOtherNetwork(AmbrosusNetwork);
+          }
+        }
+      });
+    });
+  }, [departureContractAddress]);
 
   return (
     <div className="transaction-coins">
@@ -26,7 +45,7 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           fromHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        {!!selectedChainId && (
+        {!!currentNetwork && (
           <TokenIcon
             code={currentNetwork.code}
             className="transaction-coins__img"
@@ -34,7 +53,7 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
         )}
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">Send:</p>
-          {!!selectedChainId && (
+          {!!currentNetwork && (
             <p className="transaction-coins__name">{currentNetwork.name}</p>
           )}
         </div>
@@ -43,7 +62,10 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
             <span className="transaction-coins__hash">txHash:</span>
             <a
               target="_blank"
-              href={getTxLink(selectedChainId === ethChainId, fromHash)}
+              href={getTxLink(
+                departureContractAddress === ethChainId,
+                fromHash,
+              )}
             >
               {fromHash}
             </a>
@@ -66,7 +88,7 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           toHash === null || toHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        {!!selectedChainId && (
+        {!!otherNetwork && (
           <TokenIcon
             code={otherNetwork.code}
             className="transaction-coins__img"
@@ -75,7 +97,7 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
 
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">To:</p>
-          {!!selectedChainId && (
+          {!!otherNetwork && (
             <p className="transaction-coins__name">{otherNetwork.name}</p>
           )}
         </div>
@@ -87,7 +109,10 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
             ) : (
               <a
                 target="_blank"
-                href={getTxLink(selectedChainId !== ethChainId, toHash)}
+                href={getTxLink(
+                  departureContractAddress !== ethChainId,
+                  toHash,
+                )}
               >
                 {toHash}
               </a>
@@ -106,7 +131,7 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
 };
 
 TransactionNetworks.propTypes = {
-  selectedChainId: PropTypes.number,
+  departureContractAddress: PropTypes.string,
   fromHash: PropTypes.string,
   toHash: PropTypes.string,
   tokens: PropTypes.object,
