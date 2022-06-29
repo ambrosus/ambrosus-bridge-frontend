@@ -30,6 +30,7 @@ export const MobileMenu = ({
 
   const history = useHistory();
   const logout = () => {
+    // TODO removeItem
     sessionStorage.setItem('wallet', '');
     history.push('/');
     deactivate();
@@ -38,6 +39,7 @@ export const MobileMenu = ({
 
   return (
     <div className={`mobile-menu ${isOpen ? 'mobile-menu_open' : ''}`}>
+      {/* TODO && */}
       {account ? (
         <div className="mobile-menu__account">
           <div className="account account_mobile">
@@ -133,6 +135,7 @@ const MobileSubmenu = ({
         '--items-amount': data.length,
       }}
     >
+      {/* TODO && */}
       {showAddMetamaskButton ? (
         <button
           type="button"

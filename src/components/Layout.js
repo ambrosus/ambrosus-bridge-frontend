@@ -32,7 +32,7 @@ export const Layout = ({ children, title }) => {
           >
             Ambrosus Bridge Guide
           </a>
-
+          {/* TODO && */}
           {account ? (
             <Link to="/history" className="button button_black layout__button">
               <img
@@ -54,6 +54,7 @@ export const Layout = ({ children, title }) => {
               className="layout__mobile-button-icon"
             />
           </a>
+          {/* TODO && */}
 
           {account ? (
             <Link to="/history" className="layout__mobile-button">

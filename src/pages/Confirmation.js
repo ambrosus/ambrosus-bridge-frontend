@@ -85,6 +85,7 @@ const Confirmation = () => {
               className="confirmation-info__img"
             />
             {selectedCoin.name}
+            {/* TODO && */}
             {selectedCoin.name !== receivedCoin.name ? (
               <>
                 <span>→</span>

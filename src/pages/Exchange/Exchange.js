@@ -18,7 +18,7 @@ import useError from '../../hooks/useError';
 const Exchange = () => {
   const { setError } = useError();
   const { library, account, chainId } = useWeb3React();
-
+  // TODO ?
   const networks = supportedNetworks;
 
   const isFromAmb = chainId === ambChainId;
@@ -69,7 +69,8 @@ const Exchange = () => {
     setTransactionAmount('');
   }, [selectedCoin]);
 
-  const [fee, setFee] = useState('');
+  // TODO state type
+  const [fee, setFee] = useState();
   const updateFee = async (amount) => {
     setFee(undefined);
     const { transferFee, bridgeFee, totalFee } = await getFee(
