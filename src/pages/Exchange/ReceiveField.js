@@ -9,7 +9,7 @@ import formatBalance from '../../utils/helpers/formatBalance';
 import InlineLoader from '../../components/InlineLoader';
 import useCoinBalance from '../../hooks/useCoinBalance';
 import { ReactComponent as WalletIcon } from '../../assets/svg/wallet.svg';
-import TokenIcon from '../../components/TokenIcon';
+import NetworkOrTokenIcon from '../../components/NetworkOrTokenIcon';
 
 const ReceiveField = ({
   networks = [{}],
@@ -19,9 +19,10 @@ const ReceiveField = ({
   receivedCoin = {},
   transactionAmount = '',
   setCoin = () => {},
+  changeNetwork = () => {},
 }) => {
   const [isOpenCoinModal, toggleCoinModal] = useModal();
-  const [receiveTokenList, setReceiveTokenList] = useState();
+  const [receiveTokenList, setReceiveTokenList] = useState([receivedCoin]);
 
   useEffect(async () => {
     const tokenList = [];
@@ -52,10 +53,18 @@ const ReceiveField = ({
     } else if (selectedCoin.nativeAnalog) {
       // wrapped coin in departure network
       // to wrapped coin in destination network
-      const wrappedCoin = await db.tokens.get({
+      let wrappedCoin = await db.tokens.get({
         symbol: selectedCoin.symbol,
         chainId: destinationChainId,
       });
+
+      if (wrappedCoin === undefined) {
+        changeNetwork(selectedCoin.primaryNet);
+        wrappedCoin = await db.tokens.get({
+          symbol: selectedCoin.symbol,
+          chainId: selectedCoin.primaryNet,
+        });
+      }
 
       tokenList.push(wrappedCoin);
     }
@@ -113,8 +122,8 @@ const ReceiveField = ({
             className="currency-input__coin-button"
             onClick={toggleCoinModal}
           >
-            <TokenIcon
-              code={selectedCoin.symbol}
+            <NetworkOrTokenIcon
+              symbol={selectedCoin.symbol}
               className="currency-input__currency-icon"
             />
             {receivedCoin.symbol}
@@ -138,6 +147,7 @@ ReceiveField.propTypes = {
   selectedCoin: PropTypes.object,
   receivedCoin: PropTypes.object,
   setCoin: PropTypes.func,
+  changeNetwork: PropTypes.func,
 };
 
 export default ReceiveField;

@@ -4,8 +4,6 @@ import CustomJsonRpcBatchProvider from './ethers/CustomJsonRpcBatchProvider';
 
 const { REACT_APP_ENV, REACT_APP_INFURA_KEY } = process.env;
 
-// TODO: change chainId constants for allNetworks[network].chainId in all code
-
 // ethereum read-only provider configuration
 export const ethChainId = allNetworks.eth.chainId;
 

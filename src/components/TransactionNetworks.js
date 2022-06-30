@@ -4,7 +4,7 @@ import arrowIcon from '../assets/svg/green-arrow-right.svg';
 import { ethChainId } from '../utils/providers';
 import { AmbrosusNetwork, supportedNetworks } from '../utils/networks';
 import getTxLink from '../utils/helpers/getTxLink';
-import TokenIcon from './TokenIcon';
+import NetworkOrTokenIcon from './NetworkOrTokenIcon';
 import useBridges from '../hooks/useBridges';
 
 const TransactionNetworks = ({
@@ -24,12 +24,9 @@ const TransactionNetworks = ({
       Object.keys(bridges[id]).forEach((type) => {
         if (departureContractAddress === bridges[id][type]) {
           if (type === 'native') {
-            console.log(1);
             setCurrentNetwork(AmbrosusNetwork);
             setOtherNetwork(networks.find((el) => el.chainId === +id));
-            console.log(networks, id);
           } else {
-            console.log(2);
             setCurrentNetwork(networks.find((el) => el.chainId === +id));
             setOtherNetwork(AmbrosusNetwork);
           }
@@ -46,8 +43,8 @@ const TransactionNetworks = ({
         }`}
       >
         {!!currentNetwork && (
-          <TokenIcon
-            code={currentNetwork.code}
+          <NetworkOrTokenIcon
+            symbol={currentNetwork.code}
             className="transaction-coins__img"
           />
         )}
@@ -89,8 +86,8 @@ const TransactionNetworks = ({
         }`}
       >
         {!!otherNetwork && (
-          <TokenIcon
-            code={otherNetwork.code}
+          <NetworkOrTokenIcon
+            symbol={otherNetwork.code}
             className="transaction-coins__img"
           />
         )}

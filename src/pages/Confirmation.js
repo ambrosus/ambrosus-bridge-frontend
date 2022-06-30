@@ -1,33 +1,46 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
 import TransactionNetworks from '../components/TransactionNetworks';
 import InlineLoader from '../components/InlineLoader';
-import ErrorContext from '../contexts/ErrorContext/context';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
 import { ambChainId } from '../utils/providers';
-import TokenIcon from '../components/TokenIcon';
+import NetworkOrTokenIcon from '../components/NetworkOrTokenIcon';
 import getFee from '../utils/getFee';
+import { getNetworkByChainId } from '../utils/networks';
+import useError from '../hooks/useError';
+import useBridges from '../hooks/useBridges';
 
 const Confirmation = () => {
-  const { setError } = useContext(ErrorContext);
+  const { setError } = useError();
   const { account, library, chainId } = useWeb3React();
+  const bridges = useBridges();
 
   const {
     location: {
-      state: { selectedChainId, selectedCoin, receivedCoin, transactionAmount },
+      state: {
+        destinationChainId,
+        selectedCoin,
+        receivedCoin,
+        transactionAmount,
+        foreignChainId,
+      },
     },
     goBack,
     push,
   } = useHistory();
 
+  const departureNetwork = getNetworkByChainId(chainId);
+  const isFromAmb = chainId === ambChainId;
+
   const [fee, setFee] = useState('');
   useEffect(async () => {
     const { transferFee, bridgeFee } = await getFee(
-      ambChainId === selectedChainId,
+      chainId === ambChainId,
       transactionAmount,
       selectedCoin,
+      foreignChainId,
     );
     setFee({ transferFee, bridgeFee });
   }, []);
@@ -42,12 +55,17 @@ const Confirmation = () => {
 
     setIsLocked(true);
 
+    const bridgeAddress =
+      bridges[foreignChainId][isFromAmb ? 'native' : 'foreign'];
+
     withdrawCoins(
       transactionAmount,
       selectedCoin,
       receivedCoin,
       account,
       chainId,
+      foreignChainId,
+      bridgeAddress,
       library.getSigner(),
     )
       .then((res) => {
@@ -75,41 +93,40 @@ const Confirmation = () => {
         {utils.formatUnits(bnTransactionAmount, selectedCoin.denomination)}{' '}
         {selectedCoin.symbol}
       </p>
-      <TransactionNetworks selectedChainId={selectedChainId} />
+      <TransactionNetworks selectedChainId={destinationChainId} />
       <div className="confirmation-info">
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>
           <span className="confirmation-info__value">
-            <TokenIcon
-              code={selectedCoin.symbol}
+            <NetworkOrTokenIcon
+              symbol={selectedCoin.symbol}
               className="confirmation-info__img"
             />
             {selectedCoin.name}
-            {/* TODO && */}
-            {selectedCoin.name !== receivedCoin.name ? (
+            {selectedCoin.name !== receivedCoin.name && (
               <>
                 <span>→</span>
-                <TokenIcon
-                  code={receivedCoin.symbol}
+                <NetworkOrTokenIcon
+                  symbol={receivedCoin.symbol}
                   className="confirmation-info__img"
                 />
                 {receivedCoin.name}
               </>
-            ) : null}
+            )}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
             {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
-            {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
+            {departureNetwork.symbol}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Bridge fee</span>
           <span className="confirmation-info__value">
             {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
-            {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
+            {departureNetwork.symbol}
           </span>
         </div>
         <div className="confirmation-info__item">

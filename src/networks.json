@@ -2,7 +2,7 @@
   "devnet": {
     "amb": {
       "name": "Ambrosus Devnet",
-      "chainId": 30745,
+      "chainId": 30746,
       "code": "AMB",
       "explorerUrl": "https://explorer.ambrosus-dev.io/",
       "rpcUrl": "https://network.ambrosus-dev.io",

@@ -32,8 +32,7 @@ export const Layout = ({ children, title }) => {
           >
             Ambrosus Bridge Guide
           </a>
-          {/* TODO && */}
-          {account ? (
+          {account && (
             <Link to="/history" className="button button_black layout__button">
               <img
                 src={ClockIcon}
@@ -42,7 +41,7 @@ export const Layout = ({ children, title }) => {
               />
               Transaction history
             </Link>
-          ) : null}
+          )}
 
           {/* desktop buttons block end */}
 
@@ -54,9 +53,7 @@ export const Layout = ({ children, title }) => {
               className="layout__mobile-button-icon"
             />
           </a>
-          {/* TODO && */}
-
-          {account ? (
+          {account && (
             <Link to="/history" className="layout__mobile-button">
               <img
                 src={ClockIcon}
@@ -64,7 +61,7 @@ export const Layout = ({ children, title }) => {
                 className="layout__mobile-button-icon"
               />
             </Link>
-          ) : null}
+          )}
           {/* mobile buttons block end */}
         </div>
         <div className="layout__container">{children}</div>

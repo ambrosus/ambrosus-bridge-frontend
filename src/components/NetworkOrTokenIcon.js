@@ -15,15 +15,13 @@ const iconDict = {
   BSC: BscIcon,
 };
 
-// TODO: rename code to symbol
-
-const TokenIcon = ({ code, ...props }) => {
-  const IconComponent = iconDict[code];
+const NetworkOrTokenIcon = ({ symbol, ...props }) => {
+  const IconComponent = iconDict[symbol];
   return IconComponent ? <IconComponent {...props} /> : null;
 };
 
-export default TokenIcon;
+export default NetworkOrTokenIcon;
 
-TokenIcon.propTypes = {
-  code: PropTypes.string,
+NetworkOrTokenIcon.propTypes = {
+  symbol: PropTypes.string,
 };

@@ -18,8 +18,6 @@ import useError from '../../hooks/useError';
 const Exchange = () => {
   const { setError } = useError();
   const { library, account, chainId } = useWeb3React();
-  // TODO ?
-  const networks = supportedNetworks;
 
   const isFromAmb = chainId === ambChainId;
   const [foreignChainId, setForeignChainId] = useState(
@@ -69,7 +67,6 @@ const Exchange = () => {
     setTransactionAmount('');
   }, [selectedCoin]);
 
-  // TODO state type
   const [fee, setFee] = useState();
   const updateFee = async (amount) => {
     setFee(undefined);
@@ -109,8 +106,8 @@ const Exchange = () => {
       history.push({
         pathname: '/confirm',
         state: {
-          selectedChainId: chainId,
-          foreignChainId,
+          chainId,
+          destinationChainId,
           selectedCoin,
           receivedCoin,
           transactionAmount,
@@ -132,7 +129,7 @@ const Exchange = () => {
       <div className="exchange__fields">
         <ExchangeField
           {...{
-            networks: isFromAmb ? [AmbrosusNetwork] : networks,
+            networks: isFromAmb ? [AmbrosusNetwork] : supportedNetworks,
             setChainId: changeNetwork,
             chainId,
             foreignChainId,
@@ -155,7 +152,7 @@ const Exchange = () => {
         </button>
         <ReceiveField
           {...{
-            networks: isFromAmb ? networks : [AmbrosusNetwork],
+            networks: isFromAmb ? supportedNetworks : [AmbrosusNetwork],
             setChainId: changeNetwork,
             chainId,
             destinationChainId,
@@ -163,6 +160,7 @@ const Exchange = () => {
             selectedCoin,
             receivedCoin,
             transactionAmount,
+            changeNetwork,
           }}
         />
       </div>

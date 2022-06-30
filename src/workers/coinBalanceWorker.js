@@ -4,8 +4,6 @@ import { db } from '../db';
 import providers, { batchProviders } from '../utils/providers';
 import { networksChainIds } from '../utils/networks';
 
-// TODO: decompose this to several files
-
 let currentAccount;
 
 // eslint-disable-next-line no-restricted-globals
@@ -90,7 +88,6 @@ const fetchBalancesOfNetwork = async (account, chainId) => {
   self.postMessage({ type: 'update' });
 };
 
-// TODO: refactor with ethers "attach" method
 const encodeGetErc20BalanceData = async (address, account, provider) => {
   const minABI = [
     {
