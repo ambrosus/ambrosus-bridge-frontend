@@ -9,7 +9,7 @@ import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import providers, { ambChainId, ethChainId } from '../utils/providers';
 import { getNetworkByChainId } from '../utils/networks';
-import createBridgeContractById from '../contracts';
+import { createBridgeContract } from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
 import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
@@ -48,7 +48,7 @@ const TransactionListItem = ({ tx }) => {
       setCurrentToken(currentCoin);
     }
 
-    const lastStage = await getTxLastStageStatus(getDestinationNet(tx.to, bridges), eventId);
+    const lastStage = await getTxLastStageStatus(getDestinationNet(tx.to, bridges), eventId, tx.to);
     setIsSuccess(lastStage.length);
 
     setDestinationNetTxHash(
@@ -58,7 +58,8 @@ const TransactionListItem = ({ tx }) => {
 
   const getEventData = async (eventName) => {
     const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
-    const contract = createBridgeContractById[tx.chainId](
+    const contract = createBridgeContract(
+      tx.to,
       providers[tx.chainId],
     );
 
@@ -89,7 +90,7 @@ const TransactionListItem = ({ tx }) => {
       .padStart(2, '0')}`;
   };
 
-  const getNetworkName = (chainId) => getNetworkByChainId(+chainId).name;
+  const getNetworkName = (chainId) => getNetworkByChainId(chainId).name;
 
   return (
     <div className="transaction-item">
@@ -141,7 +142,7 @@ const TransactionListItem = ({ tx }) => {
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text">From:</span>
           <span className="transaction-item__black-text">
-            {getNetworkName(tx.chainId)}
+            {!!tx.chainId && getNetworkName(tx.chainId)}
           </span>
           <IconLink
             href={getTxLink(tx.chainId === ethChainId, tx.hash)}

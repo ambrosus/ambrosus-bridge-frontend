@@ -5,10 +5,15 @@ import { Link, useParams } from 'react-router-dom';
 import TransactionNetworks from '../components/TransactionNetworks';
 import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
 import warningImg from '../assets/svg/warning.svg';
-import providers, { ambChainId, ethChainId } from '../utils/providers';
-import createBridgeContractById, {
+import providers, {
+  ambChainId,
+  bscChainId,
+  ethChainId,
+} from '../utils/providers';
+import {
   ambContractAddress,
   ethContractAddress,
+  createBridgeContract,
 } from '../contracts';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
@@ -108,10 +113,11 @@ const Status = () => {
       if (isTransferSubmitPassed) {
         currentStage = '3.2';
       }
-
+      console.log(receipt);
       const lastTx = await getTxLastStageStatus(
         refDestinationNetId.current,
         eventId,
+        receipt.to,
       );
 
       if (+currentStage >= 3.2 && lastTx.length) {
@@ -169,18 +175,21 @@ const Status = () => {
   }, [currentChainId]);
 
   const handleStatus = () => {
-    [ambChainId, ethChainId].forEach(async (networkId) => {
+    [ambChainId, ethChainId, bscChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
       if (tx && tx.blockNumber) {
-        refContract.current = await createBridgeContractById[networkId](
-          providers[networkId],
-        );
+        refContract.current = createBridgeContract(tx.to, providers[networkId]);
+
         setDepartureContractAddress(tx.to);
         refDestinationNetId.current = getDestinationNet(tx.to, bridges);
 
-        const otherContract = await createBridgeContractById[
-          refDestinationNetId.current
-        ](providers[refDestinationNetId.current]);
+        const otherContractAddress = Object.values(bridges[networkId]).find(
+          (el) => el !== tx.to,
+        );
+        const otherContract = createBridgeContract(
+          otherContractAddress,
+          providers[refDestinationNetId.current],
+        );
 
         const secondStageTime = await otherContract.timeframeSeconds();
         const lastStageTime = await otherContract.lockTime();
@@ -214,9 +223,14 @@ const Status = () => {
   };
 
   const checkTransferSubmit = async () => {
-    const otherNetworkContract = createBridgeContractById[
-      refDestinationNetId.current
-    ](providers[refDestinationNetId.current]);
+    const otherContractAddress = Object.values(bridges[currentChainId]).find(
+      (el) => el !== departureContractAddress,
+    );
+
+    const otherNetworkContract = createBridgeContract(
+      otherContractAddress,
+      providers[refDestinationNetId.current],
+    );
 
     const transferSubmitFilter =
       await otherNetworkContract.filters.TransferSubmit(refEventId.current);
@@ -285,10 +299,15 @@ const Status = () => {
 
   const handleTransferFinish = async () => {
     if (refStage.current === '3.2') {
+      const otherContractAddress = Object.values(bridges[currentChainId]).find(
+        (el) => el !== departureContractAddress,
+      );
       const lastTx = await getTxLastStageStatus(
         refDestinationNetId.current,
         refEventId.current,
+        otherContractAddress,
       );
+
       if (lastTx.length) {
         setStage('4');
         setOtherNetworkTxHash(lastTx[0].transactionHash);
