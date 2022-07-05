@@ -14,10 +14,12 @@ import ReceiveField from './ReceiveField';
 import { nativeTokensById } from '../../utils/nativeTokens';
 import getFee from '../../utils/getFee';
 import formatBalance from '../../utils/helpers/formatBalance';
+import usePrevious from '../../hooks/usePrevious';
 
 const Exchange = () => {
   const { setError } = useContext(ErrorContext);
   const { library, account, chainId } = useWeb3React();
+  const prevAccount = usePrevious(account);
 
   const networks = supportedNetworks;
   const isFromAmb = chainId === ambChainId;
@@ -43,7 +45,10 @@ const Exchange = () => {
 
   // handling account change
   useEffect(() => {
-    worker.postMessage({ type: 'restart', account });
+    if (account !== prevAccount) {
+      worker.postMessage({ type: 'restart', account });
+      setTransactionAmount('');
+    }
   }, [account]);
 
   // if network changed update transaction fee
