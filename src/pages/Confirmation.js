@@ -56,17 +56,21 @@ const Confirmation = () => {
       .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
-        if (e.code !== 4001) {
-          setError('There is some error. Please refresh and try again');
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-          });
-          setTimeout(setError, 5000, '');
-        }
-      });
+        setIsLocked(false);
 
-    setIsLocked(false);
+        let errorMsg = 'There is some error, try again later';
+        if (e.code === 4001) return; // user denied tx, do nothing
+        if (e.code === 'INSUFFICIENT_FUNDS')
+          errorMsg =
+            'Insufficient funds for transaction amount, gas and total fee';
+
+        setError(errorMsg);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+        setTimeout(setError, 7500, '');
+      });
   };
 
   return (
