@@ -12,6 +12,7 @@ const TransactionNetworks = ({
   fromHash,
   toHash,
   tokens,
+  preventRedirect,
 }) => {
   const networks = supportedNetworks;
   const bridges = useBridges();
@@ -58,6 +59,7 @@ const TransactionNetworks = ({
           <span className="transaction-coins__hash-wrapper">
             <span className="transaction-coins__hash">txHash:</span>
             <a
+              style={preventRedirect ? { pointerEvents: 'none' } : {}}
               target="_blank"
               href={getTxLink(
                 departureContractAddress === ethChainId,
@@ -132,6 +134,7 @@ TransactionNetworks.propTypes = {
   fromHash: PropTypes.string,
   toHash: PropTypes.string,
   tokens: PropTypes.object,
+  preventRedirect: PropTypes.bool,
 };
 
 export default TransactionNetworks;

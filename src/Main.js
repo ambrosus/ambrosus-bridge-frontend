@@ -16,8 +16,7 @@ import {
 } from './utils/web3ReactConnectors';
 import ConfigProvider from './contexts/ConfigContext/provider';
 import ErrorProvider from './contexts/ErrorContext/provider';
-// import useAutoLogin from './hooks/useAutoLogin';
-// TODO: refactor this ^^^
+import Mint from './pages/Mint';
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
@@ -75,7 +74,13 @@ const Routing = () => {
         component={TransactionList}
         condition={!!account}
       />
-      {/* <Route exact path="/mint" component={Mint} /> */}
+      <ConditionalRoute
+        exact
+        path="/mint"
+        component={Mint}
+        condition={!!account && process.env.REACT_APP_ENV !== 'production'}
+      />
+
       <Redirect to="/" />
     </Switch>
   ) : null;

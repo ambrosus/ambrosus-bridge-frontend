@@ -350,6 +350,7 @@ const Status = () => {
         fromHash={txHash}
         toHash={otherNetworkTxHash || null}
         tokens={transferredTokens}
+        preventRedirect={+stage < 2}
       />
       <hr />
       <div className="transaction-status">

@@ -58,7 +58,7 @@ const Confirmation = () => {
     const bridgeAddress =
       bridges[foreignChainId][isFromAmb ? 'native' : 'foreign'];
 
-    withdrawCoins(
+    await withdrawCoins(
       transactionAmount,
       selectedCoin,
       receivedCoin,

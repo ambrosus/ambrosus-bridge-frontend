@@ -3,18 +3,20 @@
     "amb": {
       "name": "Ambrosus Devnet",
       "chainId": 30746,
+      "logo": "https://media-exp1.licdn.com/dms/image/C560BAQFuR2Fncbgbtg/company-logo_200_200/0/1636390910839?e=2159024400&v=beta&t=W0WA5w02tIEH859mVypmzB_FPn29tS5JqTEYr4EYvps",
       "code": "AMB",
       "explorerUrl": "https://explorer.ambrosus-dev.io/",
       "rpcUrl": "https://network.ambrosus-dev.io",
       "rpcUrlWS": "wss://network.ambrosus-dev.io/ws"
     },
     "eth": {
-      "name": "Sepolia Ethereum",
-      "chainId": 11155111,
+      "name": "Ropsten Ethereum",
+      "chainId": 3,
+      "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
       "code": "ETH",
-      "explorerUrl": "https://sepolia.etherscan.io/",
-      "rpcUrl": "https://sepolia.ambrosus-test.io/",
-      "rpcUrlWS": "wss://sepolia.ambrosus-test.io/ws"
+      "explorerUrl": "https://ropsten.etherscan.io/",
+      "rpcUrl": "https://ropsten.infura.io/v3/",
+      "rpcUrlWS": "wss://ropsten.infura.io/ws/v3/"
     },
     "bsc": {
       "name": "Smart Chain - Testnet",
@@ -35,12 +37,13 @@
       "rpcUrlWS": "wss://network.ambrosus-test.io/ws"
     },
     "eth": {
-      "name": "Sepolia Ethereum",
-      "chainId": 11155111,
+      "name": "Ropsten Ethereum",
+      "chainId": 3,
+      "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
       "code": "ETH",
-      "explorerUrl": "https://sepolia.etherscan.io/",
-      "rpcUrl": "https://nunki.htznr.fault.dev/rpc",
-      "rpcUrlWS": "wss://nunki.htznr.fault.dev/ws"
+      "explorerUrl": "https://ropsten.etherscan.io/",
+      "rpcUrl": "https://ropsten.infura.io/v3/",
+      "rpcUrlWS": "wss://ropsten.infura.io/ws/v3/"
     },
     "bsc": {
       "name": "Smart Chain - Testnet",
