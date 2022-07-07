@@ -42,7 +42,7 @@ const Confirmation = () => {
 
     setIsLocked(true);
 
-    withdrawCoins(
+    await withdrawCoins(
       transactionAmount,
       selectedCoin,
       receivedCoin,
@@ -56,7 +56,6 @@ const Confirmation = () => {
       .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
-        setIsLocked(false);
         if (e.code !== 4001) {
           setError('There is some error. Please refresh and try again');
           window.scrollTo({
@@ -66,6 +65,8 @@ const Confirmation = () => {
           setTimeout(setError, 5000, '');
         }
       });
+
+    setIsLocked(false);
   };
 
   return (
