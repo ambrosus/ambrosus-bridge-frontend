@@ -7,16 +7,10 @@ import { allNetworks } from '../utils/networks';
 
 // TODO: decompose this to several files
 
-const ethProvider =
-  process.env.REACT_APP_ENV === 'production'
-    ? new CustomJsonRpcBatchProvider(
-        allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
-        allNetworks.eth.chainId,
-      )
-    : new CustomJsonRpcBatchProvider(
-        allNetworks.eth.rpcUrl,
-        allNetworks.eth.chainId,
-      );
+const ethProvider = new CustomJsonRpcBatchProvider(
+  allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
+  allNetworks.eth.chainId,
+);
 
 const ambProvider = new CustomJsonRpcBatchProvider(
   allNetworks.amb.rpcUrl,

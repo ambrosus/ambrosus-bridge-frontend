@@ -10,13 +10,13 @@
       "rpcUrlWS": "wss://network.ambrosus-dev.io/ws"
     },
     "eth": {
-      "name": "Sepolia Ethereum",
-      "chainId": 11155111,
+      "name": "Ropsten Ethereum",
+      "chainId": 3,
       "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
       "code": "ETH",
-      "explorerUrl": "https://sepolia.etherscan.io/",
-      "rpcUrl": "https://sepolia.ambrosus-test.io/",
-      "rpcUrlWS": "wss://sepolia.ambrosus-test.io/ws"
+      "explorerUrl": "https://ropsten.etherscan.io/",
+      "rpcUrl": "https://ropsten.infura.io/v3/",
+      "rpcUrlWS": "wss://ropsten.infura.io/ws/v3/"
     }
   },
   "testnet": {
@@ -30,13 +30,13 @@
       "rpcUrlWS": "wss://network.ambrosus-test.io/ws"
     },
     "eth": {
-      "name": "Sepolia Ethereum",
-      "chainId": 11155111,
+      "name": "Ropsten Ethereum",
+      "chainId": 3,
       "logo": "https://ethereum.org/static/bfc04ac72981166c740b189463e1f74c/448ee/eth-diamond-black-white.webp",
       "code": "ETH",
-      "explorerUrl": "https://sepolia.etherscan.io/",
-      "rpcUrl": "https://nunki.htznr.fault.dev/rpc",
-      "rpcUrlWS": "wss://nunki.htznr.fault.dev/ws"
+      "explorerUrl": "https://ropsten.etherscan.io/",
+      "rpcUrl": "https://ropsten.infura.io/v3/",
+      "rpcUrlWS": "wss://ropsten.infura.io/ws/v3/"
     }
   },
   "production": {

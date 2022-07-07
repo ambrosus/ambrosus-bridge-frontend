@@ -1,22 +1,16 @@
 import { ethers } from 'ethers';
 import { allNetworks } from './networks';
 
-const { REACT_APP_ENV, REACT_APP_INFURA_KEY } = process.env;
+const { REACT_APP_INFURA_KEY } = process.env;
 
 // TODO: change chainId constants for allNetworks[network].chainId in all code
 // ethereum read-only provider configuration
 export const ethChainId = allNetworks.eth.chainId;
 
-const ethProvider =
-  REACT_APP_ENV === 'production'
-    ? new ethers.providers.InfuraWebSocketProvider(
-        ethChainId,
-        REACT_APP_INFURA_KEY,
-      )
-    : new ethers.providers.StaticJsonRpcProvider(
-        allNetworks.eth.rpcUrl,
-        ethChainId,
-      );
+const ethProvider = new ethers.providers.InfuraWebSocketProvider(
+  ethChainId,
+  REACT_APP_INFURA_KEY,
+);
 
 // ambrosus read-only provider configuration
 export const ambChainId = allNetworks.amb.chainId;
