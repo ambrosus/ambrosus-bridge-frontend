@@ -10,12 +10,12 @@ export const ConfiguredInjectedConnector = new InjectedConnector({
 
 export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
   rpc: {
-    [allNetworks.eth.chainId]:
+    [+allNetworks.eth.chainId]:
       REACT_APP_ENV === 'production'
         ? allNetworks.eth.rpcUrl + REACT_APP_INFURA_KEY
         : allNetworks.eth.rpcUrl,
-    [allNetworks.amb.chainId]: allNetworks.amb.rpcUrl,
-    [allNetworks.bsc.chainId]: allNetworks.bsc.rpcUrl,
+    [+allNetworks.amb.chainId]: allNetworks.amb.rpcUrl,
+    [+allNetworks.bsc.chainId]: allNetworks.bsc.rpcUrl,
   },
   bridge: 'https://bridge.walletconnect.org',
   pollingInterval: 6000,
