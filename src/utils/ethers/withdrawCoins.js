@@ -24,7 +24,7 @@ const withdrawCoins = async (
     isFromAmb,
     transactionAmount,
     selectedCoin,
-    receivedCoin.chainId,
+    foreignChainId,
     false,
   );
 

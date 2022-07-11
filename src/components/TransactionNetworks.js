@@ -13,12 +13,14 @@ const TransactionNetworks = ({
   toHash,
   tokens,
   preventRedirect,
+  departureNetwork,
+  destinationNetwork,
 }) => {
   const networks = supportedNetworks;
   const bridges = useBridges();
 
-  const [currentNetwork, setCurrentNetwork] = useState(null);
-  const [otherNetwork, setOtherNetwork] = useState(null);
+  const [currentNetwork, setCurrentNetwork] = useState(departureNetwork);
+  const [otherNetwork, setOtherNetwork] = useState(destinationNetwork);
 
   useEffect(() => {
     Object.keys(bridges).forEach((id) => {
@@ -135,6 +137,8 @@ TransactionNetworks.propTypes = {
   toHash: PropTypes.string,
   tokens: PropTypes.object,
   preventRedirect: PropTypes.bool,
+  departureNetwork: PropTypes.object,
+  destinationNetwork: PropTypes.object,
 };
 
 export default TransactionNetworks;

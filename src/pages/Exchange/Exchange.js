@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
-import { AmbrosusNetwork, supportedNetworks } from '../../utils/networks';
+import {
+  AmbrosusNetwork,
+  getNetworkByChainId,
+  supportedNetworks,
+} from '../../utils/networks';
 import changeChainId from '../../utils/ethers/changeChainId';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import InlineLoader from '../../components/InlineLoader';
@@ -26,6 +30,8 @@ const Exchange = () => {
     isFromAmb ? ethChainId : chainId,
   );
   const destinationChainId = isFromAmb ? foreignChainId : ambChainId;
+
+  const departureNetwork = getNetworkByChainId(chainId);
 
   const changeNetwork = async (newChainId) => {
     if (!isFromAmb) {
@@ -113,6 +119,7 @@ const Exchange = () => {
         state: {
           chainId,
           destinationChainId,
+          foreignChainId,
           selectedCoin,
           receivedCoin,
           transactionAmount,
@@ -174,14 +181,14 @@ const Exchange = () => {
           Transfer fee:
           <span className="exchange__estimated-fee">
             {fee ? formatBalance(fee.transferFee.toString()) : <InlineLoader />}{' '}
-            {isFromAmb ? 'AMB' : 'ETH'}
+            {departureNetwork.code}
           </span>
         </div>
         <div className="exchange__estimated-fee-row">
           Bridge fee:
           <span className="exchange__estimated-fee">
             {fee ? formatBalance(fee.bridgeFee.toString()) : <InlineLoader />}{' '}
-            {isFromAmb ? 'AMB' : 'ETH'}
+            {departureNetwork.code}
           </span>
         </div>
       </div>

@@ -113,7 +113,6 @@ const Status = () => {
       if (isTransferSubmitPassed) {
         currentStage = '3.2';
       }
-      console.log(receipt);
       const lastTx = await getTxLastStageStatus(
         refDestinationNetId.current,
         eventId,

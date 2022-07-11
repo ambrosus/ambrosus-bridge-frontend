@@ -32,6 +32,7 @@ const Confirmation = () => {
   } = useHistory();
 
   const departureNetwork = getNetworkByChainId(chainId);
+  const destinationNetwork = getNetworkByChainId(destinationChainId);
   const isFromAmb = chainId === ambChainId;
 
   const [fee, setFee] = useState('');
@@ -93,7 +94,7 @@ const Confirmation = () => {
         {utils.formatUnits(bnTransactionAmount, selectedCoin.denomination)}{' '}
         {selectedCoin.symbol}
       </p>
-      <TransactionNetworks selectedChainId={destinationChainId} />
+      <TransactionNetworks {...{ departureNetwork, destinationNetwork }} />
       <div className="confirmation-info">
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>
@@ -119,14 +120,14 @@ const Confirmation = () => {
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
             {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
-            {departureNetwork.symbol}
+            {departureNetwork.code}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Bridge fee</span>
           <span className="confirmation-info__value">
             {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
-            {departureNetwork.symbol}
+            {departureNetwork.code}
           </span>
         </div>
         <div className="confirmation-info__item">

@@ -13,16 +13,10 @@ const ethProvider = new ethers.providers.InfuraWebSocketProvider(
 );
 
 // eth custom batch provider for balance worker
-const ethBatchProvider =
-  process.env.REACT_APP_ENV === 'production'
-    ? new CustomJsonRpcBatchProvider(
-        allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
-        allNetworks.eth.chainId,
-      )
-    : new CustomJsonRpcBatchProvider(
-        allNetworks.eth.rpcUrl,
-        allNetworks.eth.chainId,
-      );
+const ethBatchProvider = new CustomJsonRpcBatchProvider(
+  allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
+  allNetworks.eth.chainId,
+);
 
 // ambrosus read-only provider configuration
 export const ambChainId = allNetworks.amb.chainId;
