@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useHistory } from 'react-router';
 import { utils } from 'ethers';
 import { Link, useParams } from 'react-router-dom';
@@ -20,6 +20,7 @@ import getEventSignatureByName from '../utils/getEventSignatureByName';
 import getTransferredTokens from '../utils/helpers/getTransferredTokens';
 import useBridges from '../hooks/useBridges';
 import { getDestinationNet } from '../utils/helpers/getDestinationNet';
+import ConfigContext from '../contexts/ConfigContext/context';
 const withDrawName = 'Withdraw';
 const transferName = 'Transfer';
 const transferSubmitName = 'TransferSubmit';
@@ -29,6 +30,7 @@ const Status = () => {
   const { txHash } = useParams();
   const history = useHistory();
   const bridges = useBridges();
+  const { tokens } = useContext(ConfigContext);
 
   const [currentChainId, setCurrentChainId] = useState(0);
   const [stage, setStage] = useState('1.1');
@@ -78,7 +80,7 @@ const Status = () => {
       );
 
       if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
-        history.push('/');
+        // history.push('/');
       }
 
       const { current: contract } = refContract;
@@ -91,8 +93,12 @@ const Status = () => {
       if (withDrawEvent) {
         currentStage = '2.1';
       }
+      console.log(bridges);
       setTransferredTokens(
-        getTransferredTokens(contract.interface.parseLog(withDrawEvent).args),
+        getTransferredTokens(
+          contract.interface.parseLog(withDrawEvent).args,
+          tokens,
+        ),
       );
 
       const { eventId } = contract.interface.parseLog(withDrawEvent).args;

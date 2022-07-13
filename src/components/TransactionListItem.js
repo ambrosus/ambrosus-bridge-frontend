@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
@@ -11,17 +11,18 @@ import providers, { ambChainId, ethChainId } from '../utils/providers';
 import { getNetworkByChainId } from '../utils/networks';
 import { createBridgeContract } from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
-import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
 import getTransferredTokens from '../utils/helpers/getTransferredTokens';
 import useBridges from '../hooks/useBridges';
 import { getDestinationNet } from '../utils/helpers/getDestinationNet';
+import ConfigContext from '../contexts/ConfigContext/context';
 
 // TODO: eslint enable
 /*eslint-disable*/
 
 const TransactionListItem = ({ tx }) => {
   const bridges = useBridges();
+  const { tokens } = useContext(ConfigContext);
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
@@ -37,12 +38,11 @@ const TransactionListItem = ({ tx }) => {
     const eventId = withdrawData.args.eventId;
     const tokenAddress = withdrawData.args['tokenTo'];
 
-    setTransferredTokens(getTransferredTokens(withdrawData.args));
+    setTransferredTokens(getTransferredTokens(withdrawData.args, tokens));
+    console.log(getTransferredTokens(withdrawData.args, tokens));
     setTokenAmount(withdrawData.args.amount);
 
-    const currentCoin = Object.values(tokens).find((token) =>
-      Object.values(token.addresses).some((el) => el && el === tokenAddress),
-    );
+    const currentCoin = tokens.find((token) => token.address === tokenAddress);
 
     if (currentCoin) {
       setCurrentToken(currentCoin);
@@ -99,9 +99,7 @@ const TransactionListItem = ({ tx }) => {
           <>
             <img
               src={
-                transferredTokens.from.toLowerCase().includes('amb')
-                  ? tokens.SAMB.logo
-                  : tokens.WETH.logo
+                currentToken.logo
               }
               alt="coin"
               className="transaction-item__img"

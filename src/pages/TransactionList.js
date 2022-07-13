@@ -14,7 +14,6 @@ const TransactionList = () => {
   useEffect(() => {
     Object.keys(bridges).forEach((chainId) => {
       Object.values(bridges[chainId]).forEach((address) => {
-        console.log(address, chainId);
         getHistory(address, chainId);
       });
     });
