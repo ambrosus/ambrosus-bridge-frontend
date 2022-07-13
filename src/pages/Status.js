@@ -188,11 +188,13 @@ const Status = () => {
 
         setDepartureContractAddress(tx.to);
         refDestinationNetId.current = getDestinationNet(tx.to, bridges);
-        console.log(bridges);
+        console.log(refDestinationNetId.current);
 
-        const otherContractAddress = Object.values(bridges[networkId]).find(
-          (el) => el !== tx.to,
-        );
+        const otherContractAddress = Object.values(
+          bridges[
+            networkId !== ambChainId ? networkId : refDestinationNetId.current
+          ],
+        ).find((el) => el !== tx.to);
         const otherContract = createBridgeContract(
           otherContractAddress,
           providers[refDestinationNetId.current],
@@ -230,9 +232,13 @@ const Status = () => {
   };
 
   const checkTransferSubmit = async () => {
-    const otherContractAddress = Object.values(bridges[currentChainId]).find(
-      (el) => el !== departureContractAddress,
-    );
+    const otherContractAddress = Object.values(
+      bridges[
+        currentChainId !== ambChainId
+          ? currentChainId
+          : refDestinationNetId.current
+      ],
+    ).find((el) => el !== departureContractAddress);
 
     const otherNetworkContract = createBridgeContract(
       otherContractAddress,
