@@ -52,7 +52,9 @@ const Status = () => {
   const refFilters = useRef({});
 
   useEffect(() => {
-    setTimeout(handleStatus, 2000);
+    if (bridges) {
+      setTimeout(handleStatus, 2000);
+    }
 
     return async () => {
       clearTimeout(handleStatus);
