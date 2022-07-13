@@ -120,10 +120,18 @@ const Status = () => {
       if (isTransferSubmitPassed) {
         currentStage = '3.2';
       }
+      const otherContractAddress = Object.values(
+        bridges[
+          refDestinationNetId.current === ambChainId
+            ? currentChainId
+            : refDestinationNetId.current
+        ],
+      ).find((el) => el !== receipt.to);
+
       const lastTx = await getTxLastStageStatus(
         refDestinationNetId.current,
-        eventId,
-        receipt.to,
+        refEventId.current,
+        otherContractAddress,
       );
 
       if (+currentStage >= 3.2 && lastTx.length) {
@@ -133,14 +141,6 @@ const Status = () => {
       setStage(currentStage);
 
       const { current: provider } = refProvider;
-
-      const otherContractAddress = Object.values(
-        bridges[
-          refDestinationNetId.current === ambChainId
-            ? currentChainId
-            : refDestinationNetId.current
-        ],
-      ).find((el) => el !== receipt.to);
 
       refFilters.current = {
         withdraw: {
@@ -188,13 +188,13 @@ const Status = () => {
 
         setDepartureContractAddress(tx.to);
         refDestinationNetId.current = getDestinationNet(tx.to, bridges);
-        console.log(refDestinationNetId.current);
 
         const otherContractAddress = Object.values(
           bridges[
             networkId !== ambChainId ? networkId : refDestinationNetId.current
           ],
         ).find((el) => el !== tx.to);
+
         const otherContract = createBridgeContract(
           otherContractAddress,
           providers[refDestinationNetId.current],

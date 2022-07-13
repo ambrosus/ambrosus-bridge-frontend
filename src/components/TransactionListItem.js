@@ -39,7 +39,6 @@ const TransactionListItem = ({ tx }) => {
     const tokenAddress = withdrawData.args['tokenTo'];
 
     setTransferredTokens(getTransferredTokens(withdrawData.args, tokens));
-    console.log(getTransferredTokens(withdrawData.args, tokens));
     setTokenAmount(withdrawData.args.amount);
 
     const currentCoin = tokens.find((token) => token.address === tokenAddress);
@@ -47,8 +46,16 @@ const TransactionListItem = ({ tx }) => {
     if (currentCoin) {
       setCurrentToken(currentCoin);
     }
+    const destNetId = getDestinationNet(tx.to, bridges);
+    const otherContractAddress = Object.values(
+      bridges[
+        destNetId === ambChainId
+          ? tx.chainId
+          : destNetId
+        ],
+    ).find((el) => el !== tx.to);
 
-    const lastStage = await getTxLastStageStatus(getDestinationNet(tx.to, bridges), eventId, tx.to);
+    const lastStage = await getTxLastStageStatus(getDestinationNet(tx.to, bridges), eventId, otherContractAddress);
     setIsSuccess(lastStage.length);
 
     setDestinationNetTxHash(
