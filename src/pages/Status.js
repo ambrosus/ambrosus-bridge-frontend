@@ -312,9 +312,13 @@ const Status = () => {
 
   const handleTransferFinish = async () => {
     if (refStage.current === '3.2') {
-      const otherContractAddress = Object.values(bridges[currentChainId]).find(
-        (el) => el !== departureContractAddress,
-      );
+      const otherContractAddress = Object.values(
+        bridges[
+          currentChainId !== ambChainId
+            ? currentChainId
+            : refDestinationNetId.current
+        ],
+      ).find((el) => el !== departureContractAddress);
       const lastTx = await getTxLastStageStatus(
         refDestinationNetId.current,
         refEventId.current,
