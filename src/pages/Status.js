@@ -65,7 +65,7 @@ const Status = () => {
         providers[destId].removeAllListeners();
       }
     };
-  }, []);
+  }, [bridges]);
 
   useEffect(() => {
     refStage.current = stage;
@@ -93,7 +93,6 @@ const Status = () => {
       if (withDrawEvent) {
         currentStage = '2.1';
       }
-      console.log(bridges);
       setTransferredTokens(
         getTransferredTokens(
           contract.interface.parseLog(withDrawEvent).args,
@@ -187,6 +186,7 @@ const Status = () => {
 
         setDepartureContractAddress(tx.to);
         refDestinationNetId.current = getDestinationNet(tx.to, bridges);
+        console.log(bridges);
 
         const otherContractAddress = Object.values(bridges[networkId]).find(
           (el) => el !== tx.to,
