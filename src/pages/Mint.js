@@ -62,8 +62,6 @@ const Mint = () => {
 
     contract.deposit({
       value: ethers.utils.parseEther(formData.wrapWETHAmount),
-      gasLimit: 8000000,
-      gasPrice: 1,
     });
   };
 
