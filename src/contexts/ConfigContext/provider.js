@@ -17,7 +17,7 @@ const ConfigProvider = (props) => {
     const formattedBridges = formatBridgesFromConfig(bridges);
 
     fullfillDB(formattedTokens);
-
+    console.log(formattedTokens);
     setConfig({ tokens: formattedTokens, bridges: formattedBridges });
   }, []);
 

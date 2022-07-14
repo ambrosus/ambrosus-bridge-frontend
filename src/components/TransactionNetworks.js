@@ -23,19 +23,21 @@ const TransactionNetworks = ({
   const [otherNetwork, setOtherNetwork] = useState(destinationNetwork);
 
   useEffect(() => {
-    Object.keys(bridges).forEach((id) => {
-      Object.keys(bridges[id]).forEach((type) => {
-        if (departureContractAddress === bridges[id][type]) {
-          if (type === 'native') {
-            setCurrentNetwork(AmbrosusNetwork);
-            setOtherNetwork(networks.find((el) => el.chainId === +id));
-          } else {
-            setCurrentNetwork(networks.find((el) => el.chainId === +id));
-            setOtherNetwork(AmbrosusNetwork);
+    if (bridges) {
+      Object.keys(bridges).forEach((id) => {
+        Object.keys(bridges[id]).forEach((type) => {
+          if (departureContractAddress === bridges[id][type]) {
+            if (type === 'native') {
+              setCurrentNetwork(AmbrosusNetwork);
+              setOtherNetwork(networks.find((el) => el.chainId === +id));
+            } else {
+              setCurrentNetwork(networks.find((el) => el.chainId === +id));
+              setOtherNetwork(AmbrosusNetwork);
+            }
           }
-        }
+        });
       });
-    });
+    }
   }, [departureContractAddress]);
 
   return (
