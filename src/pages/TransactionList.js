@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
-import providers from '../utils/providers';
+import providers, { ambChainId } from '../utils/providers';
 import { createBridgeContract } from '../contracts';
 import TransactionListItem from '../components/TransactionListItem';
 import useBridges from '../hooks/useBridges';
-
 const TransactionList = () => {
   const { account } = useWeb3React();
   const bridges = useBridges();
@@ -12,12 +11,17 @@ const TransactionList = () => {
   const [transactionHistory, setTransactionHistory] = useState([]);
 
   useEffect(() => {
-    Object.keys(bridges).forEach((chainId) => {
-      Object.values(bridges[chainId]).forEach((address) => {
-        getHistory(address, chainId);
+    if (bridges) {
+      Object.keys(bridges).forEach((chainId) => {
+        Object.keys(bridges[chainId]).forEach((type) => {
+          getHistory(
+            bridges[chainId][type],
+            type === 'native' ? ambChainId : chainId,
+          );
+        });
       });
-    });
-  }, []);
+    }
+  }, [bridges]);
 
   const getHistory = (address, networkId) => {
     const contract = createBridgeContract(address, providers[networkId]);
@@ -25,6 +29,7 @@ const TransactionList = () => {
     contract
       .queryFilter(contract.filters.Withdraw(account))
       .then((response) => {
+        console.log(response);
         response.forEach(async (el) => {
           const { timestamp } = await el.getBlock();
 

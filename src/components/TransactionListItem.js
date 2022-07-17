@@ -97,7 +97,7 @@ const TransactionListItem = ({ tx }) => {
       .padStart(2, '0')}`;
   };
 
-  const getNetworkName = (chainId) => getNetworkByChainId(chainId).name;
+  const getNetworkName = (chainId) => getNetworkByChainId(+chainId).name;
 
   return (
     <div className="transaction-item">
