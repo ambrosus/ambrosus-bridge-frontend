@@ -9,10 +9,7 @@ const increaseAllowanceIfNeeded = async (
   signer,
 ) => {
   const TokenContract = createTokenContract(tokenAddress, signer);
-  const allowance = await TokenContract.allowance(
-    contractAddress,
-    tokenAddress,
-  );
+  const allowance = await TokenContract.allowance(account, contractAddress);
 
   if (
     allowance.lt(transactionAmount) &&
