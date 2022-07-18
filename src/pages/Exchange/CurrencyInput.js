@@ -13,6 +13,7 @@ const CurrencyInput = ({
   selectedCoin = {},
   isValueInvalid = false,
   onBlur = () => {},
+  foreignChainId = null,
 }) => {
   const [timer, setTimer] = useState();
   const { setError } = useError();
@@ -34,7 +35,7 @@ const CurrencyInput = ({
     }
   };
 
-  const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, value);
+  const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, foreignChainId);
   const setMax = async () => {
     try {
       const maxTxAmount = await getMaxTxAmount();
@@ -105,6 +106,7 @@ CurrencyInput.propTypes = {
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
   onBlur: PropTypes.func,
+  foreignChainId: PropTypes.number,
 };
 
 export default CurrencyInput;
