@@ -50,6 +50,7 @@ const withdrawCoins = async (
   // if wrapped coin
   await increaseAllowanceIfNeeded(
     account,
+    selectedCoin.address,
     contractAddress,
     bnTransactionAmount,
     signer,
