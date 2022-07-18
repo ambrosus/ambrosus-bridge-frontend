@@ -1,3 +1,4 @@
+import { utils } from 'ethers';
 import { allNetworks } from '../networks';
 
 const formatTokenListFromConfig = (tokens) =>
@@ -26,9 +27,9 @@ const formatTokenListFromConfig = (tokens) =>
 
     return [
       ...list,
-      ...(token.addresses.amb ? [ambTokenEntity] : []),
-      ...(token.addresses.eth ? [ethTokenEntity] : []),
-      ...(token.addresses.bsc ? [bscTokenEntity] : []),
+      ...(utils.isAddress(token.addresses.amb) ? [ambTokenEntity] : []),
+      ...(utils.isAddress(token.addresses.eth) ? [ethTokenEntity] : []),
+      ...(utils.isAddress(token.addresses.bsc) ? [bscTokenEntity] : []),
     ];
   }, []);
 
