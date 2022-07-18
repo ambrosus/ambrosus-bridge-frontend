@@ -109,7 +109,9 @@ const TransactionNetworks = ({
             ) : (
               <a
                 target="_blank"
-                href={`${departureNetwork.explorerUrl}tx/${toHash}`}
+                href={`${
+                  destinationNetwork ? destinationNetwork.explorerUrl : ''
+                }tx/${toHash}`}
               >
                 {toHash}
               </a>
