@@ -14,6 +14,7 @@ const ExchangeField = ({
   networks = [{}],
   setChainId = () => {},
   chainId = 0,
+  foreignChainId = 0,
   selectedCoin = {},
   transactionAmount = '',
   setTransactionAmount = () => {},
@@ -65,6 +66,7 @@ const ExchangeField = ({
           balance={balance}
           onBlur={updateFee}
           setError={setError}
+          foreignChainId={foreignChainId}
         />
       </div>
     </>
@@ -75,6 +77,7 @@ ExchangeField.propTypes = {
   networks: PropTypes.arrayOf(PropTypes.object),
   setChainId: PropTypes.func,
   chainId: PropTypes.number,
+  foreignChainId: PropTypes.number,
   transactionAmount: PropTypes.string,
   setTransactionAmount: PropTypes.func,
   selectedCoin: PropTypes.object,

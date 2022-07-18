@@ -51,6 +51,7 @@ const withdrawCoins = async (
   await increaseAllowanceIfNeeded(
     account,
     selectedCoin.address,
+    contractAddress,
     bnTransactionAmount,
     signer,
   );
