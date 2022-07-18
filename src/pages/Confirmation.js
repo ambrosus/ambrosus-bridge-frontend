@@ -11,6 +11,7 @@ import getFee from '../utils/getFee';
 import { getNetworkByChainId } from '../utils/networks';
 import useError from '../hooks/useError';
 import useBridges from '../hooks/useBridges';
+import formatAddress from '../utils/helpers/formatAddres';
 
 const Confirmation = () => {
   const { setError } = useError();
@@ -132,7 +133,9 @@ const Confirmation = () => {
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Destination</span>
-          <span className="confirmation-info__value">{account}</span>
+          <span className="confirmation-info__value">
+            {window.innerWidth < 410 ? formatAddress(account) : account}
+          </span>
         </div>
       </div>
       {isLocked ? (
