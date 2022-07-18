@@ -2,20 +2,18 @@ import { ethers } from 'ethers';
 import { allNetworks } from './networks';
 import CustomJsonRpcBatchProvider from './ethers/CustomJsonRpcBatchProvider';
 
-const { REACT_APP_INFURA_KEY } = process.env;
-
 // ethereum read-only provider configuration
 export const ethChainId = allNetworks.eth.chainId;
 
-const ethProvider = new ethers.providers.InfuraWebSocketProvider(
+const ethProvider = new ethers.providers.StaticJsonRpcProvider(
+  allNetworks.eth.rpcUrl,
   ethChainId,
-  REACT_APP_INFURA_KEY,
 );
 
 // eth custom batch provider for balance worker
 const ethBatchProvider = new CustomJsonRpcBatchProvider(
-  allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
-  allNetworks.eth.chainId,
+  allNetworks.eth.rpcUrl,
+  ethChainId,
 );
 
 // ambrosus read-only provider configuration

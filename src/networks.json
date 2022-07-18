@@ -68,15 +68,15 @@
       "chainId": 1,
       "code": "ETH",
       "explorerUrl": "https://etherscan.io/",
-      "rpcUrl": "https://mainnet.infura.io/v3/",
-      "rpcUrlWS": "wss://mainnet.infura.io/v3/"
+      "rpcUrl": "https://ambrosus.gynn.io/bnbu/chs_o9ZYdhOkuGXc1CbYMoYTJnb0SvoHHvsXjJwxJ",
+      "rpcUrlWS": ""
     },
     "bsc": {
       "name": "Smart Chain",
       "chainId": 56,
       "code": "BSC",
       "explorerUrl": "https://bscscan.com/",
-      "rpcUrl": "",
+      "rpcUrl": "https://ambrosus.gynn.io/bnbu/chs_o9ZYdhOkuGXc1CbYMoYTJnb0SvoHHvsXjJwxJ",
       "rpcUrlWS": ""
     }
   }
