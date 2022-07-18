@@ -46,7 +46,11 @@ export const Layout = ({ children, title }) => {
           {/* desktop buttons block end */}
 
           {/* mobile buttons block start */}
-          <a href="/" className="layout__mobile-button">
+          <a
+            href="https://blog.ambrosus.io/ambrosus-guide-connecting-and-transacting-via-the-amb-bridge-89f27a60b8d2"
+            target="_blank"
+            className="layout__mobile-button"
+          >
             <img
               src={BookIcon}
               alt="book icon"
