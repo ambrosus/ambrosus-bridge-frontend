@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
-import providers, { ambChainId, ethChainId } from '../utils/providers';
-import createBridgeContract, {
-  ambContractAddress,
-  ethContractAddress,
-} from '../contracts';
+import providers, { ambChainId } from '../utils/providers';
+import { createBridgeContract } from '../contracts';
 import TransactionListItem from '../components/TransactionListItem';
-
+import useBridges from '../hooks/useBridges';
 const TransactionList = () => {
   const { account } = useWeb3React();
+  const bridges = useBridges();
+
   const [transactionHistory, setTransactionHistory] = useState([]);
 
   useEffect(() => {
-    getHistory(ethChainId);
-    getHistory(ambChainId);
-  }, []);
+    if (bridges) {
+      Object.keys(bridges).forEach((chainId) => {
+        Object.keys(bridges[chainId]).forEach((type) => {
+          getHistory(
+            bridges[chainId][type],
+            type === 'native' ? ambChainId : chainId,
+          );
+        });
+      });
+    }
+  }, [bridges]);
 
-  const getHistory = (networkId) => {
-    const provider = providers[networkId];
-    const contract = createBridgeContract[networkId](provider);
+  const getHistory = (address, networkId) => {
+    const contract = createBridgeContract(address, providers[networkId]);
 
     contract
       .queryFilter(contract.filters.Withdraw(account))
@@ -27,15 +33,10 @@ const TransactionList = () => {
           const { timestamp } = await el.getBlock();
 
           el.getTransaction().then((trans) => {
-            if (
-              trans.to === ambContractAddress ||
-              trans.to === ethContractAddress
-            ) {
-              setTransactionHistory((state) => [
-                ...state,
-                { ...trans, timestamp, args: el.args },
-              ]);
-            }
+            setTransactionHistory((state) => [
+              ...state,
+              { ...trans, timestamp, args: el.args },
+            ]);
           });
         });
       });

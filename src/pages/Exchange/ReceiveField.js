@@ -5,56 +5,67 @@ import TokenSelect from './TokenSelect';
 import useModal from '../../hooks/useModal';
 import { db } from '../../db';
 import ChevronIcon from '../../assets/svg/chevron.svg';
-import { ambChainId, ethChainId } from '../../utils/providers';
 import formatBalance from '../../utils/helpers/formatBalance';
 import InlineLoader from '../../components/InlineLoader';
 import useCoinBalance from '../../hooks/useCoinBalance';
 import { ReactComponent as WalletIcon } from '../../assets/svg/wallet.svg';
-import TokenIcon from '../../components/TokenIcon';
+import NetworkOrTokenIcon from '../../components/NetworkOrTokenIcon';
 
 const ReceiveField = ({
   networks = [{}],
   setChainId = () => {},
-  selectedChainId = 0,
+  destinationChainId = 0,
   selectedCoin = {},
   receivedCoin = {},
   transactionAmount = '',
   setCoin = () => {},
+  changeNetwork = () => {},
 }) => {
   const [isOpenCoinModal, toggleCoinModal] = useModal();
-  const [receiveTokenList, setReceiveTokenList] = useState();
-  const receiveChainId =
-    selectedChainId === ambChainId ? ethChainId : ambChainId;
+  const [receiveTokenList, setReceiveTokenList] = useState([receivedCoin]);
 
   useEffect(async () => {
     const tokenList = [];
     if (
-      selectedCoin.primaryNet !== selectedChainId &&
+      selectedCoin.primaryNet === destinationChainId &&
       selectedCoin.nativeAnalog
     ) {
+      // wrapped coin in departure network
+      // to native coin in destination network (with unwrap)
       const nativeCoin = await db.nativeTokens.get({
         symbol: selectedCoin.nativeAnalog,
-        chainId: receiveChainId,
+        chainId: destinationChainId,
       });
       const wrappedCoin = await db.tokens.get({
         symbol: selectedCoin.symbol,
-        chainId: receiveChainId,
+        chainId: destinationChainId,
       });
+
       tokenList.push(wrappedCoin, nativeCoin);
     } else if (selectedCoin.wrappedAnalog) {
+      // native coin in departure network
+      // to wrapped coin in destination network
       const wrappedCoin = await db.tokens.get({
         symbol: selectedCoin.wrappedAnalog,
-        chainId: receiveChainId,
+        chainId: destinationChainId,
       });
       tokenList.push(wrappedCoin);
-    } else if (
-      selectedCoin.primaryNet === selectedChainId &&
-      selectedCoin.nativeAnalog
-    ) {
-      const wrappedCoin = await db.tokens.get({
+    } else if (selectedCoin.nativeAnalog) {
+      // wrapped coin in departure network
+      // to wrapped coin in destination network
+      let wrappedCoin = await db.tokens.get({
         symbol: selectedCoin.symbol,
-        chainId: receiveChainId,
+        chainId: destinationChainId,
       });
+
+      if (wrappedCoin === undefined) {
+        changeNetwork(selectedCoin.primaryNet);
+        wrappedCoin = await db.tokens.get({
+          symbol: selectedCoin.symbol,
+          chainId: selectedCoin.primaryNet,
+        });
+      }
+
       tokenList.push(wrappedCoin);
     }
     setReceiveTokenList(tokenList);
@@ -77,7 +88,7 @@ const ReceiveField = ({
         <NetworkSelect
           networks={networks}
           setChainId={setChainId}
-          selectedChainId={selectedChainId}
+          selectedChainId={destinationChainId}
         />
 
         <div className="exchange-field__balance-container">
@@ -111,8 +122,8 @@ const ReceiveField = ({
             className="currency-input__coin-button"
             onClick={toggleCoinModal}
           >
-            <TokenIcon
-              code={selectedCoin.symbol}
+            <NetworkOrTokenIcon
+              symbol={selectedCoin.symbol}
               className="currency-input__currency-icon"
             />
             {receivedCoin.symbol}
@@ -131,11 +142,12 @@ const ReceiveField = ({
 ReceiveField.propTypes = {
   networks: PropTypes.arrayOf(PropTypes.object),
   setChainId: PropTypes.func,
-  selectedChainId: PropTypes.number,
+  destinationChainId: PropTypes.number,
   transactionAmount: PropTypes.string,
   selectedCoin: PropTypes.object,
   receivedCoin: PropTypes.object,
   setCoin: PropTypes.func,
+  changeNetwork: PropTypes.func,
 };
 
 export default ReceiveField;

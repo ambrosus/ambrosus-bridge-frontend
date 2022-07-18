@@ -1,9 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
-import ErrorContext from '../../contexts/ErrorContext';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
-import { AmbrosusNetwork, supportedNetworks } from '../../utils/networks';
+import {
+  AmbrosusNetwork,
+  getNetworkByChainId,
+  supportedNetworks,
+} from '../../utils/networks';
 import changeChainId from '../../utils/ethers/changeChainId';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import InlineLoader from '../../components/InlineLoader';
@@ -14,18 +17,31 @@ import ReceiveField from './ReceiveField';
 import { nativeTokensById } from '../../utils/nativeTokens';
 import getFee from '../../utils/getFee';
 import formatBalance from '../../utils/helpers/formatBalance';
+import useError from '../../hooks/useError';
 import usePrevious from '../../hooks/usePrevious';
 
 const Exchange = () => {
-  const { setError } = useContext(ErrorContext);
+  const { setError } = useError();
   const { library, account, chainId } = useWeb3React();
   const prevAccount = usePrevious(account);
 
-  const networks = supportedNetworks;
   const isFromAmb = chainId === ambChainId;
+  const [foreignChainId, setForeignChainId] = useState(
+    isFromAmb ? ethChainId : chainId,
+  );
+  const destinationChainId = isFromAmb ? foreignChainId : ambChainId;
+
+  const departureNetwork = getNetworkByChainId(chainId);
+
+  const changeNetwork = async (newChainId) => {
+    if (!isFromAmb) {
+      await changeChainId(library.provider, newChainId);
+    }
+    setForeignChainId(newChainId);
+  };
 
   const toggleDirection = async () => {
-    const newChainId = isFromAmb ? ethChainId : ambChainId;
+    const newChainId = isFromAmb ? foreignChainId : ambChainId;
     await changeChainId(library.provider, newChainId);
   };
 
@@ -38,6 +54,7 @@ const Exchange = () => {
   // starting balance-fetching worker and clearing it on unmount
   useEffect(() => {
     worker.postMessage({ type: 'start', account });
+
     return () => {
       worker.postMessage({ type: 'stop' });
     };
@@ -54,24 +71,25 @@ const Exchange = () => {
   // if network changed update transaction fee
   useEffect(() => {
     setCoin(nativeTokensById[chainId]);
-  }, [chainId]);
+  }, [chainId, foreignChainId]);
 
   // reset value if coin changed
   useEffect(() => {
     setTransactionAmount('');
   }, [selectedCoin]);
 
-  const [fee, setFee] = useState('');
+  const [fee, setFee] = useState();
   const updateFee = async (amount) => {
     setFee(undefined);
     const { transferFee, bridgeFee, totalFee } = await getFee(
       isFromAmb,
       amount,
       selectedCoin,
+      foreignChainId,
     );
     setFee({ transferFee, bridgeFee, totalFee });
   };
-  useEffect(() => updateFee(transactionAmount), [chainId]);
+  useEffect(() => updateFee(transactionAmount), [chainId, foreignChainId]);
   useEffect(() => updateFee('0.001'), [selectedCoin]);
 
   const [isValueInvalid, setIsInvalid] = useState(false);
@@ -99,7 +117,9 @@ const Exchange = () => {
       history.push({
         pathname: '/confirm',
         state: {
-          selectedChainId: chainId,
+          chainId,
+          destinationChainId,
+          foreignChainId,
           selectedCoin,
           receivedCoin,
           transactionAmount,
@@ -121,8 +141,10 @@ const Exchange = () => {
       <div className="exchange__fields">
         <ExchangeField
           {...{
-            networks: isFromAmb ? [AmbrosusNetwork] : networks,
-            selectedChainId: chainId,
+            networks: isFromAmb ? [AmbrosusNetwork] : supportedNetworks,
+            setChainId: changeNetwork,
+            chainId,
+            foreignChainId,
             selectedCoin,
             transactionAmount,
             setTransactionAmount,
@@ -142,12 +164,15 @@ const Exchange = () => {
         </button>
         <ReceiveField
           {...{
-            networks: isFromAmb ? networks : [AmbrosusNetwork],
-            selectedChainId: chainId,
+            networks: isFromAmb ? supportedNetworks : [AmbrosusNetwork],
+            setChainId: changeNetwork,
+            chainId,
+            destinationChainId,
             setCoin: setReceivedCoin,
             selectedCoin,
             receivedCoin,
             transactionAmount,
+            changeNetwork,
           }}
         />
       </div>
@@ -156,14 +181,14 @@ const Exchange = () => {
           Transfer fee:
           <span className="exchange__estimated-fee">
             {fee ? formatBalance(fee.transferFee.toString()) : <InlineLoader />}{' '}
-            {isFromAmb ? 'AMB' : 'ETH'}
+            {departureNetwork.code}
           </span>
         </div>
         <div className="exchange__estimated-fee-row">
           Bridge fee:
           <span className="exchange__estimated-fee">
             {fee ? formatBalance(fee.bridgeFee.toString()) : <InlineLoader />}{' '}
-            {isFromAmb ? 'AMB' : 'ETH'}
+            {departureNetwork.code}
           </span>
         </div>
       </div>

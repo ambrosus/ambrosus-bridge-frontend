@@ -5,7 +5,7 @@
   margin-bottom: 1.5rem;
   font-family: "Proxima Nova", 'sans-serif';
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 750px) {
     flex-direction: column;
   }
 
@@ -19,7 +19,7 @@
     width: 10rem;
     position: relative;
 
-    @media screen and (max-width: 450px) {
+    @media screen and (max-width: 750px) {
       width: 100%;
     }
 
@@ -62,7 +62,7 @@
   &__arrow {
     margin: 0.85rem;
 
-    @media screen and (max-width: 450px) {
+    @media screen and (max-width: 750px) {
       transform: rotate(90deg);
     }
   }

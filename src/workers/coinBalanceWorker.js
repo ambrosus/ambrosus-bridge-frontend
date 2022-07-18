@@ -1,26 +1,8 @@
 import { ethers } from 'ethers';
 import Dexie from 'dexie';
 import { db } from '../db';
-import providers from '../utils/providers';
-import CustomJsonRpcBatchProvider from '../utils/ethers/CustomJsonRpcBatchProvider';
-import { allNetworks } from '../utils/networks';
-
-// TODO: decompose this to several files
-
-const ethProvider = new CustomJsonRpcBatchProvider(
-  allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
-  allNetworks.eth.chainId,
-);
-
-const ambProvider = new CustomJsonRpcBatchProvider(
-  allNetworks.amb.rpcUrl,
-  allNetworks.amb.chainId,
-);
-
-const batchProviders = {
-  [allNetworks.eth.chainId]: ethProvider,
-  [allNetworks.amb.chainId]: ambProvider,
-};
+import providers, { batchProviders } from '../utils/providers';
+import { networksChainIds } from '../utils/networks';
 
 let currentAccount;
 
@@ -42,7 +24,7 @@ self.addEventListener('message', ({ data: message }) => {
 
 const startBalanceMonitoring = async (account) => {
   // eslint-disable-next-line no-restricted-syntax
-  for (const chainId of [allNetworks.eth.chainId, allNetworks.amb.chainId]) {
+  for (const chainId of networksChainIds) {
     fetchBalancesOfNetwork(account, chainId);
     providers[chainId].on('block', () =>
       fetchBalancesOfNetwork(account, chainId),
@@ -52,7 +34,7 @@ const startBalanceMonitoring = async (account) => {
 
 const stopBalanceMonitoring = async () => {
   // eslint-disable-next-line no-restricted-syntax
-  for (const chainId of [allNetworks.amb.chainId, allNetworks.eth.chainId]) {
+  for (const chainId of networksChainIds) {
     providers[chainId].off('block');
   }
 };
@@ -106,7 +88,6 @@ const fetchBalancesOfNetwork = async (account, chainId) => {
   self.postMessage({ type: 'update' });
 };
 
-// TODO: refactor with ethers "attach" method
 const encodeGetErc20BalanceData = async (address, account, provider) => {
   const minABI = [
     {

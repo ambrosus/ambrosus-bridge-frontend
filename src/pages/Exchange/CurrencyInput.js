@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../../assets/svg/chevron.svg';
 import useGetMaxTxAmount from '../../hooks/useSetMax';
-import TokenIcon from '../../components/TokenIcon';
+import NetworkOrTokenIcon from '../../components/NetworkOrTokenIcon';
+import useError from '../../hooks/useError';
 
 const CurrencyInput = ({
   disabled = false,
@@ -12,9 +13,10 @@ const CurrencyInput = ({
   selectedCoin = {},
   isValueInvalid = false,
   onBlur = () => {},
-  setError = () => {},
+  foreignChainId = null,
 }) => {
   const [timer, setTimer] = useState();
+  const { setError } = useError();
 
   const handleInput = ({ target: { value: newValue } }) => {
     const formattedValue = newValue.replace(',', '.');
@@ -33,14 +35,13 @@ const CurrencyInput = ({
     }
   };
 
-  const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, value);
+  const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, foreignChainId);
   const setMax = async () => {
     try {
       const maxTxAmount = await getMaxTxAmount();
       onChange(maxTxAmount);
       onBlur(maxTxAmount);
     } catch (e) {
-      // TODO: make setError hook
       setError('Your balance is smaller than total fee');
       window.scrollTo({
         top: 0,
@@ -82,8 +83,8 @@ const CurrencyInput = ({
         className="currency-input__coin-button"
         onClick={changeCoin}
       >
-        <TokenIcon
-          code={selectedCoin.symbol}
+        <NetworkOrTokenIcon
+          symbol={selectedCoin.symbol}
           className="currency-input__currency-icon"
         />
         {selectedCoin.symbol}
@@ -105,7 +106,7 @@ CurrencyInput.propTypes = {
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
   onBlur: PropTypes.func,
-  setError: PropTypes.func,
+  foreignChainId: PropTypes.number,
 };
 
 export default CurrencyInput;

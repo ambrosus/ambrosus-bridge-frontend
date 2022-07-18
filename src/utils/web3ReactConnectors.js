@@ -1,11 +1,11 @@
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { allNetworks } from './networks';
+import { allNetworks, networksChainIds } from './networks';
 
 const { REACT_APP_INFURA_KEY, REACT_APP_ENV } = process.env;
 
 export const ConfiguredInjectedConnector = new InjectedConnector({
-  supportedChainIds: [allNetworks.eth.chainId, allNetworks.amb.chainId],
+  supportedChainIds: networksChainIds,
 });
 
 export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
@@ -15,6 +15,7 @@ export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
         ? allNetworks.eth.rpcUrl + REACT_APP_INFURA_KEY
         : allNetworks.eth.rpcUrl,
     [+allNetworks.amb.chainId]: allNetworks.amb.rpcUrl,
+    [+allNetworks.bsc.chainId]: allNetworks.bsc.rpcUrl,
   },
   bridge: 'https://bridge.walletconnect.org',
   pollingInterval: 6000,

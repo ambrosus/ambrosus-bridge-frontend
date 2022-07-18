@@ -27,6 +27,7 @@ const changeChainId = async (provider, chainId) => {
             decimals: nativeCoin.denomination,
           },
           rpcUrls: [selectedNetwork.rpcUrl],
+          blockExplorerUrls: [selectedNetwork.explorerUrl],
         },
       ],
     });

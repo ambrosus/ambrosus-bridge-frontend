@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { ErrorWidget } from './ErrorWidget';
+import useError from '../hooks/useError';
 import ClockIcon from '../assets/svg/layout__clock-icon.svg';
 import BookIcon from '../assets/svg/layout__book-icon.svg';
 import PyramidIllustration from '../assets/svg/layout__pyramid.svg';
@@ -12,8 +13,9 @@ import SphereIllustration from '../assets/svg/layout__sphere.svg';
 
 import '../styles/Main.scss';
 
-export const Layout = ({ children, title, error }) => {
+export const Layout = ({ children, title }) => {
   const { account } = useWeb3React();
+  const { error } = useError();
   return (
     <div className="root">
       <ErrorWidget error={error} />
@@ -30,8 +32,7 @@ export const Layout = ({ children, title, error }) => {
           >
             Ambrosus Bridge Guide
           </a>
-
-          {account ? (
+          {account && (
             <Link to="/history" className="button button_black layout__button">
               <img
                 src={ClockIcon}
@@ -40,20 +41,23 @@ export const Layout = ({ children, title, error }) => {
               />
               Transaction history
             </Link>
-          ) : null}
+          )}
 
           {/* desktop buttons block end */}
 
           {/* mobile buttons block start */}
-          <a href="/" className="layout__mobile-button">
+          <a
+            href="https://blog.ambrosus.io/ambrosus-guide-connecting-and-transacting-via-the-amb-bridge-89f27a60b8d2"
+            target="_blank"
+            className="layout__mobile-button"
+          >
             <img
               src={BookIcon}
               alt="book icon"
               className="layout__mobile-button-icon"
             />
           </a>
-
-          {account ? (
+          {account && (
             <Link to="/history" className="layout__mobile-button">
               <img
                 src={ClockIcon}
@@ -61,7 +65,7 @@ export const Layout = ({ children, title, error }) => {
                 className="layout__mobile-button-icon"
               />
             </Link>
-          ) : null}
+          )}
           {/* mobile buttons block end */}
         </div>
         <div className="layout__container">{children}</div>
@@ -84,7 +88,6 @@ export const Layout = ({ children, title, error }) => {
 Layout.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
-  error: PropTypes.string,
 };
 
 export default Layout;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../../assets/svg/chevron.svg';
-import TokenIcon from '../../components/TokenIcon';
+import NetworkOrTokenIcon from '../../components/NetworkOrTokenIcon';
 
 const NetworkSelect = ({
   networks = [{}],
@@ -31,7 +31,10 @@ const NetworkSelect = ({
             key={`select-option-${chainId}`}
             onClick={() => setChainId(chainId)}
           >
-            <TokenIcon code={code} className="network-select__currency-icon" />
+            <NetworkOrTokenIcon
+              symbol={code}
+              className="network-select__currency-icon"
+            />
             {window.innerWidth < 1279 ? name.split(' ')[0] : name}
           </button>
         ))}

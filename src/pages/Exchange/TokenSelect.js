@@ -6,7 +6,7 @@ import CrossIcon from '../../assets/svg/cross.svg';
 import InlineLoader from '../../components/InlineLoader';
 import formatBalance from '../../utils/helpers/formatBalance';
 import useCoinBalance from '../../hooks/useCoinBalance';
-import TokenIcon from '../../components/TokenIcon';
+import NetworkOrTokenIcon from '../../components/NetworkOrTokenIcon';
 
 const TokenSelect = ({
   isOpen = false,
@@ -125,8 +125,8 @@ const TokenButton = ({ token, setCoin, toggle }) => {
       }}
       className="token-select__token"
     >
-      <TokenIcon
-        code={token.symbol}
+      <NetworkOrTokenIcon
+        symbol={token.symbol}
         alt="#"
         className="token-select__token-icon"
       />

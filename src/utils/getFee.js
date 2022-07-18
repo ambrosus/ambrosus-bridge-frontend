@@ -1,12 +1,14 @@
 import { BigNumber, utils } from 'ethers';
+import { bscChainId, ethChainId } from './providers';
 
 const getFee = (
   isFromAmb,
   transactionAmount,
   selectedCoin,
+  foreignChainId,
   isAmountWithFees = false,
 ) =>
-  fetch('https://relay-eth.ambrosus-dev.io/fees', {
+  fetch(relayUrlByChainId[foreignChainId], {
     method: 'POST',
     body: JSON.stringify({
       isAmb: isFromAmb,
@@ -33,5 +35,10 @@ const getFee = (
         signature,
       };
     });
+
+const relayUrlByChainId = {
+  [bscChainId]: 'https://relay-bsc.ambrosus-dev.io/fees',
+  [ethChainId]: 'https://relay-eth.ambrosus-dev.io/fees',
+};
 
 export default getFee;
