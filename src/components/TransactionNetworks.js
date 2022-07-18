@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import arrowIcon from '../assets/svg/green-arrow-right.svg';
-import { ethChainId } from '../utils/providers';
 import { AmbrosusNetwork, supportedNetworks } from '../utils/networks';
-import getTxLink from '../utils/helpers/getTxLink';
 import NetworkOrTokenIcon from './NetworkOrTokenIcon';
 import useBridges from '../hooks/useBridges';
 
@@ -65,10 +63,9 @@ const TransactionNetworks = ({
             <a
               style={preventRedirect ? { pointerEvents: 'none' } : {}}
               target="_blank"
-              href={getTxLink(
-                departureContractAddress === ethChainId,
-                fromHash,
-              )}
+              href={`${
+                departureNetwork ? departureNetwork.explorerUrl : ''
+              }tx/${fromHash}`}
             >
               {fromHash}
             </a>
@@ -112,10 +109,7 @@ const TransactionNetworks = ({
             ) : (
               <a
                 target="_blank"
-                href={getTxLink(
-                  departureContractAddress !== ethChainId,
-                  toHash,
-                )}
+                href={`${departureNetwork.explorerUrl}tx/${toHash}`}
               >
                 {toHash}
               </a>

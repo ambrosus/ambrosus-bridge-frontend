@@ -1,8 +1,10 @@
 import { allNetworks } from '../networks';
 
-const { eth, amb } = allNetworks;
-
-const getTxLink = (isEth, hash) =>
-  `${isEth ? eth.explorerUrl : amb.explorerUrl}tx/${hash}`;
+const getTxLink = (chainId, hash) => {
+  const explorerLink = Object.values(allNetworks).find(
+    (el) => el.chainId === chainId,
+  );
+  return explorerLink ? `${explorerLink.explorerUrl}tx/${hash}` : null;
+};
 
 export default getTxLink;

@@ -29,7 +29,6 @@ const TransactionList = () => {
     contract
       .queryFilter(contract.filters.Withdraw(account))
       .then((response) => {
-        console.log(response);
         response.forEach(async (el) => {
           const { timestamp } = await el.getBlock();
 

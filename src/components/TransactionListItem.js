@@ -7,7 +7,7 @@ import checkIcon from '../assets/svg/check.svg';
 import spinnerIcon from '../assets/svg/spinner.svg';
 import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
-import providers, { ambChainId, ethChainId } from '../utils/providers';
+import providers, { ambChainId } from '../utils/providers';
 import { getNetworkByChainId } from '../utils/networks';
 import { createBridgeContract } from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
@@ -150,7 +150,7 @@ const TransactionListItem = ({ tx }) => {
             {!!tx.chainId && getNetworkName(tx.chainId)}
           </span>
           <IconLink
-            href={getTxLink(tx.chainId === ethChainId, tx.hash)}
+            href={getTxLink(tx.chainId, tx.hash)}
             text="txHash"
           />
         </div>
@@ -165,7 +165,7 @@ const TransactionListItem = ({ tx }) => {
             (destinationNetTxHash ? (
               <IconLink
                 href={getTxLink(
-                  tx.chainId !== ethChainId,
+                  +getDestinationNet(tx.to, bridges),
                   destinationNetTxHash,
                 )}
                 text="txHash"

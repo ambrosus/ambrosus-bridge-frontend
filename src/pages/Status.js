@@ -21,6 +21,8 @@ import getTransferredTokens from '../utils/helpers/getTransferredTokens';
 import useBridges from '../hooks/useBridges';
 import { getDestinationNet } from '../utils/helpers/getDestinationNet';
 import ConfigContext from '../contexts/ConfigContext/context';
+import { allNetworks } from '../utils/networks';
+
 const withDrawName = 'Withdraw';
 const transferName = 'Transfer';
 const transferSubmitName = 'TransferSubmit';
@@ -368,6 +370,12 @@ const Status = () => {
         toHash={otherNetworkTxHash || null}
         tokens={transferredTokens}
         preventRedirect={+stage < 2}
+        departureNetwork={Object.values(allNetworks).find(
+          (el) => el.chainId === +currentChainId,
+        )}
+        destinationNetwork={Object.values(allNetworks).find(
+          (el) => el.chainId === +refDestinationNetId.current,
+        )}
       />
       <hr />
       <div className="transaction-status">
