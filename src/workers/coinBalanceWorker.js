@@ -37,6 +37,7 @@ const stopBalanceMonitoring = async () => {
   for (const chainId of networksChainIds) {
     providers[chainId].off('block');
   }
+  db.nativeTokens.toCollection().modify({ balance: '' });
 };
 
 const fetchBalancesOfNetwork = async (account, chainId) => {
