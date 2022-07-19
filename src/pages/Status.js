@@ -7,7 +7,7 @@ import { ReactComponent as ClockIcon } from '../assets/svg/clock.svg';
 import warningImg from '../assets/svg/warning.svg';
 import providers, {
   ambChainId,
-  bscChainId,
+  // bscChainId,
   ethChainId,
 } from '../utils/providers';
 import {
@@ -182,8 +182,10 @@ const Status = () => {
     }
   }, [currentChainId]);
 
+  // TODO: BSC
+  // [ambChainId, ethChainId, bscChainId]
   const handleStatus = () => {
-    [ambChainId, ethChainId, bscChainId].forEach(async (networkId) => {
+    [ambChainId, ethChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
       if (tx && tx.blockNumber) {
         refContract.current = createBridgeContract(tx.to, providers[networkId]);

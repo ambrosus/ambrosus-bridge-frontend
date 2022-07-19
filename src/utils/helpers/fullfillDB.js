@@ -20,14 +20,14 @@ const fulfillDB = (tokenList) => {
       wrappedAnalog: 'WETH',
       balance: '',
     },
-    {
-      name: 'Binance Coin',
-      symbol: 'BNB',
-      denomination: 18,
-      chainId: allNetworks.bsc.chainId,
-      wrappedAnalog: 'WBNB',
-      balance: '',
-    },
+    // {
+    //   name: 'Binance Coin',
+    //   symbol: 'BNB',
+    //   denomination: 18,
+    //   chainId: allNetworks.bsc.chainId,
+    //   wrappedAnalog: 'WBNB',
+    //   balance: '',
+    // },
   ]);
 };
 

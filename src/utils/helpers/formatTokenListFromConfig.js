@@ -17,19 +17,19 @@ const formatTokenListFromConfig = (tokens) =>
       primaryNet: allNetworks[token.primaryNet].chainId,
       balance: '',
     };
-    const bscTokenEntity = {
-      ...token,
-      chainId: allNetworks.bsc.chainId,
-      address: token.addresses.bsc,
-      primaryNet: allNetworks[token.primaryNet].chainId,
-      balance: '',
-    };
+    // const bscTokenEntity = {
+    //   ...token,
+    //   chainId: allNetworks.bsc.chainId,
+    //   address: token.addresses.bsc,
+    //   primaryNet: allNetworks[token.primaryNet].chainId,
+    //   balance: '',
+    // };
 
     return [
       ...list,
       ...(utils.isAddress(token.addresses.amb) ? [ambTokenEntity] : []),
       ...(utils.isAddress(token.addresses.eth) ? [ethTokenEntity] : []),
-      ...(utils.isAddress(token.addresses.bsc) ? [bscTokenEntity] : []),
+      // ...(utils.isAddress(token.addresses.bsc) ? [bscTokenEntity] : []),
     ];
   }, []);
 

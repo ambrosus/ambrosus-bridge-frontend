@@ -32,30 +32,32 @@ const ambBatchProvider = new CustomJsonRpcBatchProvider(
   allNetworks.amb.chainId,
 );
 
-// binance smart chain read-only provider configuration
-export const bscChainId = allNetworks.bsc.chainId;
-
-const bscProvider = new ethers.providers.StaticJsonRpcProvider(
-  allNetworks.bsc.rpcUrl,
-  bscChainId,
-);
-
-// bsc custom batch provider for balance worker
-const bscBatchProvider = new CustomJsonRpcBatchProvider(
-  allNetworks.bsc.rpcUrl,
-  bscChainId,
-);
+// // binance smart chain read-only provider configuration
+export const bscChainId = 0;
+// export const bscChainId = allNetworks.bsc.chainId;
+//
+//
+// const bscProvider = new ethers.providers.StaticJsonRpcProvider(
+//   allNetworks.bsc.rpcUrl,
+//   bscChainId,
+// );
+//
+// // bsc custom batch provider for balance worker
+// const bscBatchProvider = new CustomJsonRpcBatchProvider(
+//   allNetworks.bsc.rpcUrl,
+//   bscChainId,
+// );
 
 const providers = {
   [ethChainId]: ethProvider,
   [ambChainId]: ambProvider,
-  [bscChainId]: bscProvider,
+  // [bscChainId]: bscProvider,
 };
 
 export const batchProviders = {
   [ethChainId]: ethBatchProvider,
   [ambChainId]: ambBatchProvider,
-  [bscChainId]: bscBatchProvider,
+  // [bscChainId]: bscBatchProvider,
 };
 
 export default providers;
