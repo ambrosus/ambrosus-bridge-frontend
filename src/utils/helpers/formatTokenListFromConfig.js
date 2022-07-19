@@ -1,8 +1,8 @@
 import { utils } from 'ethers';
 import { allNetworks } from '../networks';
 
-const formatTokenListFromConfig = (tokens) =>
-  Object.values(tokens).reduce((list, token) => {
+const formatTokenListFromConfig = ({ SAMB, WETH }) =>
+  [SAMB, WETH].reduce((list, token) => {
     const ambTokenEntity = {
       ...token,
       chainId: allNetworks.amb.chainId,
