@@ -52,11 +52,22 @@ const Exchange = () => {
   const worker = useContext(CoinBalanceWorkerContext);
 
   // starting balance-fetching worker and clearing it on unmount
+  // stopping worker if switched to another tab
   useEffect(() => {
     worker.postMessage({ type: 'start', account });
 
+    const visibilityChangeHandler = () => {
+      if (document.hidden) {
+        worker.postMessage({ type: 'stop' });
+      } else {
+        worker.postMessage({ type: 'start', account });
+      }
+    };
+    document.addEventListener('visibilitychange', visibilityChangeHandler);
+
     return () => {
       worker.postMessage({ type: 'stop' });
+      document.removeEventListener('visibilitychange', visibilityChangeHandler);
     };
   }, []);
 
