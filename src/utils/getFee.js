@@ -1,6 +1,8 @@
 import { BigNumber, utils } from 'ethers';
 import { bscChainId, ethChainId } from './providers';
 
+const { REACT_APP_ENV } = process.env;
+
 const getFee = (
   isFromAmb,
   transactionAmount,
@@ -36,9 +38,15 @@ const getFee = (
       };
     });
 
-const relayUrlByChainId = {
-  [bscChainId]: 'https://relay-bsc.ambrosus-dev.io/fees',
-  [ethChainId]: 'https://relay-eth.ambrosus-dev.io/fees',
-};
+const relayUrlByChainId =
+  REACT_APP_ENV === 'production'
+    ? {
+        [bscChainId]: `https://relay-bsc.ambrosus.io/fees`,
+        [ethChainId]: `https://relay-eth.ambrosus.io/fees`,
+      }
+    : {
+        [bscChainId]: `https://relay-bsc.ambrosus-dev.io/fees`,
+        [ethChainId]: `https://relay-eth.ambrosus-dev.io/fees`,
+      };
 
 export default getFee;
