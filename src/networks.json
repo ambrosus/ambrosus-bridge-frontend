@@ -60,7 +60,7 @@
       "chainId": 16718,
       "code": "AMB",
       "explorerUrl": "https://explorer.ambrosus.io/",
-      "rpcUrl": "https://network.ambrosus.io",
+      "rpcUrl": "https://network.ambrosus.io/",
       "rpcUrlWS": "wss://network.ambrosus.io/ws"
     },
     "eth": {
@@ -68,8 +68,8 @@
       "chainId": 1,
       "code": "ETH",
       "explorerUrl": "https://etherscan.io/",
-      "rpcUrl": "https://ambrosus.gynn.io/gethu/chs_NIFgn5rrdUAgHxiccy0jbJ9gdHnqWEH5AKBiT",
-      "rpcUrlWS": "wss://ambrosus.gynn.io/gethu/ws/chs_NIFgn5rrdUAgHxiccy0jbJ9gdHnqWEH5AKBiT"
+      "rpcUrl": "https://mainnet.infura.io/v3/",
+      "rpcUrlWS": "wss://mainnet.infura.io/ws/v3/"
     },
     "bsc": {
       "name": "Smart Chain",
