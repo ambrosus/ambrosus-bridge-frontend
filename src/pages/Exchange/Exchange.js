@@ -69,7 +69,7 @@ const Exchange = () => {
       worker.postMessage({ type: 'stop' });
       document.removeEventListener('visibilitychange', visibilityChangeHandler);
     };
-  }, []);
+  }, [account]);
 
   // handling account change
   useEffect(() => {
