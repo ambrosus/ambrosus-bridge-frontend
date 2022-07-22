@@ -1,7 +1,7 @@
 import { allNetworks } from '../networks';
 
 const formatBridgesFromConfig = (bridges) =>
-  ['eth'].reduce(
+  Object.keys(bridges).reduce(
     (dict, network) => ({
       ...dict,
       [allNetworks[network].chainId]: {

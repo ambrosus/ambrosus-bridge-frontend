@@ -1,8 +1,8 @@
 import { utils } from 'ethers';
 import { allNetworks } from '../networks';
 
-const formatTokenListFromConfig = ({ SAMB, WETH }) =>
-  [SAMB, WETH].reduce((list, token) => {
+const formatTokenListFromConfig = (tokens) =>
+  Object.values(tokens).reduce((list, token) => {
     const ambTokenEntity = {
       ...token,
       chainId: allNetworks.amb.chainId,
@@ -17,19 +17,19 @@ const formatTokenListFromConfig = ({ SAMB, WETH }) =>
       primaryNet: allNetworks[token.primaryNet].chainId,
       balance: '',
     };
-    // const bscTokenEntity = {
-    //   ...token,
-    //   chainId: allNetworks.bsc.chainId,
-    //   address: token.addresses.bsc,
-    //   primaryNet: allNetworks[token.primaryNet].chainId,
-    //   balance: '',
-    // };
+    const bscTokenEntity = {
+      ...token,
+      chainId: allNetworks.bsc.chainId,
+      address: token.addresses.bsc,
+      primaryNet: allNetworks[token.primaryNet].chainId,
+      balance: '',
+    };
 
     return [
       ...list,
       ...(utils.isAddress(token.addresses.amb) ? [ambTokenEntity] : []),
       ...(utils.isAddress(token.addresses.eth) ? [ethTokenEntity] : []),
-      // ...(utils.isAddress(token.addresses.bsc) ? [bscTokenEntity] : []),
+      ...(utils.isAddress(token.addresses.bsc) ? [bscTokenEntity] : []),
     ];
   }, []);
 

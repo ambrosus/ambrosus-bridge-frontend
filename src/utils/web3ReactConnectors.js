@@ -15,7 +15,7 @@ export const ConfiguredWalletConnectConnector = new WalletConnectConnector({
         ? allNetworks.eth.rpcUrl + REACT_APP_INFURA_KEY
         : allNetworks.eth.rpcUrl,
     [+allNetworks.amb.chainId]: allNetworks.amb.rpcUrl,
-    // [+allNetworks.bsc.chainId]: allNetworks.bsc.rpcUrl,
+    [+allNetworks.bsc.chainId]: allNetworks.bsc.rpcUrl,
   },
   bridge: 'https://bridge.walletconnect.org',
   pollingInterval: 6000,

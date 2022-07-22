@@ -2,18 +2,20 @@ import NetworksConfig from '../networks.json';
 
 const { REACT_APP_ENV } = process.env;
 
-// export const allNetworks = NetworksConfig[REACT_APP_ENV];
+// in case of breaking bsc, again, use this
 //
-// const { amb, eth, bsc } = allNetworks;
+// const { amb, eth } = NetworksConfig[REACT_APP_ENV];
 //
-// export const supportedNetworks = [eth, bsc];
+// export const allNetworks = { amb, eth };
+//
+// export const supportedNetworks = [eth];
 // export const AmbrosusNetwork = amb;
 
-const { amb, eth } = NetworksConfig[REACT_APP_ENV];
+export const allNetworks = NetworksConfig[REACT_APP_ENV];
 
-export const allNetworks = { amb, eth };
+const { amb, eth, bsc } = allNetworks;
 
-export const supportedNetworks = [eth];
+export const supportedNetworks = [eth, bsc];
 export const AmbrosusNetwork = amb;
 
 export const getNetworkByChainId = (chainId) =>

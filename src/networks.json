@@ -76,8 +76,8 @@
       "chainId": 56,
       "code": "BSC",
       "explorerUrl": "https://bscscan.com/",
-      "rpcUrl": "https://ambrosus.gynn.io/bnbu/chs_NIFgn5rrdUAgHxiccy0jbJ9gdHnqWEH5AKBiT",
-      "rpcUrlWS": "wss://ambrosus.gynn.io/bnbu/ws/chs_NIFgn5rrdUAgHxiccy0jbJ9gdHnqWEH5AKBiT"
+      "rpcUrl": "https://bsc-dataseed.binance.org/",
+      "rpcUrlWS": "wss://bsc-dataseed.binance.org/"
     }
   }
 }
