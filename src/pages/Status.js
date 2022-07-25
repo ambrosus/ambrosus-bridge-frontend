@@ -10,11 +10,7 @@ import providers, {
   bscChainId,
   ethChainId,
 } from '../utils/providers';
-import {
-  ambContractAddress,
-  ethContractAddress,
-  createBridgeContract,
-} from '../contracts';
+import { createBridgeContract } from '../contracts';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
 import getTransferredTokens from '../utils/helpers/getTransferredTokens';
@@ -22,6 +18,7 @@ import useBridges from '../hooks/useBridges';
 import { getDestinationNet } from '../utils/helpers/getDestinationNet';
 import ConfigContext from '../contexts/ConfigContext/context';
 import { allNetworks } from '../utils/networks';
+import getEventFromContract from '../utils/ethers/getEventFromContract';
 
 const withDrawName = 'Withdraw';
 const transferName = 'Transfer';
@@ -83,7 +80,13 @@ const Status = () => {
         txHash,
       );
 
-      if (![ambContractAddress, ethContractAddress].includes(receipt.to)) {
+      // TODO: set right addresses
+      if (
+        ![
+          '0x0fA20862c5511cACC810Ca9d662F7c1edC230396',
+          '0xd461De9b5Ca6DF8575817a1a54a31A933913fa29',
+        ].includes(receipt.to)
+      ) {
         // history.push('/');
       }
 
@@ -108,7 +111,12 @@ const Status = () => {
       refEventId.current = eventId;
 
       const filter = await contract.filters.Transfer(eventId);
-      const event = await contract.queryFilter(filter);
+      const event = await getEventFromContract(
+        currentChainId,
+        contract,
+        filter,
+        receipt.blockNumber,
+      );
 
       if (+currentStage >= 2.1 && event.length) {
         currentStage = '2.2';
