@@ -18,7 +18,7 @@ import useBridges from '../hooks/useBridges';
 import { getDestinationNet } from '../utils/helpers/getDestinationNet';
 import ConfigContext from '../contexts/ConfigContext/context';
 import { allNetworks } from '../utils/networks';
-import getEventFromContract from '../utils/ethers/getEventFromContract';
+import getFirstEventFromContract from '../utils/ethers/getFirstEventFromContract';
 
 const withDrawName = 'Withdraw';
 const transferName = 'Transfer';
@@ -111,8 +111,7 @@ const Status = () => {
       refEventId.current = eventId;
 
       const filter = await contract.filters.Transfer(eventId);
-      const event = await getEventFromContract(
-        currentChainId,
+      const event = await getFirstEventFromContract(
         contract,
         filter,
         receipt.blockNumber,
@@ -258,7 +257,8 @@ const Status = () => {
     const transferSubmitFilter =
       await otherNetworkContract.filters.TransferSubmit(refEventId.current);
 
-    const transferSubmitEvent = await otherNetworkContract.queryFilter(
+    const transferSubmitEvent = await getFirstEventFromContract(
+      otherNetworkContract,
       transferSubmitFilter,
     );
 
