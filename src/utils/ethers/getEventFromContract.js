@@ -1,8 +1,8 @@
-import providers, { bscChainId } from '../providers';
+import { bscChainId, bscProvider } from '../providers';
 
 const getEventFromContract = async (chainId, contract, filter, fromBlock) => {
   if (chainId === bscChainId) {
-    const latestBlock = await providers[bscChainId].getBlockNumber();
+    const latestBlock = await bscProvider.getBlockNumber();
     return recursiveQueryFilter(contract, filter, fromBlock, latestBlock);
   }
   return contract.queryFilter(filter);
