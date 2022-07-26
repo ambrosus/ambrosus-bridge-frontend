@@ -14,8 +14,8 @@ const ethProvider = new ethers.providers.InfuraWebSocketProvider(
 
 // eth custom batch provider for balance worker
 const ethBatchProvider = new CustomJsonRpcBatchProvider(
-  allNetworks.eth.rpcUrl + process.env.REACT_APP_INFURA_KEY,
-  allNetworks.eth.chainId,
+  allNetworks.eth.rpcUrl + REACT_APP_INFURA_KEY,
+  ethChainId,
 );
 
 // ambrosus read-only provider configuration
@@ -32,10 +32,10 @@ const ambBatchProvider = new CustomJsonRpcBatchProvider(
   allNetworks.amb.chainId,
 );
 
-// binance smart chain read-only provider configuration
+// // binance smart chain read-only provider configuration
 export const bscChainId = allNetworks.bsc.chainId;
 
-const bscProvider = new ethers.providers.StaticJsonRpcProvider(
+export const bscProvider = new ethers.providers.StaticJsonRpcProvider(
   allNetworks.bsc.rpcUrl,
   bscChainId,
 );

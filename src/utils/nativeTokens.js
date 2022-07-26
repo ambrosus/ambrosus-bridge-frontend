@@ -5,7 +5,7 @@ const AMB = {
   symbol: 'AMB',
   denomination: 18,
   chainId: ambChainId,
-  wrappedAnalog: 'SAMB',
+  wrappedAnalog: 'testSAMB',
   balance: '',
 };
 

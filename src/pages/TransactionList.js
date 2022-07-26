@@ -4,6 +4,7 @@ import providers, { ambChainId } from '../utils/providers';
 import { createBridgeContract } from '../contracts';
 import TransactionListItem from '../components/TransactionListItem';
 import useBridges from '../hooks/useBridges';
+import getEventsFromContract from '../utils/ethers/getEventsFromContract';
 const TransactionList = () => {
   const { account } = useWeb3React();
   const bridges = useBridges();
@@ -16,7 +17,7 @@ const TransactionList = () => {
         Object.keys(bridges[chainId]).forEach((type) => {
           getHistory(
             bridges[chainId][type],
-            type === 'native' ? ambChainId : chainId,
+            type === 'native' ? ambChainId : +chainId,
           );
         });
       });
@@ -25,21 +26,20 @@ const TransactionList = () => {
 
   const getHistory = (address, networkId) => {
     const contract = createBridgeContract(address, providers[networkId]);
+    const filter = contract.filters.Withdraw(account);
 
-    contract
-      .queryFilter(contract.filters.Withdraw(account))
-      .then((response) => {
-        response.forEach(async (el) => {
-          const { timestamp } = await el.getBlock();
+    getEventsFromContract(contract, filter).then((response) => {
+      response.forEach(async (el) => {
+        const { timestamp } = await el.getBlock();
 
-          el.getTransaction().then((trans) => {
-            setTransactionHistory((state) => [
-              ...state,
-              { ...trans, timestamp, args: el.args },
-            ]);
-          });
+        el.getTransaction().then((trans) => {
+          setTransactionHistory((state) => [
+            ...state,
+            { ...trans, timestamp, args: el.args },
+          ]);
         });
       });
+    });
   };
 
   const sortedTxs = transactionHistory.sort(
