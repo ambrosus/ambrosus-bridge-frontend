@@ -1,8 +1,10 @@
-const getTxLink = (isEth, hash) =>
-  `${
-    isEth
-      ? 'https://ropsten.etherscan.io/tx/'
-      : 'https://explorer.ambrosus.io/tx/'
-  }${hash}`;
+import { allNetworks } from '../networks';
+
+const getTxLink = (chainId, hash) => {
+  const explorerLink = Object.values(allNetworks).find(
+    (el) => el.chainId === chainId,
+  );
+  return explorerLink ? `${explorerLink.explorerUrl}tx/${hash}` : null;
+};
 
 export default getTxLink;

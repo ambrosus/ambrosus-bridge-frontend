@@ -13,15 +13,18 @@ import { ReactComponent as WalletIcon } from '../../assets/svg/wallet.svg';
 const ExchangeField = ({
   networks = [{}],
   setChainId = () => {},
-  selectedChainId = 0,
+  chainId = 0,
+  foreignChainId = 0,
   selectedCoin = {},
   transactionAmount = '',
   setTransactionAmount = () => {},
   isValueInvalid = false,
   setCoin = () => {},
+  updateFee = () => {},
+  setError = () => {},
 }) => {
   const [isOpenCoinModal, toggleCoinModal] = useModal();
-  const tokenList = useTokenList(selectedChainId);
+  const tokenList = useTokenList(chainId);
   const balance = useCoinBalance(selectedCoin.symbol, selectedCoin.chainId);
 
   return (
@@ -38,7 +41,7 @@ const ExchangeField = ({
         <NetworkSelect
           networks={networks}
           setChainId={setChainId}
-          selectedChainId={selectedChainId}
+          selectedChainId={chainId}
         />
 
         <div className="exchange-field__balance-container">
@@ -61,6 +64,9 @@ const ExchangeField = ({
           changeCoin={toggleCoinModal}
           selectedCoin={selectedCoin}
           balance={balance}
+          onBlur={updateFee}
+          setError={setError}
+          foreignChainId={foreignChainId}
         />
       </div>
     </>
@@ -70,12 +76,15 @@ const ExchangeField = ({
 ExchangeField.propTypes = {
   networks: PropTypes.arrayOf(PropTypes.object),
   setChainId: PropTypes.func,
-  selectedChainId: PropTypes.number,
+  chainId: PropTypes.number,
+  foreignChainId: PropTypes.number,
   transactionAmount: PropTypes.string,
   setTransactionAmount: PropTypes.func,
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
   setCoin: PropTypes.func,
+  updateFee: PropTypes.func,
+  setError: PropTypes.func,
 };
 
 export default ExchangeField;

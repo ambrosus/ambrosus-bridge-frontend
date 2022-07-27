@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ChevronIcon from '../../assets/svg/chevron.svg';
 import useGetMaxTxAmount from '../../hooks/useSetMax';
+import NetworkOrTokenIcon from '../../components/NetworkOrTokenIcon';
+import useError from '../../hooks/useError';
 
 const CurrencyInput = ({
   disabled = false,
@@ -10,21 +12,20 @@ const CurrencyInput = ({
   changeCoin = () => {},
   selectedCoin = {},
   isValueInvalid = false,
+  onBlur = () => {},
+  foreignChainId = null,
 }) => {
+  const [timer, setTimer] = useState();
+  const { setError } = useError();
+
   const handleInput = ({ target: { value: newValue } }) => {
-    const [intPart, floatPart] = newValue.replace(',', '.').split('.');
-    let formattedValue;
-    if (floatPart && floatPart.length > selectedCoin.denomination) {
-      formattedValue = `${intPart}.${floatPart.slice(
-        0,
-        selectedCoin.denomination,
-      )}`;
-    } else if (floatPart) {
-      formattedValue = `${intPart}.${floatPart}`;
-    } else {
-      formattedValue = intPart;
+    const formattedValue = newValue.replace(',', '.');
+    if (/^\d*(\.\d{0,8})?$/.test(formattedValue) || formattedValue === '') {
+      onChange(formattedValue);
+
+      if (timer) clearTimeout(timer);
+      setTimer(setTimeout(onBlur, 1000, formattedValue));
     }
-    onChange(formattedValue);
   };
 
   const handleKeyPress = (e) => {
@@ -34,9 +35,20 @@ const CurrencyInput = ({
     }
   };
 
-  const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, value);
+  const getMaxTxAmount = useGetMaxTxAmount(selectedCoin, foreignChainId);
   const setMax = async () => {
-    onChange(await getMaxTxAmount());
+    try {
+      const maxTxAmount = await getMaxTxAmount();
+      onChange(maxTxAmount);
+      onBlur(maxTxAmount);
+    } catch (e) {
+      setError('Your balance is smaller than total fee');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      setTimeout(setError, 5000, '');
+    }
   };
 
   return (
@@ -51,7 +63,7 @@ const CurrencyInput = ({
         {disabled ? 'Receive:' : 'Send:'}
       </label>
       <input
-        type="number"
+        type="text"
         placeholder="0.0"
         value={value}
         className="currency-input__input"
@@ -71,9 +83,8 @@ const CurrencyInput = ({
         className="currency-input__coin-button"
         onClick={changeCoin}
       >
-        <img
-          src={selectedCoin.logo}
-          alt="#"
+        <NetworkOrTokenIcon
+          symbol={selectedCoin.symbol}
           className="currency-input__currency-icon"
         />
         {selectedCoin.symbol}
@@ -94,6 +105,8 @@ CurrencyInput.propTypes = {
   changeCoin: PropTypes.func,
   selectedCoin: PropTypes.object,
   isValueInvalid: PropTypes.bool,
+  onBlur: PropTypes.func,
+  foreignChainId: PropTypes.number,
 };
 
 export default CurrencyInput;

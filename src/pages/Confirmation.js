@@ -1,60 +1,95 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { useWeb3React } from '@web3-react/core';
 import { BigNumber, utils } from 'ethers';
 import TransactionNetworks from '../components/TransactionNetworks';
-import createBridgeContract from '../contracts';
 import InlineLoader from '../components/InlineLoader';
-import ErrorContext from '../contexts/ErrorContext';
 import withdrawCoins from '../utils/ethers/withdrawCoins';
 import { ambChainId } from '../utils/providers';
+import NetworkOrTokenIcon from '../components/NetworkOrTokenIcon';
+import getFee from '../utils/getFee';
+import { getNetworkByChainId } from '../utils/networks';
+import useError from '../hooks/useError';
+import useBridges from '../hooks/useBridges';
+import formatAddress from '../utils/helpers/formatAddres';
 
 const Confirmation = () => {
-  const { setError } = useContext(ErrorContext);
+  const { setError } = useError();
   const { account, library, chainId } = useWeb3React();
-  const [transferFee, setTransferFee] = useState();
+  const bridges = useBridges();
 
   const {
     location: {
-      state: { selectedChainId, selectedCoin, receivedCoin, transactionAmount },
+      state: {
+        destinationChainId,
+        selectedCoin,
+        receivedCoin,
+        transactionAmount,
+        foreignChainId,
+      },
     },
     goBack,
     push,
   } = useHistory();
 
+  const departureNetwork = getNetworkByChainId(chainId);
+  const destinationNetwork = getNetworkByChainId(destinationChainId);
+  const isFromAmb = chainId === ambChainId;
+
+  const [fee, setFee] = useState('');
+  useEffect(async () => {
+    const { transferFee, bridgeFee } = await getFee(
+      chainId === ambChainId,
+      transactionAmount,
+      selectedCoin,
+      foreignChainId,
+    );
+    setFee({ transferFee, bridgeFee });
+  }, []);
   const [isLocked, setIsLocked] = useState(false);
 
   const bnTransactionAmount = BigNumber.from(
     utils.parseUnits(transactionAmount, selectedCoin.denomination),
   );
-  const BridgeContract = createBridgeContract[chainId](library.getSigner());
-
-  useEffect(async () => {
-    const fee = await BridgeContract.callStatic.fee();
-    setTransferFee(fee);
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     setIsLocked(true);
 
-    withdrawCoins(
+    const bridgeAddress =
+      bridges[foreignChainId][isFromAmb ? 'native' : 'foreign'];
+
+    await withdrawCoins(
       transactionAmount,
       selectedCoin,
       receivedCoin,
-      transferFee,
       account,
       chainId,
+      foreignChainId,
+      bridgeAddress,
       library.getSigner(),
     )
       .then((res) => {
         push(`/status/${res.hash}`);
       })
       .catch((e) => {
+        // eslint-disable-next-line no-console
         console.error(e);
         setIsLocked(false);
-        setError('There is some error. Please refresh and try again');
+
+        let errorMsg = 'There is some error, try again later';
+        if (e.code === 4001) return; // user denied tx, do nothing
+        if (e.code === 'INSUFFICIENT_FUNDS')
+          errorMsg =
+            'Insufficient funds for transaction amount, gas and total fee';
+
+        setError(errorMsg);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+        setTimeout(setError, 7500, '');
       });
   };
 
@@ -65,40 +100,47 @@ const Confirmation = () => {
         {utils.formatUnits(bnTransactionAmount, selectedCoin.denomination)}{' '}
         {selectedCoin.symbol}
       </p>
-      <TransactionNetworks selectedChainId={selectedChainId} />
+      <TransactionNetworks {...{ departureNetwork, destinationNetwork }} />
       <div className="confirmation-info">
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Asset</span>
           <span className="confirmation-info__value">
-            <img
-              src={selectedCoin.logo}
-              alt={selectedCoin.name}
+            <NetworkOrTokenIcon
+              symbol={selectedCoin.symbol}
               className="confirmation-info__img"
             />
             {selectedCoin.name}
-            {selectedCoin.name !== receivedCoin.name ? (
+            {selectedCoin.name !== receivedCoin.name && (
               <>
                 <span>→</span>
-                <img
-                  src={receivedCoin.logo}
-                  alt={receivedCoin.name}
+                <NetworkOrTokenIcon
+                  symbol={receivedCoin.symbol}
                   className="confirmation-info__img"
                 />
                 {receivedCoin.name}
               </>
-            ) : null}
+            )}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
-            {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
-            {selectedChainId === ambChainId ? 'AMB' : 'ETH'}
+            {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
+            {departureNetwork.code}
+          </span>
+        </div>
+        <div className="confirmation-info__item">
+          <span className="confirmation-info__label">Bridge fee</span>
+          <span className="confirmation-info__value">
+            {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
+            {departureNetwork.code}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Destination</span>
-          <span className="confirmation-info__value">{account}</span>
+          <span className="confirmation-info__value">
+            {window.innerWidth < 410 ? formatAddress(account) : account}
+          </span>
         </div>
       </div>
       {isLocked ? (

@@ -9,7 +9,10 @@ const useCoinBalance = (symbol, chainId) =>
           const { balance } = await db.tokens.get({ symbol, chainId });
           return balance || '';
         } catch (e) {
-          const { balance } = await db.nativeTokens.get({ symbol, chainId });
+          const { balance } = await db.nativeTokens.get({
+            symbol,
+            chainId,
+          });
           return balance || '';
         }
       }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
@@ -7,15 +7,23 @@ import checkIcon from '../assets/svg/check.svg';
 import spinnerIcon from '../assets/svg/spinner.svg';
 import IconLink from './IconLink';
 import getTxLastStageStatus from '../utils/ethers/getTxLastStageStatus';
-import providers, { ambChainId, ethChainId } from '../utils/providers';
-import { getAllNetworks } from '../utils/networks';
-import createBridgeContract from '../contracts';
+import providers, { ambChainId } from '../utils/providers';
+import { getNetworkByChainId } from '../utils/networks';
+import { createBridgeContract } from '../contracts';
 import getEventSignatureByName from '../utils/getEventSignatureByName';
-import { tokens } from '../bridge-config.mock.json';
 import getTxLink from '../utils/helpers/getTxLink';
 import getTransferredTokens from '../utils/helpers/getTransferredTokens';
+import useBridges from '../hooks/useBridges';
+import { getDestinationNet } from '../utils/helpers/getDestinationNet';
+import ConfigContext from '../contexts/ConfigContext/context';
+
+// TODO: eslint enable
 /*eslint-disable*/
+
 const TransactionListItem = ({ tx }) => {
+  const bridges = useBridges();
+  const { tokens } = useContext(ConfigContext);
+
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
   const [currentToken, setCurrentToken] = useState({});
@@ -30,18 +38,24 @@ const TransactionListItem = ({ tx }) => {
     const eventId = withdrawData.args.eventId;
     const tokenAddress = withdrawData.args['tokenTo'];
 
-    setTransferredTokens(getTransferredTokens(withdrawData.args));
+    setTransferredTokens(getTransferredTokens(withdrawData.args, tokens));
     setTokenAmount(withdrawData.args.amount);
 
-    const currentCoin = Object.values(tokens).find((token) =>
-      Object.values(token.addresses).some((el) => el && el === tokenAddress),
-    );
+    const currentCoin = tokens.find((token) => token.address === tokenAddress);
 
     if (currentCoin) {
       setCurrentToken(currentCoin);
     }
+    const destNetId = getDestinationNet(tx.to, bridges);
+    const otherContractAddress = Object.values(
+      bridges[
+        destNetId === ambChainId
+          ? tx.chainId
+          : destNetId
+        ],
+    ).find((el) => el !== tx.to);
 
-    const lastStage = await getTxLastStageStatus(tx.chainId, eventId);
+    const lastStage = await getTxLastStageStatus(getDestinationNet(tx.to, bridges), eventId, otherContractAddress);
     setIsSuccess(lastStage.length);
 
     setDestinationNetTxHash(
@@ -51,7 +65,10 @@ const TransactionListItem = ({ tx }) => {
 
   const getEventData = async (eventName) => {
     const receipt = await providers[tx.chainId].getTransactionReceipt(tx.hash);
-    const contract = createBridgeContract[tx.chainId](providers[tx.chainId]);
+    const contract = createBridgeContract(
+      tx.to,
+      providers[tx.chainId],
+    );
 
     const eventData = receipt.logs.find((log) =>
       log.topics.some(
@@ -80,8 +97,7 @@ const TransactionListItem = ({ tx }) => {
       .padStart(2, '0')}`;
   };
 
-  const getNetworkName = (networkId) =>
-    getAllNetworks().find((el) => el.chainId === networkId).name;
+  const getNetworkName = (chainId) => getNetworkByChainId(+chainId).name;
 
   return (
     <div className="transaction-item">
@@ -89,7 +105,9 @@ const TransactionListItem = ({ tx }) => {
         {transferredTokens.from && (
           <>
             <img
-              src={transferredTokens.from.toLowerCase().includes('amb') ? tokens.SAMB.logo : tokens.WETH.logo}
+              src={
+                currentToken.logo
+              }
               alt="coin"
               className="transaction-item__img"
             />
@@ -129,10 +147,10 @@ const TransactionListItem = ({ tx }) => {
         <div className="transaction-item__mobile-row">
           <span className="transaction-item__grey-text">From:</span>
           <span className="transaction-item__black-text">
-            {getNetworkName(tx.chainId)}
+            {!!tx.chainId && getNetworkName(tx.chainId)}
           </span>
           <IconLink
-            href={getTxLink(tx.chainId === ethChainId, tx.hash)}
+            href={getTxLink(tx.chainId, tx.hash)}
             text="txHash"
           />
         </div>
@@ -140,14 +158,14 @@ const TransactionListItem = ({ tx }) => {
           <span className="transaction-item__grey-text">To:</span>
           <span className="transaction-item__black-text">
             {getNetworkName(
-              tx.chainId === ambChainId ? ethChainId : ambChainId,
+              getDestinationNet(tx.to, bridges),
             )}
           </span>
           {destinationNetTxHash !== null &&
             (destinationNetTxHash ? (
               <IconLink
                 href={getTxLink(
-                  tx.chainId !== ethChainId,
+                  +getDestinationNet(tx.to, bridges),
                   destinationNetTxHash,
                 )}
                 text="txHash"
@@ -183,15 +201,16 @@ const TransactionListItem = ({ tx }) => {
             Transaction fee:
           </span>
           <span className="transaction-item__black-text">
-            {ethers.utils.formatUnits(tx.gasPrice, currentToken.denomination)}{' '}
+            {ethers.utils.formatUnits(
+              tx.args['transferFeeAmount'].add(tx.args['bridgeFeeAmount']),
+              currentToken.denomination,
+            )}
             {tx.chainId === ambChainId ? 'AMB' : 'ETH'}
           </span>
         </div>
       </div>
       <div className="transaction-item__row">
-        <span className="transaction-item__grey-text">
-          Transferred tokens:
-        </span>
+        <span className="transaction-item__grey-text">Transferred tokens:</span>
         <span className="transaction-item__black-text">
           {`${transferredTokens.from} - ${transferredTokens.to}`}
         </span>

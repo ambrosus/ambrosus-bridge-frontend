@@ -8,33 +8,31 @@ import Exchange from './pages/Exchange';
 import Layout from './components/Layout';
 import ConnectWallet from './pages/ConnectWallet';
 import Confirmation from './pages/Confirmation';
-// import Mint from './pages/Mint';
-import ErrorContext from './contexts/ErrorContext';
 import TransactionList from './pages/TransactionList';
 import CoinBalanceWorkerProvider from './contexts/CoinBalanceWorkerContext/provider';
 import {
   ConfiguredInjectedConnector,
   ConfiguredWalletConnectConnector,
 } from './utils/web3ReactConnectors';
-// import useAutoLogin from './hooks/useAutoLogin';
+import ConfigProvider from './contexts/ConfigContext/provider';
+import ErrorProvider from './contexts/ErrorContext/provider';
+import Mint from './pages/Mint';
 
 const getLibrary = (provider = null) => new providers.Web3Provider(provider);
 
-const Main = () => {
-  const [error, setError] = useState('');
-
-  return (
-    <CoinBalanceWorkerProvider>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <ErrorContext.Provider value={{ error, setError }}>
-          <Layout title="Bridge" error={error}>
-            <Routing setError={setError} />
+const Main = () => (
+  <ConfigProvider>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <CoinBalanceWorkerProvider>
+        <ErrorProvider>
+          <Layout title="Bridge">
+            <Routing />
           </Layout>
-        </ErrorContext.Provider>
-      </Web3ReactProvider>
-    </CoinBalanceWorkerProvider>
-  );
-};
+        </ErrorProvider>
+      </CoinBalanceWorkerProvider>
+    </Web3ReactProvider>
+  </ConfigProvider>
+);
 
 export default Main;
 
@@ -76,7 +74,13 @@ const Routing = () => {
         component={TransactionList}
         condition={!!account}
       />
-      {/* <Route exact path="/mint" component={Mint} /> */}
+      <ConditionalRoute
+        exact
+        path="/mint"
+        component={Mint}
+        condition={!!account && process.env.REACT_APP_ENV !== 'production'}
+      />
+
       <Redirect to="/" />
     </Switch>
   ) : null;

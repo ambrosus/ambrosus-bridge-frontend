@@ -1,22 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import arrowIcon from '../assets/svg/green-arrow-right.svg';
-import { ethChainId } from '../utils/providers';
-import { AmbrosusNetwork, getSupportedNetworks } from '../utils/networks';
-import getTxLink from '../utils/helpers/getTxLink';
+import { AmbrosusNetwork, supportedNetworks } from '../utils/networks';
+import NetworkOrTokenIcon from './NetworkOrTokenIcon';
+import useBridges from '../hooks/useBridges';
 
-const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
-  const networks = getSupportedNetworks();
+const TransactionNetworks = ({
+  departureContractAddress,
+  fromHash,
+  toHash,
+  tokens,
+  preventRedirect,
+  departureNetwork,
+  destinationNetwork,
+}) => {
+  const networks = supportedNetworks;
+  const bridges = useBridges();
 
-  const currentNetwork =
-    selectedChainId === ethChainId
-      ? networks.find((el) => el.chainId === ethChainId)
-      : AmbrosusNetwork;
+  const [currentNetwork, setCurrentNetwork] = useState(departureNetwork);
+  const [otherNetwork, setOtherNetwork] = useState(destinationNetwork);
 
-  const otherNetwork =
-    selectedChainId !== ethChainId
-      ? networks.find((el) => el.chainId === ethChainId)
-      : AmbrosusNetwork;
+  useEffect(() => {
+    if (bridges) {
+      Object.keys(bridges).forEach((id) => {
+        Object.keys(bridges[id]).forEach((type) => {
+          if (departureContractAddress === bridges[id][type]) {
+            if (type === 'native') {
+              setCurrentNetwork(AmbrosusNetwork);
+              setOtherNetwork(networks.find((el) => el.chainId === +id));
+            } else {
+              setCurrentNetwork(networks.find((el) => el.chainId === +id));
+              setOtherNetwork(AmbrosusNetwork);
+            }
+          }
+        });
+      });
+    }
+  }, [departureContractAddress]);
 
   return (
     <div className="transaction-coins">
@@ -25,16 +45,15 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           fromHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        {!!selectedChainId && (
-          <img
-            src={currentNetwork.logo}
-            alt="coin name"
+        {!!currentNetwork && (
+          <NetworkOrTokenIcon
+            symbol={currentNetwork.code}
             className="transaction-coins__img"
           />
         )}
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">Send:</p>
-          {!!selectedChainId && (
+          {!!currentNetwork && (
             <p className="transaction-coins__name">{currentNetwork.name}</p>
           )}
         </div>
@@ -42,8 +61,11 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           <span className="transaction-coins__hash-wrapper">
             <span className="transaction-coins__hash">txHash:</span>
             <a
+              style={preventRedirect ? { pointerEvents: 'none' } : {}}
               target="_blank"
-              href={getTxLink(selectedChainId === ethChainId, fromHash)}
+              href={`${
+                departureNetwork ? departureNetwork.explorerUrl : ''
+              }tx/${fromHash}`}
             >
               {fromHash}
             </a>
@@ -66,16 +88,16 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
           toHash === null || toHash ? 'transaction-coins__item--hash' : ''
         }`}
       >
-        {!!selectedChainId && (
-          <img
-            src={otherNetwork.logo}
-            alt="coin name"
+        {!!otherNetwork && (
+          <NetworkOrTokenIcon
+            symbol={otherNetwork.code}
             className="transaction-coins__img"
           />
         )}
+
         <div className="transaction-coins__info">
           <p className="transaction-coins__title">To:</p>
-          {!!selectedChainId && (
+          {!!otherNetwork && (
             <p className="transaction-coins__name">{otherNetwork.name}</p>
           )}
         </div>
@@ -87,7 +109,9 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
             ) : (
               <a
                 target="_blank"
-                href={getTxLink(selectedChainId !== ethChainId, toHash)}
+                href={`${
+                  destinationNetwork ? destinationNetwork.explorerUrl : ''
+                }tx/${toHash}`}
               >
                 {toHash}
               </a>
@@ -106,10 +130,13 @@ const TransactionNetworks = ({ selectedChainId, fromHash, toHash, tokens }) => {
 };
 
 TransactionNetworks.propTypes = {
-  selectedChainId: PropTypes.number,
+  departureContractAddress: PropTypes.string,
   fromHash: PropTypes.string,
   toHash: PropTypes.string,
   tokens: PropTypes.object,
+  preventRedirect: PropTypes.bool,
+  departureNetwork: PropTypes.object,
+  destinationNetwork: PropTypes.object,
 };
 
 export default TransactionNetworks;

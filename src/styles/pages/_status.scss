@@ -9,7 +9,7 @@
     background: #F4F5F6;
   }
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 750px) {
     padding-bottom: 0;
     width: 100%;
   }
@@ -52,7 +52,7 @@
     background-repeat: repeat-x;
   }
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 750px) {
     flex-direction: column;
     align-items: flex-start;
     position: relative;
@@ -80,7 +80,7 @@
     &:not(:first-child) {
       padding-left: 1rem;
 
-      @media screen and (max-width: 450px) {
+      @media screen and (max-width: 750px) {
         padding-left: 0;
       }
     }
@@ -88,9 +88,13 @@
     &:not(:last-child) .transaction-status__item-info{
       padding-right: 1rem;
       border-right: 1px solid #EFF2F5;
+
+      @media screen and (max-width: 750px) {
+        border: 0;
+      }
     }
 
-    @media screen and (max-width: 450px) {
+    @media screen and (max-width: 750px) {
       align-items: flex-start;
       margin-bottom: 1.5rem;
     }
@@ -107,7 +111,7 @@
     border: 4px solid $gray;
     margin-bottom: 1rem;
 
-    @media screen and (max-width: 450px) {
+    @media screen and (max-width: 750px) {
       position: relative;
 
       &:before {

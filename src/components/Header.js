@@ -13,6 +13,7 @@ import MetaMaskLogo from '../assets/img/connect-wallet__metamask.jpg';
 import LogoutIcon from '../assets/svg/logout.svg';
 import { ReactComponent as MetamaskIcon } from '../assets/svg/metamask-menu-icon.svg';
 import addNetworkToMetamask from '../utils/addNetworkToMetamask';
+import formatAddress from '../utils/helpers/formatAddres';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -186,8 +187,6 @@ const walletLogo = (connector) => {
   if (connector instanceof WalletConnectConnector) return WalletConnectLogo;
   return null;
 };
-
-const formatAddress = (addr) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 
 const HEADER_DATA = [
   {

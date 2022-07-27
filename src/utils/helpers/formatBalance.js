@@ -1,5 +1,6 @@
 import { BigNumber, utils } from 'ethers';
 
+// TODO: rename function and change params type to BigNumber
 const formatBalance = (balance, denomination) => {
   const balanceFloatString = utils.formatUnits(
     BigNumber.from(balance),

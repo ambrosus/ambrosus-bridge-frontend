@@ -1,62 +1,107 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { useHistory } from 'react-router';
-import { utils } from 'ethers';
-import ErrorContext from '../../contexts/ErrorContext';
 import CoinBalanceWorkerContext from '../../contexts/CoinBalanceWorkerContext/context';
-import { AmbrosusNetwork, getSupportedNetworks } from '../../utils/networks';
+import {
+  AmbrosusNetwork,
+  getNetworkByChainId,
+  supportedNetworks,
+} from '../../utils/networks';
 import changeChainId from '../../utils/ethers/changeChainId';
 import SwapButton from '../../assets/svg/exchange__swap-button.svg';
 import InlineLoader from '../../components/InlineLoader';
 import ExchangeField from './ExchangeField';
-import createBridgeContract from '../../contracts';
 import { ambChainId, ethChainId } from '../../utils/providers';
 import validateTransactionAmount from '../../utils/ethers/validateTransactionAmount';
 import ReceiveField from './ReceiveField';
 import { nativeTokensById } from '../../utils/nativeTokens';
+import getFee from '../../utils/getFee';
+import formatBalance from '../../utils/helpers/formatBalance';
+import useError from '../../hooks/useError';
+import usePrevious from '../../hooks/usePrevious';
 
 const Exchange = () => {
-  const { setError } = useContext(ErrorContext);
-  const [networks, setNetworks] = useState(undefined);
-
+  const { setError } = useError();
   const { library, account, chainId } = useWeb3React();
+  const prevAccount = usePrevious(account);
 
   const isFromAmb = chainId === ambChainId;
+  const [foreignChainId, setForeignChainId] = useState(
+    isFromAmb ? ethChainId : chainId,
+  );
+  const destinationChainId = isFromAmb ? foreignChainId : ambChainId;
+
+  const departureNetwork = getNetworkByChainId(chainId);
+
+  const changeNetwork = async (newChainId) => {
+    if (!isFromAmb) {
+      await changeChainId(library.provider, newChainId);
+    }
+    setForeignChainId(newChainId);
+  };
+
   const toggleDirection = async () => {
-    const newChainId = isFromAmb ? ethChainId : ambChainId;
+    const newChainId = isFromAmb ? foreignChainId : ambChainId;
     await changeChainId(library.provider, newChainId);
   };
 
-  const [selectedCoin, setCoin] = useState();
-  const [receivedCoin, setReceivedCoin] = useState();
+  const [selectedCoin, setCoin] = useState(nativeTokensById[chainId]);
+  const [receivedCoin, setReceivedCoin] = useState({});
   const [transactionAmount, setTransactionAmount] = useState('');
-  const [transferFee, setTransferFee] = useState('');
 
   const worker = useContext(CoinBalanceWorkerContext);
 
-  // setting init values
+  // starting balance-fetching worker and clearing it on unmount
+  // stopping worker if switched to another tab
   useEffect(() => {
-    const supportedNetworks = getSupportedNetworks();
-    setNetworks(supportedNetworks);
     worker.postMessage({ type: 'start', account });
-    setCoin(nativeTokensById[chainId]);
+
+    const visibilityChangeHandler = () => {
+      if (document.hidden) {
+        worker.postMessage({ type: 'stop' });
+      } else {
+        worker.postMessage({ type: 'start', account });
+      }
+    };
+    document.addEventListener('visibilitychange', visibilityChangeHandler);
+
     return () => {
-      worker.postMessage({ type: 'stop', account });
+      worker.postMessage({ type: 'stop' });
+      document.removeEventListener('visibilitychange', visibilityChangeHandler);
     };
   }, []);
 
+  // handling account change
+  useEffect(() => {
+    if (account !== prevAccount) {
+      worker.postMessage({ type: 'restart', account });
+      setTransactionAmount('');
+    }
+  }, [account]);
+
   // if network changed update transaction fee
-  useEffect(async () => {
-    const BridgeContract = createBridgeContract[chainId](library);
-    const fee = await BridgeContract.callStatic.fee();
-    setTransferFee(fee);
+  useEffect(() => {
     setCoin(nativeTokensById[chainId]);
-  }, [chainId]);
+  }, [chainId, foreignChainId]);
 
   // reset value if coin changed
   useEffect(() => {
     setTransactionAmount('');
   }, [selectedCoin]);
+
+  const [fee, setFee] = useState();
+  const updateFee = async (amount) => {
+    setFee(undefined);
+    const { transferFee, bridgeFee, totalFee } = await getFee(
+      isFromAmb,
+      amount,
+      selectedCoin,
+      foreignChainId,
+    );
+    setFee({ transferFee, bridgeFee, totalFee });
+  };
+  useEffect(() => updateFee(transactionAmount), [chainId, foreignChainId]);
+  useEffect(() => updateFee('0.001'), [selectedCoin]);
 
   const [isValueInvalid, setIsInvalid] = useState(false);
   const history = useHistory();
@@ -69,7 +114,7 @@ const Exchange = () => {
       transactionAmount,
       selectedCoin.denomination,
       account,
-      transferFee,
+      fee,
     );
 
     if (errorMessage) {
@@ -83,10 +128,13 @@ const Exchange = () => {
       history.push({
         pathname: '/confirm',
         state: {
-          selectedChainId: chainId,
+          chainId,
+          destinationChainId,
+          foreignChainId,
           selectedCoin,
           receivedCoin,
           transactionAmount,
+          fee,
         },
       });
     }
@@ -104,14 +152,18 @@ const Exchange = () => {
       <div className="exchange__fields">
         <ExchangeField
           {...{
-            networks: isFromAmb ? [AmbrosusNetwork] : networks,
-            selectedChainId: chainId,
+            networks: isFromAmb ? [AmbrosusNetwork] : supportedNetworks,
+            setChainId: changeNetwork,
+            chainId,
+            foreignChainId,
             selectedCoin,
             transactionAmount,
             setTransactionAmount,
             isValueInvalid,
             isFromAmb,
             setCoin,
+            updateFee,
+            setError,
           }}
         />
         <button type="button" onClick={toggleDirection}>
@@ -123,32 +175,37 @@ const Exchange = () => {
         </button>
         <ReceiveField
           {...{
-            networks: isFromAmb ? networks : [AmbrosusNetwork],
-            selectedChainId: chainId,
+            networks: isFromAmb ? supportedNetworks : [AmbrosusNetwork],
+            setChainId: changeNetwork,
+            chainId,
+            destinationChainId,
             setCoin: setReceivedCoin,
             selectedCoin,
             receivedCoin,
             transactionAmount,
+            changeNetwork,
           }}
         />
       </div>
       <div className="exchange__estimated-fee-container">
-        Transfer fee:
-        <span className="exchange__estimated-fee">
-          {transferFee ? utils.formatEther(transferFee) : <InlineLoader />}{' '}
-          {isFromAmb ? 'AMB' : 'ETH'}
-        </span>
+        <div className="exchange__estimated-fee-row exchange__estimated-fee-row_transfer">
+          Transfer fee:
+          <span className="exchange__estimated-fee">
+            {fee ? formatBalance(fee.transferFee.toString()) : <InlineLoader />}{' '}
+            {departureNetwork.code}
+          </span>
+        </div>
+        <div className="exchange__estimated-fee-row">
+          Bridge fee:
+          <span className="exchange__estimated-fee">
+            {fee ? formatBalance(fee.bridgeFee.toString()) : <InlineLoader />}{' '}
+            {departureNetwork.code}
+          </span>
+        </div>
       </div>
       <button type="submit" className="button button_black exchange__button">
         Transfer
       </button>
-      {/* <Link */}
-      {/*  to="/mint" */}
-      {/*  style={{ marginTop: 16 }} */}
-      {/*  className="button button_gray exchange__button" */}
-      {/* > */}
-      {/*  Mint Coins */}
-      {/* </Link> */}
     </form>
   );
 };

@@ -30,7 +30,7 @@ export const MobileMenu = ({
 
   const history = useHistory();
   const logout = () => {
-    sessionStorage.setItem('wallet', '');
+    sessionStorage.removeItem('wallet');
     history.push('/');
     deactivate();
     toggleMenu();
@@ -38,7 +38,7 @@ export const MobileMenu = ({
 
   return (
     <div className={`mobile-menu ${isOpen ? 'mobile-menu_open' : ''}`}>
-      {account ? (
+      {account && (
         <div className="mobile-menu__account">
           <div className="account account_mobile">
             <div className="account__wallet-logo-container">
@@ -60,7 +60,7 @@ export const MobileMenu = ({
             <span className="logout__text">LOG OUT</span>
           </button>
         </div>
-      ) : null}
+      )}
 
       {data.map((menuItem, i) => {
         if (menuItem.type === 'submenu') {
@@ -72,6 +72,7 @@ export const MobileMenu = ({
               toggleSubmenu={() => toggleSubmenu(i)}
               isOpen={openSubmenuIndex === i}
               showAddMetamaskButton={menuItem.showAddMetamaskButton}
+              key={menuItem.name}
             />
           );
         }
@@ -82,6 +83,7 @@ export const MobileMenu = ({
               className="mobile-menu__link"
               data-number={`—\u00A00${i + 1}`}
               onClick={toggleMenu}
+              key={menuItem.name}
             >
               {menuItem.name}
             </a>
@@ -131,7 +133,7 @@ const MobileSubmenu = ({
         '--items-amount': data.length,
       }}
     >
-      {showAddMetamaskButton ? (
+      {showAddMetamaskButton && (
         <button
           type="button"
           className="mobile-submenu__item mobile-submenu__item_metamask"
@@ -140,9 +142,14 @@ const MobileSubmenu = ({
           <MetamaskIcon className="mobile-submenu__metamask-icon" />
           Add to Metamask
         </button>
-      ) : null}
+      )}
       {data.map(({ name: itemName, link }) => (
-        <a href={link} className="mobile-submenu__item" onClick={toggleMenu}>
+        <a
+          href={link}
+          key={itemName}
+          className="mobile-submenu__item"
+          onClick={toggleMenu}
+        >
           {itemName}
         </a>
       ))}

@@ -1,48 +1,61 @@
 import { ethers } from 'ethers';
+import { allNetworks } from './networks';
+import CustomJsonRpcBatchProvider from './ethers/CustomJsonRpcBatchProvider';
 
-const {
-  REACT_APP_ETH_CHAIN_ID,
-  REACT_APP_AMB_CHAIN_ID,
-  REACT_APP_INFURA_KEY,
-  REACT_APP_AMB_RPC_URL,
-} = process.env;
+const { REACT_APP_INFURA_KEY } = process.env;
 
 // ethereum read-only provider configuration
-export const ethChainId = +REACT_APP_ETH_CHAIN_ID;
+export const ethChainId = allNetworks.eth.chainId;
 
 const ethProvider = new ethers.providers.InfuraWebSocketProvider(
   ethChainId,
   REACT_APP_INFURA_KEY,
 );
 
+// eth custom batch provider for balance worker
+const ethBatchProvider = new CustomJsonRpcBatchProvider(
+  allNetworks.eth.rpcUrl + REACT_APP_INFURA_KEY,
+  ethChainId,
+);
+
 // ambrosus read-only provider configuration
-export const ambChainId = +REACT_APP_AMB_CHAIN_ID;
+export const ambChainId = allNetworks.amb.chainId;
 
 export const ambProvider = new ethers.providers.StaticJsonRpcProvider(
-  REACT_APP_AMB_RPC_URL,
+  allNetworks.amb.rpcUrl,
   ambChainId,
 );
 
-// binance smart chain read-only provider configuration
-// export const bscChainId = REACT_APP_ENV === 'production' ? 56 : 97;
-//
-// const bscRPCUrlList =
-//   REACT_APP_ENV === 'production'
-//     ? ['https://bsc-dataseed.binance.org/', 'https://bsc-dataseed4.defibit.io/']
-//     : [
-//         'https://data-seed-prebsc-1-s1.binance.org:8545/',
-//         'https://data-seed-prebsc-1-s2.binance.org:8545/',
-//       ];
-//
-// const bscProvider = new ethers.providers.FallbackProvider(
-//   bscRPCUrlList.map((RPCUrl) => new ethers.providers.JsonRpcProvider(RPCUrl)),
-//   1,
-// );
+// amb custom batch provider for balance worker
+const ambBatchProvider = new CustomJsonRpcBatchProvider(
+  allNetworks.amb.rpcUrl,
+  allNetworks.amb.chainId,
+);
+
+// // binance smart chain read-only provider configuration
+export const bscChainId = allNetworks.bsc.chainId;
+
+export const bscProvider = new ethers.providers.StaticJsonRpcProvider(
+  allNetworks.bsc.rpcUrl,
+  bscChainId,
+);
+
+// bsc custom batch provider for balance worker
+const bscBatchProvider = new CustomJsonRpcBatchProvider(
+  allNetworks.bsc.rpcUrl,
+  bscChainId,
+);
 
 const providers = {
   [ethChainId]: ethProvider,
   [ambChainId]: ambProvider,
-  // [bscChainId]: bscProvider,
+  [bscChainId]: bscProvider,
+};
+
+export const batchProviders = {
+  [ethChainId]: ethBatchProvider,
+  [ambChainId]: ambBatchProvider,
+  [bscChainId]: bscBatchProvider,
 };
 
 export default providers;
