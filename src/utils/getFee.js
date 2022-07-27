@@ -39,14 +39,20 @@ const getFee = (
     });
 
 const relayUrlByChainId =
+  // eslint-disable-next-line no-nested-ternary
   REACT_APP_ENV === 'production'
     ? {
         [bscChainId]: `https://relay-bsc.ambrosus.io/fees`,
         [ethChainId]: `https://relay-eth.ambrosus.io/fees`,
       }
-    : {
+    : REACT_APP_ENV === 'devnet'
+    ? {
         [bscChainId]: `https://relay-bsc.ambrosus-dev.io/fees`,
         [ethChainId]: `https://relay-eth.ambrosus-dev.io/fees`,
+      }
+    : {
+        [bscChainId]: `https://relay-bsc.ambrosus-test.io/fees`,
+        [ethChainId]: `https://relay-eth.ambrosus-test.io/fees`,
       };
 
 export default getFee;
