@@ -49,6 +49,7 @@ const ReceiveField = ({
         symbol: selectedCoin.wrappedAnalog,
         chainId: destinationChainId,
       });
+
       tokenList.push(wrappedCoin);
     } else if (selectedCoin.nativeAnalog) {
       // wrapped coin in departure network
@@ -73,7 +74,6 @@ const ReceiveField = ({
   }, [selectedCoin]);
 
   const balance = useCoinBalance(receivedCoin.symbol, receivedCoin.chainId);
-
   return (
     <>
       <TokenSelect

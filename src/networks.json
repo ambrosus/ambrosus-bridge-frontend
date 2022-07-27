@@ -23,8 +23,8 @@
       "chainId": 97,
       "code": "BSC",
       "explorerUrl": "https://testnet.bscscan.com/",
-      "rpcUrl": "https://bsc.ambrosus-test.io/",
-      "rpcUrlWS": "wss://bsc.ambrosus-test.io/ws"
+      "rpcUrl": "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      "rpcUrlWS": ""
     }
   },
   "testnet": {
@@ -50,8 +50,8 @@
       "chainId": 97,
       "code": "BSC",
       "explorerUrl": "https://testnet.bscscan.com/",
-      "rpcUrl": "https://bsc.ambrosus-test.io/",
-      "rpcUrlWS": "wss://bsc.ambrosus-test.io/ws"
+      "rpcUrl": "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      "rpcUrlWS": ""
     }
   },
   "production": {

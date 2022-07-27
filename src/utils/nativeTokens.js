@@ -5,7 +5,7 @@ const AMB = {
   symbol: 'AMB',
   denomination: 18,
   chainId: ambChainId,
-  wrappedAnalog: 'testSAMB',
+  wrappedAnalog: 'SAMB',
   balance: '',
 };
 
@@ -26,6 +26,8 @@ const BNB = {
   wrappedAnalog: 'WBNB',
   balance: '',
 };
+
+export const nativeTokens = [AMB, ETH, BNB];
 
 export const nativeTokensById = {
   [ambChainId]: AMB,
