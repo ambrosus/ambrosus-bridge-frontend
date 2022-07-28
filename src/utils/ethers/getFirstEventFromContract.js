@@ -26,8 +26,8 @@ const recursiveQueryFilter = async (contract, filter, startBlock, endBlock) => {
   const result = await contract.queryFilter(
     filter,
     startBlock,
-    startBlock + limit < endBlock ? startBlock + limit : endBlock,
+    startBlock + +limit < endBlock ? startBlock + +limit : endBlock,
   );
   if (result.length) return result;
-  return recursiveQueryFilter(contract, filter, startBlock + limit, endBlock);
+  return recursiveQueryFilter(contract, filter, startBlock + +limit, endBlock);
 };
