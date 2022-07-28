@@ -52,7 +52,6 @@ const Status = () => {
   const initInterval = useRef(null);
   useEffect(() => {
     if (bridges) {
-      console.log(1);
       initInterval.current = setInterval(handleStatus, 2000);
     }
 
@@ -95,11 +94,6 @@ const Status = () => {
         log.topics.some(
           (topic) => topic === getEventSignatureByName(contract, withDrawName),
         ),
-      );
-      console.log(
-        'old1',
-        receipt,
-        getEventSignatureByName(contract, withDrawName),
       );
 
       if (withDrawEvent) {
@@ -182,9 +176,6 @@ const Status = () => {
 
       if (currentStage === '1.1') {
         provider.on(withdraw, handleWithdraw);
-        console.log('old2', receipt);
-        const n = await providers[currentChainId].getTransactionReceipt(txHash);
-        console.log('new', n);
       } else if (currentStage === '2.1') {
         provider.on(transfer, handleTransfer);
       } else if (currentStage === '2.2') {
@@ -200,7 +191,6 @@ const Status = () => {
   const handleStatus = () => {
     [ambChainId, ethChainId, bscChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
-      console.log(tx);
       if (tx && tx.blockNumber) {
         clearInterval(initInterval.current);
         refContract.current = createBridgeContract(tx.to, providers[networkId]);
