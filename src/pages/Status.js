@@ -97,6 +97,12 @@ const Status = () => {
           (topic) => topic === getEventSignatureByName(contract, withDrawName),
         ),
       );
+      console.log(
+        'old1',
+        receipt,
+        getEventSignatureByName(contract, withDrawName),
+      );
+
       if (withDrawEvent) {
         currentStage = '2.1';
       }
@@ -177,6 +183,9 @@ const Status = () => {
 
       if (currentStage === '1.1') {
         provider.on(withdraw, handleWithdraw);
+        console.log('old2', receipt);
+        const n = await providers[currentChainId].getTransactionReceipt(txHash);
+        console.log('new', n);
       } else if (currentStage === '2.1') {
         provider.on(transfer, handleTransfer);
       } else if (currentStage === '2.2') {
@@ -292,6 +301,7 @@ const Status = () => {
   };
 
   const handleWithdraw = () => {
+    console.log('withdeaw');
     if (refStage.current === '1.1') {
       setStage('2.1');
       refProvider.current.off(refFilters.current.withdraw, handleWithdraw);
