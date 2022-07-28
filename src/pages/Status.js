@@ -49,15 +49,14 @@ const Status = () => {
   const refContract = useRef(null);
   const refDestinationNetId = useRef(null);
   const refFilters = useRef({});
-
+  const initInterval = useRef(null);
   useEffect(() => {
     if (bridges) {
-      setTimeout(handleStatus, 2000);
+      console.log(1);
+      initInterval.current = setInterval(handleStatus, 2000);
     }
 
     return async () => {
-      clearTimeout(handleStatus);
-
       const { current: provider } = refProvider;
 
       if (provider) {
@@ -201,7 +200,9 @@ const Status = () => {
   const handleStatus = () => {
     [ambChainId, ethChainId, bscChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
+      console.log(tx);
       if (tx && tx.blockNumber) {
+        clearInterval(initInterval.current);
         refContract.current = createBridgeContract(tx.to, providers[networkId]);
 
         setDepartureContractAddress(tx.to);
@@ -242,7 +243,9 @@ const Status = () => {
 
         setCurrentChainId(networkId);
       } else if (tx && !tx.blockNumber) {
+        console.log(2, 'w');
         tx.wait().then(() => {
+          console.log(2, 'h');
           handleStatus();
         });
       }
