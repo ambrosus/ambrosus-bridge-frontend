@@ -42,7 +42,7 @@ const TransactionListItem = ({ tx }) => {
     setTokenAmount(withdrawData.args.amount);
 
     const currentCoin = tokens.find((token) => token.address === tokenAddress);
-    console.log(withdrawData);
+    console.log(tokens, tx);
     if (currentCoin) {
       setCurrentToken(currentCoin);
     }
