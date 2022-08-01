@@ -49,15 +49,13 @@ const Status = () => {
   const refContract = useRef(null);
   const refDestinationNetId = useRef(null);
   const refFilters = useRef({});
-
+  const initInterval = useRef(null);
   useEffect(() => {
     if (bridges) {
-      setTimeout(handleStatus, 2000);
+      initInterval.current = setInterval(handleStatus, 2000);
     }
 
     return async () => {
-      clearTimeout(handleStatus);
-
       const { current: provider } = refProvider;
 
       if (provider) {
@@ -97,6 +95,7 @@ const Status = () => {
           (topic) => topic === getEventSignatureByName(contract, withDrawName),
         ),
       );
+
       if (withDrawEvent) {
         currentStage = '2.1';
       }
@@ -193,6 +192,7 @@ const Status = () => {
     [ambChainId, ethChainId, bscChainId].forEach(async (networkId) => {
       const tx = await providers[networkId].getTransaction(txHash);
       if (tx && tx.blockNumber) {
+        clearInterval(initInterval.current);
         refContract.current = createBridgeContract(tx.to, providers[networkId]);
 
         setDepartureContractAddress(tx.to);
@@ -233,7 +233,9 @@ const Status = () => {
 
         setCurrentChainId(networkId);
       } else if (tx && !tx.blockNumber) {
+        console.log(2, 'w');
         tx.wait().then(() => {
+          console.log(2, 'h');
           handleStatus();
         });
       }
@@ -292,6 +294,7 @@ const Status = () => {
   };
 
   const handleWithdraw = () => {
+    console.log('withdeaw');
     if (refStage.current === '1.1') {
       setStage('2.1');
       refProvider.current.off(refFilters.current.withdraw, handleWithdraw);
