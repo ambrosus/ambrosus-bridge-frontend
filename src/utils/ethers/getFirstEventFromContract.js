@@ -1,11 +1,14 @@
 import { bscChainId, bscProvider } from '../providers';
 
-const { REACT_APP_BSC_FROM_BLOCK } = process.env;
+const {
+  REACT_APP_BSC_FROM_BLOCK: contractDeployBlock,
+  REACT_APP_BSC_LOGS_LIMIT: limit,
+} = process.env;
 
 const getFirstEventFromContract = async (
   contract,
   filter,
-  fromBlock = +REACT_APP_BSC_FROM_BLOCK,
+  fromBlock = +contractDeployBlock,
 ) => {
   // eslint-disable-next-line no-underscore-dangle
   const { chainId } = contract.provider._network;
@@ -23,8 +26,8 @@ const recursiveQueryFilter = async (contract, filter, startBlock, endBlock) => {
   const result = await contract.queryFilter(
     filter,
     startBlock,
-    startBlock + 49999 < endBlock ? startBlock + 49999 : endBlock,
+    startBlock + +limit < endBlock ? startBlock + +limit : endBlock,
   );
   if (result.length) return result;
-  return recursiveQueryFilter(contract, filter, startBlock + 49999, endBlock);
+  return recursiveQueryFilter(contract, filter, startBlock + +limit, endBlock);
 };
