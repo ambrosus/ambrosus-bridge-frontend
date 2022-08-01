@@ -26,7 +26,7 @@ const TransactionListItem = ({ tx }) => {
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [destinationNetTxHash, setDestinationNetTxHash] = useState(null);
-  const [currentToken, setCurrentToken] = useState({});
+  const [logo, setLogo] = useState('');
   const [tokenAmount, setTokenAmount] = useState(0);
   const [transferredTokens, setTransferredTokens] = useState({
     from: '',
@@ -36,15 +36,14 @@ const TransactionListItem = ({ tx }) => {
   useEffect(async () => {
     const withdrawData = await getEventData('Withdraw');
     const eventId = withdrawData.args.eventId;
-    const tokenAddress = withdrawData.args['tokenTo'];
 
     setTransferredTokens(getTransferredTokens(withdrawData.args, tokens));
     setTokenAmount(withdrawData.args.amount);
 
-    const currentCoin = tokens.find((token) => token.address === tokenAddress);
-    console.log(tokens, tx);
+    const currentCoin = tokens.find((token) => token.primaryNet === tx.chainId);
+
     if (currentCoin) {
-      setCurrentToken(currentCoin);
+      setLogo(currentCoin.logo);
     }
     const destNetId = getDestinationNet(tx.to, bridges);
     const otherContractAddress = Object.values(
@@ -105,9 +104,7 @@ const TransactionListItem = ({ tx }) => {
         {transferredTokens.from && (
           <>
             <img
-              src={
-                currentToken.logo
-              }
+              src={logo}
               alt="coin"
               className="transaction-item__img"
             />
@@ -181,7 +178,7 @@ const TransactionListItem = ({ tx }) => {
             Amount:
           </span>
           <span className="transaction-item__black-text">
-            {ethers.utils.formatUnits(tokenAmount, currentToken.denomination)}{' '}
+            {ethers.utils.formatUnits(tokenAmount, 18)}{' '}
             {transferredTokens.from}
           </span>
         </div>
@@ -203,7 +200,7 @@ const TransactionListItem = ({ tx }) => {
           <span className="transaction-item__black-text">
             {ethers.utils.formatUnits(
               tx.args['transferFeeAmount'].add(tx.args['bridgeFeeAmount']),
-              currentToken.denomination,
+              18,
             )}{' '}
             {getNetworkByChainId(tx.chainId).code}
           </span>
