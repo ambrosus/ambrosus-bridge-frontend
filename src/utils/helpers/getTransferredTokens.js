@@ -1,26 +1,25 @@
 import { BigNumber } from 'ethers';
 
-const handleTransferredTokens = (withDrawArgs, tokens) => {
+const handleTransferredTokens = (withDrawArgs, tokens, getLogo) => {
   const transTokens = { from: '', to: '' };
 
   if (BigNumber.from(0).eq(withDrawArgs.tokenFrom)) {
-    transTokens.from = findTokenByAddress(
-      withDrawArgs.tokenTo,
-      tokens,
-    ).nativeAnalog;
+    transTokens.from = findTokenByAddress(withDrawArgs.tokenTo, tokens)[
+      getLogo ? 'logo' : 'nativeAnalog'
+    ];
   } else {
-    transTokens.from = findTokenByAddress(
-      withDrawArgs.tokenFrom,
-      tokens,
-    ).symbol;
+    transTokens.from = findTokenByAddress(withDrawArgs.tokenFrom, tokens)[
+      getLogo ? 'logo' : 'symbol'
+    ];
   }
   if (BigNumber.from(0).eq(withDrawArgs.tokenTo)) {
-    transTokens.to = findTokenByAddress(
-      withDrawArgs.tokenFrom,
-      tokens,
-    ).nativeAnalog;
+    transTokens.to = findTokenByAddress(withDrawArgs.tokenFrom, tokens)[
+      getLogo ? 'logo' : 'nativeAnalog'
+    ];
   } else {
-    transTokens.to = findTokenByAddress(withDrawArgs.tokenTo, tokens).symbol;
+    transTokens.to = findTokenByAddress(withDrawArgs.tokenTo, tokens)[
+      getLogo ? 'logo' : 'symbol'
+    ];
   }
   return transTokens;
 };

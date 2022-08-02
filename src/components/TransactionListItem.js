@@ -39,12 +39,8 @@ const TransactionListItem = ({ tx }) => {
 
     setTransferredTokens(getTransferredTokens(withdrawData.args, tokens));
     setTokenAmount(withdrawData.args.amount);
+    setLogo(getTransferredTokens(withdrawData.args, tokens, true).from);
 
-    const currentCoin = tokens.find((token) => token.primaryNet === tx.chainId);
-
-    if (currentCoin) {
-      setLogo(currentCoin.logo);
-    }
     const destNetId = getDestinationNet(tx.to, bridges);
     const otherContractAddress = Object.values(
       bridges[
