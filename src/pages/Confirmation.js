@@ -12,11 +12,14 @@ import { getNetworkByChainId } from '../utils/networks';
 import useError from '../hooks/useError';
 import useBridges from '../hooks/useBridges';
 import formatAddress from '../utils/helpers/formatAddres';
+import usePrevious from '../hooks/usePrevious';
 
 const Confirmation = () => {
   const { setError } = useError();
   const { account, library, chainId } = useWeb3React();
+  const prevChainId = usePrevious(chainId);
   const bridges = useBridges();
+  const history = useHistory();
 
   const {
     location: {
@@ -46,8 +49,8 @@ const Confirmation = () => {
     );
     setFee({ transferFee, bridgeFee });
   }, []);
-  const [isLocked, setIsLocked] = useState(false);
 
+  const [isLocked, setIsLocked] = useState(false);
   const bnTransactionAmount = BigNumber.from(
     utils.parseUnits(transactionAmount, selectedCoin.denomination),
   );
@@ -92,6 +95,11 @@ const Confirmation = () => {
         setTimeout(setError, 7500, '');
       });
   };
+
+  useEffect(() => {
+    if (chainId && prevChainId && chainId !== prevChainId)
+      history.push('/exchange');
+  }, [chainId]);
 
   return (
     <form onSubmit={handleSubmit} className="content confirmation-page">
