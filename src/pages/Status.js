@@ -438,7 +438,7 @@ const Status = () => {
               {stagesTime && (
                 <div className="transaction-status__timing">
                   <ClockIcon />
-                  {formatSeconds(stagesTime.third)}
+                  {formatSeconds(stagesTime.third + 1200)}
                 </div>
               )}
             </div>
