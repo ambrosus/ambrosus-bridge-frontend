@@ -233,9 +233,7 @@ const Status = () => {
 
         setCurrentChainId(networkId);
       } else if (tx && !tx.blockNumber) {
-        console.log(2, 'w');
         tx.wait().then(() => {
-          console.log(2, 'h');
           handleStatus();
         });
       }
@@ -294,7 +292,6 @@ const Status = () => {
   };
 
   const handleWithdraw = () => {
-    console.log('withdeaw');
     if (refStage.current === '1.1') {
       setStage('2.1');
       refProvider.current.off(refFilters.current.withdraw, handleWithdraw);
@@ -369,6 +366,9 @@ const Status = () => {
 
   const goHome = () => history.push('/exchange');
 
+  const formatSeconds = (seconds) =>
+    seconds / 60 < 60 ? `${seconds / 60} min` : `${seconds / 60 / 60} hrs`;
+
   return (
     <div className="content status-page">
       <h2 className="status-page__title">Transaction in progress</h2>
@@ -415,7 +415,7 @@ const Status = () => {
               {stagesTime && (
                 <div className="transaction-status__timing">
                   <ClockIcon />
-                  {stagesTime.second / 60} min
+                  {formatSeconds(stagesTime.second)}
                 </div>
               )}
             </div>
@@ -438,7 +438,7 @@ const Status = () => {
               {stagesTime && (
                 <div className="transaction-status__timing">
                   <ClockIcon />
-                  {stagesTime.third / 60} min
+                  {formatSeconds(stagesTime.third)}
                 </div>
               )}
             </div>
