@@ -10,7 +10,6 @@ const TransactionNetworks = ({
   fromHash,
   toHash,
   tokens,
-  preventRedirect,
   departureNetwork,
   destinationNetwork,
 }) => {
@@ -61,7 +60,6 @@ const TransactionNetworks = ({
           <span className="transaction-coins__hash-wrapper">
             <span className="transaction-coins__hash">txHash:</span>
             <a
-              style={preventRedirect ? { pointerEvents: 'none' } : {}}
               target="_blank"
               href={`${
                 departureNetwork ? departureNetwork.explorerUrl : ''
@@ -134,7 +132,6 @@ TransactionNetworks.propTypes = {
   fromHash: PropTypes.string,
   toHash: PropTypes.string,
   tokens: PropTypes.object,
-  preventRedirect: PropTypes.bool,
   departureNetwork: PropTypes.object,
   destinationNetwork: PropTypes.object,
 };

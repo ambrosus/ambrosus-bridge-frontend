@@ -380,7 +380,6 @@ const Status = () => {
         fromHash={txHash}
         toHash={otherNetworkTxHash || null}
         tokens={transferredTokens}
-        preventRedirect={+stage < 2}
         departureNetwork={Object.values(allNetworks).find(
           (el) => el.chainId === +currentChainId,
         )}
