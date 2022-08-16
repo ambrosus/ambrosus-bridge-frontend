@@ -2,8 +2,6 @@ import { utils } from 'ethers';
 import { getNetworkByChainId } from '../networks';
 import { db } from '../../db';
 
-// TODO: add rpcUrls
-
 const changeChainId = async (provider, chainId) => {
   const selectedNetwork = getNetworkByChainId(chainId);
   const hexChainId = utils.hexValue(chainId);
