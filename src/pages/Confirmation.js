@@ -134,14 +134,14 @@ const Confirmation = () => {
           <span className="confirmation-info__label">Transfer fee</span>
           <span className="confirmation-info__value">
             {fee ? utils.formatEther(fee.transferFee) : <InlineLoader />}{' '}
-            {departureNetwork.code}
+            {departureNetwork.tokenSymbol}
           </span>
         </div>
         <div className="confirmation-info__item">
           <span className="confirmation-info__label">Bridge fee</span>
           <span className="confirmation-info__value">
             {fee ? utils.formatEther(fee.bridgeFee) : <InlineLoader />}{' '}
-            {departureNetwork.code}
+            {departureNetwork.tokenSymbol}
           </span>
         </div>
         <div className="confirmation-info__item">

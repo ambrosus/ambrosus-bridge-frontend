@@ -192,14 +192,14 @@ const Exchange = () => {
           Transfer fee:
           <span className="exchange__estimated-fee">
             {fee ? formatBalance(fee.transferFee.toString()) : <InlineLoader />}{' '}
-            {departureNetwork.code}
+            {departureNetwork.tokenSymbol}
           </span>
         </div>
         <div className="exchange__estimated-fee-row">
           Bridge fee:
           <span className="exchange__estimated-fee">
             {fee ? formatBalance(fee.bridgeFee.toString()) : <InlineLoader />}{' '}
-            {departureNetwork.code}
+            {departureNetwork.tokenSymbol}
           </span>
         </div>
       </div>
