@@ -1,0 +1,146 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1040;
+  background: rgba(38, 38, 38, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+  display: flex;
+  align-items: center;
+}
+
+.modal {
+  background: $white;
+  box-shadow: 0 4px 24px rgba(55, 29, 199, 0.1);
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  margin: 0 auto;
+  max-width: 1040px;
+  width: 98%;
+  height: auto;
+  padding: 20px;
+
+  &--modal-body {
+    &__header {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      flex-direction: row;
+      justify-content: space-between;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      color: #9198BB;
+      height: 25px;
+
+      > div {
+        min-width: 125px;
+        flex-direction: row;
+      }
+    }
+  }
+}
+
+
+.modal-close-button {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.transaction-modal {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  *, * {
+    color: #FFFFFF;
+  }
+
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: Halvar Breitschrift, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 32px;
+    @media (max-width: 600px) {
+      font-size: 18px;
+      line-height: 134.3%;
+    }
+    }
+
+  &__amount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: Proxima Nova, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+    @media (max-width: 600px) {
+      font-size: 16px;
+      line-height: 19px;
+    }
+  }
+
+  &__hash {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: Proxima Nova, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    @media (max-width: 600px) {
+      font-size: 12px;
+      line-height: 15px;
+    }
+  }
+}
+
+.cross {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  cursor: pointer;
+}

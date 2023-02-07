@@ -3,21 +3,46 @@
   height: 6.25rem;
   //background: linear-gradient(180deg, #212121 39.84%, rgba(33, 33, 33, 0) 100%);
   background: $black;
+  justify-content: space-between;
+
   position: relative;
   z-index: 20;
+  @media screen and (max-width: $mobile-breakpoint) {
+    height: 7.125rem;
+  }
+
+  *,
+  * {
+    white-space: nowrap;
+  }
+}
+
+.header-container {
+  justify-content: space-between;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  z-index: 5;
+  position: relative;
 
   @media screen and (max-width: $tablet-breakpoint) {
-    height: 7.125rem;
+    padding: 0 0;
   }
 }
 
 .header__content {
+  justify-content: space-between;
+  padding: 0 20px;
+
   height: 100%;
   margin: 0 auto;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   grid-column-gap: 2rem;
+  @media screen and (max-width: $tablet-breakpoint) {
+    grid-column-gap: 1rem;
+  }
 }
 
 .header__logo-wrapper {
@@ -25,7 +50,7 @@
 }
 
 .header__logo {
-  @media screen and (max-width: $tablet-breakpoint) {
+  @media screen and (max-width: $mobile-breakpoint) {
     width: 11rem;
   }
 }
@@ -38,7 +63,7 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
 
-  @media screen and (max-width: $tablet-breakpoint) {
+  @media screen and (max-width: 1124px) {
     display: none;
   }
 }
@@ -51,16 +76,15 @@
   justify-content: center;
   align-items: center;
 
-  @media screen and (max-width: $tablet-breakpoint) {
+  @media screen and (max-width: $mobile-breakpoint) {
     display: none;
   }
-
 }
 
 .submenu__name {
   color: white;
   font-family: 'Proxima Nova', sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -76,7 +100,7 @@
   width: 1rem;
   margin-left: 0.75rem;
   transform: rotate(0);
-  transition: transform .25s ease-in-out;
+  transition: transform 0.25s ease-in-out;
 }
 
 .submenu:hover .submenu__arrow {
@@ -84,14 +108,11 @@
 }
 
 .submenu__items {
-  width: 22rem;
-
+  width: 27rem;
   position: absolute;
+
   top: 6.25rem;
-  left: -1rem;
-
   overflow: hidden;
-
   background: $black;
   box-shadow: 0 6px 10px rgba(37, 37, 37, 0.25), 0 4px 4px rgba(0, 0, 0, 0.15);
 
@@ -99,7 +120,7 @@
   flex-flow: column nowrap;
   justify-content: center;
 
-  transition: height .25s ease-in-out;
+  transition: height 0.25s ease-in-out;
 
   --items-amount: unset; //passed from html
   height: 0;
@@ -107,86 +128,52 @@
   // where 2.875rem = height + margins + some gap
   // and 1.5rem is additional space at top and bottom
   // this needed for equal animation speed for any amount of items inside
+  //need for last-child  right: 0; with scss
+
 }
+
 
 .submenu:hover .submenu__items {
   //see explanation at .submenu__items ^^^
   height: calc(2.875rem * var(--items-amount) + 1.5rem);
 }
 
-.submenu_last .submenu__items {
-  left: unset;
-  right: -1rem;
-}
-
-.submenu_metamask .submenu__items {
-  width: 27rem;
-}
-
 .submenu__item {
   padding: 1rem 1.25rem;
   color: white;
   font-family: 'Proxima Nova', sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  user-select: none;
-}
-
-.submenu__item_metamask {
-  display: flex;
-  flex-flow: row nowrap;
-  text-align: left;
-  background: #262626;
-  padding: 1rem 1.25rem;
-  margin: 0 1.25rem;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .account {
+  padding: 0.5rem 1rem;
+  background: $lighter-black;
+  border: 1px solid white;
   display: flex;
   flex-flow: row nowrap;
-  align-items: center;
-
-  @media screen and (max-width: $tablet-breakpoint) {
-    display: none;
-  }
-}
-
-.account_mobile {
-  @media screen and (max-width: $tablet-breakpoint) {
-    display: flex;
-  }
-}
-
-.account__wallet-logo-container {
-  height: 1.5rem;
-  width: 1.5rem;
-  background: white;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  overflow: hidden;
-
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
   align-items: center;
 }
 
 .account__wallet-logo {
-  height: 1rem;
-  width: 1rem;
+  background: white;
+  height: 1.5rem;
+  width: 1.5rem;
+  object-position: center;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-right: 0.5rem;
 }
 
 .account__address {
-  font-family: "Proxima Nova", sans-serif;
+  font-family: 'Proxima Nova', sans-serif;
   font-style: normal;
   font-weight: 600;
   font-size: 0.875rem;
   line-height: 100%;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .logout {
@@ -194,38 +181,28 @@
   flex-flow: row nowrap;
   align-items: center;
   cursor: pointer;
-  column-gap: 1rem;
-
-  @media screen and (max-width: $tablet-breakpoint) {
-    display: none;
-  }
-}
-
-.logout_mobile {
-  @media screen and (max-width: $tablet-breakpoint) {
-    display: flex;
-  }
 }
 
 .logout__icon {
   height: 1.5rem;
   width: 1.5rem;
+  margin-right: 1rem;
 }
 
 .logout__text {
-  font-family: "Proxima Nova", sans-serif;
+  font-family: 'Proxima Nova', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 0.75rem;
   line-height: 100%;
   letter-spacing: 0.22em;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .burger-icon {
   display: none;
 
-  @media screen and (max-width: $tablet-breakpoint) {
+  @media screen and (max-width: $mobile-breakpoint) {
     width: 2.5rem;
     height: 1rem;
 
@@ -236,14 +213,13 @@
 
     position: relative;
   }
-
 }
 
 .burger-icon__line {
   height: 2px;
   background: white;
   transform: rotate(0deg);
-  transition: all .25s ease-in-out;
+  transition: all 0.25s ease-in-out;
   position: relative;
 }
 
@@ -258,7 +234,6 @@
 .burger-icon__third-line {
   width: calc((100% / 3) * 2);
 }
-
 
 .burger-icon_open {
   .burger-icon__first-line {
@@ -277,5 +252,56 @@
     transform: rotate(-45deg);
     bottom: 2px;
     right: -2px;
+  }
+}
+
+.wallet-connect {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+  background: $graphitered;
+
+  p {
+    color: #ffffff;
+    padding-left: 10px;
+  }
+}
+
+.connect-metamask-btn {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  gap: 13px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0px auto;
+
+  padding: 20px 16px !important;
+  width: 90%;
+  min-height: 66px !important;
+  background: #262626;
+  p {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    font-family: Aktiv Grotesk Corp;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 34px;
+    text-align: right;
+    letter-spacing: 0.09rem;
+    text-transform: uppercase;
+    color: #ffffff;
   }
 }

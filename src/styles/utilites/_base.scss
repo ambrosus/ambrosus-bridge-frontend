@@ -1,42 +1,50 @@
 * {
-  outline: none;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  outline: none;
 }
 
 html {
-  position: relative;
-  font-size: 20px;
-  scroll-behavior: smooth;
-  background-color: $black;
-  min-height: 100vh;
+  font-family: Inter, Halvar Breitschrift, sans-serif !important;
+}
+li {
+  list-style-type: none;
 }
 
-h1, h2, h3, h4, h5, h6, a, p {
-  white-space: pre-line;
+h2 {
+  font-size: 28px;
 }
 
-@media screen and (max-width: 1800px) {
-  html {
-    font-size: 18px;
+a {
+  &:link {
+    text-decoration: none;
+  }
+
+  &:visited {
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:active {
+    text-decoration: none;
   }
 }
 
-@media screen and (max-width: 1600px) {
-  html {
-    font-size: 16px;
-  }
+.white {
+  color: $white;
 }
 
-@media screen and (max-width: $mobile-breakpoint) {
-  html {
-    font-size: 14px;
-  }
+.gray {
+  color: $color-gray;
 }
 
-@media screen and (max-width: 320px) {
-  html {
-    font-size: 12px;
-  }
+.calc-stake {
+  min-width: auto !important;
+  width: 174px !important;
+  height: 65px !important;
+  margin-left: auto;
 }

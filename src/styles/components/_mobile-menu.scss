@@ -1,7 +1,41 @@
 .mobile-menu {
   display: none;
 
-  @media screen and (max-width: $tablet-breakpoint) {
+  .wallet-connect {
+    margin: 0 4rem 0 auto;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+    background: $graphitered;
+
+    p {
+      color: #ffffff;
+      padding-left: 10px;
+    }
+  }
+
+  .login {
+    margin: 0 4rem 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    color: #ffffff !important;
+
+    .header__btn {
+      color: #ffffff !important;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+    }
+  }
+
+  @media screen and (max-width: $mobile-breakpoint) {
     position: fixed;
     top: 7.125rem;
     left: 0;
@@ -21,9 +55,8 @@
 
     overflow-y: scroll;
 
-    transition: all .25s ease-in-out;
+    transition: all 0.25s ease-in-out;
   }
-
 }
 
 .mobile-menu_open {
@@ -32,7 +65,7 @@
 }
 
 .mobile-menu__link {
-  font-family: "Proxima Nova", sans-serif;
+  font-family: 'Proxima Nova', sans-serif;
   font-weight: 300;
   font-size: 1.125rem;
   line-height: 3.5rem;
@@ -58,23 +91,16 @@
   vertical-align: top;
 }
 
-.mobile-menu__account {
-  width: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-end;
-  padding: 4rem 4rem 0 0;
-  column-gap: 2rem;
-}
-
 .mobile-submenu {
   position: relative;
-  margin: 0 3rem 0 auto;
+  margin: 0 4rem 0 auto;
 }
 
 .mobile-submenu__name {
-  font-family: "Proxima Nova", sans-serif;
-  font-weight: 300;
+  float: right;
+
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 400;
   font-size: 1.125rem;
   line-height: 3.5rem;
   text-align: right;
@@ -82,8 +108,9 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: white;
+  margin-right: auto;
 
-  width: 100%;
+  width: fit-content;
 }
 
 .mobile-submenu_open .mobile-submenu__name {
@@ -107,7 +134,7 @@
   width: 1rem;
   margin-left: 0.75rem;
   transform: rotate(0);
-  transition: transform .25s ease-in-out;
+  transition: transform 0.25s ease-in-out;
 }
 
 .mobile-submenu_open .mobile-submenu__arrow {
@@ -119,11 +146,11 @@
   flex-flow: column nowrap;
   justify-content: flex-end;
   grid-row-gap: 1.75rem;
-
+  position: relative;
   text-align: right;
 
   overflow: hidden;
-  transition: height .25s ease-in-out;
+  transition: height 0.25s ease-in-out;
 
   --items-amount: unset; //passed from html
   height: 0;
@@ -134,44 +161,16 @@
 
 .mobile-submenu_open .mobile-submenu__items {
   //see explanation ^^^
-  height: calc(4.25rem * var(--items-amount));
-}
-
-.mobile-submenu_open .mobile-submenu__items_metamask {
-  //exception for submenu with metamask button
-  height: calc((4.25rem * var(--items-amount)) + 4.75rem);
+  height: calc(4rem * var(--items-amount));
 }
 
 .mobile-submenu__item {
-  font-family: "Proxima Nova", sans-serif;
+  font-family: 'Proxima Nova', sans-serif;
   font-style: normal;
-  font-weight: 300;
-  font-size: 1.25rem;
+  font-weight: 400;
   line-height: 212%;
   text-align: right;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #FFFFFF;
-
-  @media screen and (max-width: $tablet-breakpoint) {
-    font-size: 1rem;
-  }
-
-}
-
-.mobile-submenu__item_metamask {
-  user-select: none;
-  padding: 1.25rem 1.25rem;
-  background: #262626;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-  margin-left: 2rem;
-}
-
-.mobile-submenu__metamask-icon {
-  width: 1.75rem;
-  height: auto;
-  margin-right: 0.875rem;
+  color: #ffffff;
 }

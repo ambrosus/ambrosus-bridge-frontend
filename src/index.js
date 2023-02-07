@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import Main from './Main';
-
+import HomeStatic from "./pages/HomeStatic";
+import 'styles/Main.scss'
 ReactDOM.render(
-  <BrowserRouter>
-    <Main />
-  </BrowserRouter>,
+  <HomeStatic />
+    ,
   document.getElementById('root'),
 );

@@ -1,0 +1,150 @@
+
+.input {
+  position: relative;
+  width: 100%;
+  font-family: Halvar Breitschrift, sans-serif !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  font-feature-settings: 'liga' off;
+  height: 56px;
+
+  input {
+    * {
+      font-family: Halvar Breitschrift, sans-serif !important
+    }
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  font-family: Halvar Breitschrift, sans-serif !important;
+  -webkit-appearance: none;
+  margin: -20px;
+
+}
+
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.input input[type="number"],
+.input input[type="email"],
+.input input[type="text"],
+.input input[type="password"] {
+  font-family: Halvar Breitschrift, sans-serif !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-feature-settings: 'liga' off !important;
+  background: #262626;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  appearance: none;
+  height: inherit;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 14px;
+  padding-left: 16px;
+  padding-right: 89px !important;
+  color: #fff;
+  transition-property: border, color;
+  transition-duration: 400ms;
+}
+
+.input input[type="number"]:focus,
+.input input[type="email"]:focus,
+.input input[type="text"]:focus,
+.input input[type="password"]:focus {
+  font-family: Halvar Breitschrift, sans-serif !important;
+  font-size: 14px;
+  border: 1px solid #FFFFFF;
+}
+
+.input input[type="number"]:focus + .iconLeft,
+.input input[type="email"]:focus + .iconLeft,
+.input input[type="text"]:focus + .iconLeft,
+.input input[type="password"]:focus + .iconLeft {
+  font-family: Halvar Breitschrift, sans-serif !important;
+  opacity: 1;
+
+  span {
+    span {
+      svg {
+        path {
+          fill: #FFFFFF !important;
+        }
+      }
+    }
+
+  }
+}
+
+.input .iconLeft,
+.input .iconRight {
+  position: absolute;
+  opacity: 0.5;
+  transition: opacity 300ms;
+}
+
+.input .iconLeft {
+  top: 20px;
+  left: 12px;
+}
+
+.input .iconRight {
+  top: 15px;
+  right: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+
+  svg {
+
+  }
+}
+
+.input .iconRight:hover {
+  span {
+    span {
+      svg {
+        color: white;
+        fill: white !important;
+
+        path {
+          fill: white !important;
+        }
+      }
+    }
+  }
+}
+
+.input-error input[type="number"]:focus,
+.input-error input[type="email"]:focus,
+.input-error input[type="text"]:focus,
+.input-error input[type="password"]:focus {
+  font-family: Halvar Breitschrift, sans-serif !important;
+
+  border: 2px solid $red !important;
+  color: $red !important;
+}
+
+.input-error input[type="number"],
+.input-error input[type="email"],
+.input-error input[type="text"],
+.input-error input[type="password"] {
+  border: 2px solid $red !important;
+  color: $red;
+  font-family: Halvar Breitschrift, sans-serif !important;
+
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+

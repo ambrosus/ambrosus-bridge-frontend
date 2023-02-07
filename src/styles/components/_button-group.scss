@@ -1,0 +1,19 @@
+.button-group {
+  margin-left: auto;
+div{
+  button{
+    height: 56px!important;
+    width: 187px!important;
+    border: none;
+  }
+}
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0.5rem;
+
+  &.compact {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
